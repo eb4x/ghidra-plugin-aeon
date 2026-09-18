@@ -31,6 +31,11 @@ import ghidra.util.task.TaskMonitor;
  * reference on the instruction that completes the address, as MIPS does for
  * {@code lui} + {@code addiu}.
  * <p>
+ * The reference goes to the program's data space: {@code ram} in the plain
+ * languages, {@code data} in the Harvard one. Pairs that build a code address
+ * feed an indirect call or jump, and the stock propagator references those
+ * itself, in the code space, from the branch.
+ * <p>
  * An address completed from {@code r0} is a plain constant, not a movhi pair, so
  * it is skipped. So are values under 64 KiB and values outside the program's
  * memory, which cannot be told apart from ordinary numbers.
@@ -90,7 +95,7 @@ public class AeonAddressAnalyzer extends ConstantPropagationAnalyzer {
 		}
 		Address target;
 		try {
-			target = instr.getMinAddress().getNewAddress(offset);
+			target = program.getLanguage().getDefaultDataSpace().getAddress(offset);
 		}
 		catch (AddressOutOfBoundsException e) {
 			return;

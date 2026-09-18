@@ -310,6 +310,25 @@ def sanitize(name):
     return 'aeon_' + re.sub(r'\W', '_', name.split('.', 1)[1])
 
 
+
+# Every load and store names the space $(DATA): `ram` in the plain languages,
+# `data` in the Harvard one, where data addresses collide with code (see
+# aeonR2le_harvard.slaspec). Branch targets name `ram` explicitly and constants
+# `const`, so nothing is left to default. A bare `*:` would silently mean the
+# default (code) space, which is exactly the bug the Harvard variant exists to
+# avoid, so it is an error here rather than a convention.
+def route_data_accesses(text):
+    text = re.sub(r'\*:(\d)', r'*[$(DATA)]:\1', text)
+    spaces = re.findall(r'\*\[([^\]]+)\]:\d', text)
+    unknown = set(spaces) - {'ram', 'const', 'spr', '$(DATA)'}
+    # the only code-space accesses are the exported branch targets
+    stray_code = spaces.count('ram') - text.count('export *[ram]:4 reloc;')
+    if unknown or stray_code:
+        raise SystemExit(f'memory accesses outside the data space: {sorted(unknown)}, '
+                         f'{stray_code} code-space accesses that are not branch targets')
+    return text
+
+
 class Gen:
     def __init__(self):
         self.isa = json.load(open(os.path.join(HERE, 'isa/aeon_isa.json')))['aeon_aeonR2_isa']
@@ -408,7 +427,7 @@ class Gen:
                 expr = f'(({expr}) + {add})'
             if pcrel:
                 body = (f'{sub}: reloc is {" & ".join(f for f, _ in exprs)} '
-                        f'[ reloc = inst_start + {expr}; ] {{ export *:4 reloc; }}')
+                        f'[ reloc = inst_start + {expr}; ] {{ export *[ram]:4 reloc; }}')
             else:
                 body = (f'{sub}: val is {" & ".join(f for f, _ in exprs)} '
                         f'[ val = {expr}; ] {{ export *[const]:4 val; }}')
@@ -619,9 +638,10 @@ class Gen:
         L.append('')
         L.extend(self.ctors)
         L.append('')
+        text = route_data_accesses('\n'.join(L) + '\n')
         sinc = os.path.join(HERE, 'data/languages/aeonR2.sinc')
         os.makedirs(os.path.dirname(sinc), exist_ok=True)
-        open(sinc, 'w').write('\n'.join(L) + '\n')
+        open(sinc, 'w').write(text)
 
         ops = '\n'.join(f'define pcodeop {o};' for o in sorted(self.pcodeops))
         open(os.path.join(HERE, 'data/languages/aeonR2_pcodeops.sinc'), 'w').write(ops + '\n')

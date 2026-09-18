@@ -7,4 +7,7 @@
 
 define endian=little;
 
+# loads and stores share the code space
+@define DATA "ram"
+
 @include "aeonR2_common.sinc"
