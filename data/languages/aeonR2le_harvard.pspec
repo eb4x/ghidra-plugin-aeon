@@ -53,9 +53,13 @@
          99999 = 0x1869f). The data seen in use starts near 0x2ce000. -->
     <memory_block name="data_ram" start_address="data:0x00200000" length="0x1ae00000"
                   initialized="false" mode="rw"/>
-    <!-- 0x1b06_xxxx / 0x1b07_xxxx register accesses in the MST9U firmware -->
-    <memory_block name="mmio" start_address="data:0x1b000000" length="0x01000000"
-                  initialized="false" mode="rwv"/>
+    <!-- No MMIO block: registers are not reached by address. The firmware
+         passes a register number (e.g. 0x121b00, bank 0x121b) to helpers such
+         as FUN_0036ab4f, which write to base + (n*2 - (n&1)). The base is a
+         pointer in data RAM (data:0x3af750 on stream 0) that the image only
+         reads, so where the registers live is set outside it. Mapping the
+         register numbers as memory would turn every one into a false data
+         reference. -->
   </default_memory_blocks>
   <context_data>
     <tracked_set space="ram">

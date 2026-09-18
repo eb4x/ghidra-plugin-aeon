@@ -268,9 +268,12 @@ load and store, the stack included, in `data`:
 - The generator names the space of every memory access and refuses to emit a code-space
   access that isn't a branch target.
 - The cspec has `<global>` over both spaces and a stack pointer in `data`.
-- The pspec creates `data_ram` at `data:0x200000`–`0x1affffff` (uninitialized, writable) and
-  a volatile `mmio` block at `data:0x1b000000`. The floor is 0x200000 because mapping from 0
-  turned every small constant and struct offset into a reference (over 20,000 of them).
+- The pspec creates `data_ram` at `data:0x200000`–`0x1affffff` (uninitialized, writable).
+  The floor is 0x200000 because mapping from 0 turned every small constant and struct offset
+  into a reference (over 20,000 of them). There is no MMIO block. Registers are written
+  through helpers that take a register number (`0x121b00` is bank `0x121b`) and add it,
+  scaled, to a base pointer the image reads but never sets. So the register addresses aren't
+  visible statically, and mapping the numbers would make each one a false reference.
 
 On a fresh import, `FUN_0030e7f3` decompiles all 162 instructions: four double-buffered queues
 of ordinary `DAT_data_003c0xxx` globals. The "Read-only address is written" warnings are
