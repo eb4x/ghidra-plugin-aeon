@@ -5,6 +5,9 @@
  * Output (one line per address): <hex addr> TAB <length> TAB <mnemonic> TAB <operands>
  * A failure prints length 1, mnemonic ".bad" and no operands.
  *
+ * This row format is also the reference for a planned MCP linear-sweep tool
+ * (ghidra-plugin-mcp friction log f4def5c): tell that session if it changes.
+ *
  * Usage: analyzeHeadless ... -postScript AeonDumpDisasm.java <output file>
  */
 //@category AEON
