@@ -214,6 +214,8 @@ tasks.register('census', Exec) {
 	def fixture = file(project.findProperty('aeonFixture') ?: 'fixtures/sboot.bin')
 	def seeds = file(project.findProperty('aeonSeeds') ?: 'tests/sboot_entries.txt')
 	def base = project.findProperty('aeonBase') ?: '0x0'
+	// Entry-point lists for the firmware fixtures are not in the repo; generate
+	// one with tools/jal_targets.py and pass it as -PaeonSeeds.
 	def output = new ByteArrayOutputStream()
 	standardOutput = output
 	errorOutput = output
@@ -248,7 +250,7 @@ tasks.register('decompileCheck', Exec) {
 	description = 'Decompile every function in a fixture and report failures and warnings'
 	dependsOn tasks.named('smokeExtract')
 	def fixture = file(project.findProperty('aeonFixture') ?: 'fixtures/hdcp.bin')
-	def seeds = file(project.findProperty('aeonSeeds') ?: 'tests/hdcp_entries.txt')
+	def seeds = file(project.findProperty('aeonSeeds') ?: 'tests/sboot_entries.txt')
 	def base = project.findProperty('aeonBase') ?: '0x157000'
 	def args = ['-postScript', 'AeonDecompileCheck.java', "seed=${seeds.absolutePath}"]
 	if (project.hasProperty('aeonShow')) {

@@ -101,7 +101,11 @@ This is what caught the carry semantics. `b.add` sets CY in hardware, so modelli
 that corrupts decompiled 64-bit arithmetic silently rather than failing. Deliberately
 reverting that one line makes 4 of the 26 cases fail, so the test has teeth.
 
-Fixtures come from the `hp-z27k-g3` session and are not committed here.
+Fixtures come from the `hp-z27k-g3` session and are not committed here, and neither are the
+entry-point lists derived from them: generate one with
+`tools/jal_targets.py <listing> <base> <size> strong` and pass it as `-PaeonSeeds`. The only
+seed list in the repo is sBoot's, which is the architectural reset vector rather than anything
+derived from a firmware image.
 
 **The acceptance diff proves decoding, not code coverage.** Both tools sweep linearly, which
 is what makes the comparison fair, but a linear sweep decodes .rodata as instructions too. No

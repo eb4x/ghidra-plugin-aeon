@@ -22,3 +22,7 @@ data/languages/*.sla
 fixtures/
 __pycache__/
 *.pyc
+
+# firmware-derived entry-point lists (regenerate with tools/jal_targets.py)
+tests/hdcp_entries.txt
+tests/stream0_entries.txt
