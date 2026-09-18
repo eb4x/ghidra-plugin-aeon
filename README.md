@@ -132,7 +132,25 @@ standalone register rather than a bit-field of `sr`.
 Recovery needs the table bytes **in the same program**, in a block Ghidra treats as readable.
 A table that lives in a separately imported image will not resolve however correct the spec
 is, so an image whose tables sit outside it should be imported as one program at the right
-base. The HDCP module recovers none of its 31 because its dispatch tables
+base.
+
+Where stream 0's unrecovered tables live is settled, and not where I guessed. I proposed they
+were in another DEFLATE stream that had not been extracted; `hp-z27k-g3` refuted it by
+checking: the payload has exactly five streams, and streams 1-4 all begin `42 4D` ("BM") —
+they are OSD bitmaps, not code or data. The 0x2d0000 region is runtime RAM or something
+stream 0's init copies there, the same situation as the HDCP module's 0xb000828. Those
+dispatches need a live memory dump or the flash table that populates the region; no import
+arrangement will recover them.
+
+The AEON address map, from their pointer histogram, is useful context for anyone importing
+one of these images:
+
+| range | what |
+|---|---|
+| 0x300000 – ~0x3c0000 | main firmware (stream 0); base 0x300000 confirmed |
+| 0x10xxxx – 0x16xxxx | the loadable modules, sharing one address space with the firmware, which calls into them (the HDCP module's 0x157000 sits here) |
+| 0x2d0000 | data/table region, 551 references, populated at runtime |
+| 0x1b06_0000 / 0x1b07_0000 | MMIO and buffers | The HDCP module recovers none of its 31 because its dispatch tables
 live in RAM — the pattern is `b.bgtui` bound check, `b.slli` index, `movhi`+`addi` table base
 of 0xb000828, `b.lwz`, `b.jr` — and that RAM is not part of the module blob. Mapping the RAM
 region (or importing the module alongside the firmware that fills it) is what would recover
