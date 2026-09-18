@@ -1,0 +1,18 @@
+# MStar AEON "R2" built -EL, with data in its own address space.
+#
+# In the MST9U scaler firmware, data addresses reuse the numbers of code
+# addresses without meaning the same bytes: 0x3241e9 is a printf format string
+# where code sits, 0x3305da is both a struct base and a function entry. In one
+# space Ghidra cannot hold both, and the decompiler treats every address inside
+# a function body as read-only, so it folds RAM loads to instruction bytes.
+# Here instruction fetches and branch targets stay in `ram`, and every load and
+# store, the stack included, goes to `data`.
+#
+# Otherwise identical to aeonR2le.slaspec.
+
+define endian=little;
+
+@define DATA "data"
+@define HARVARD ""
+
+@include "aeonR2_common.sinc"

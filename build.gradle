@@ -104,13 +104,15 @@ tasks.register('compileSleigh', Exec) {
 		include '**/*.slaspec'
 		include '**/*.sinc'
 	}
-	outputs.files file('data/languages/aeonR2.sla'), file('data/languages/aeonR2le.sla')
+	outputs.files file('data/languages/aeonR2.sla'), file('data/languages/aeonR2le.sla'),
+		file('data/languages/aeonR2le_harvard.sla')
 	doFirst { sleighSettingsDir.get().asFile.mkdirs() }
 	// support/sleigh ignores GHIDRA_JAVA_OPTIONS, but honours XDG_CONFIG_HOME
 	// (measured by ghidra-plugin-keil8051), which keeps its logs out of
 	// ~/.config/ghidra. Linux-only, which is what this repo builds on.
 	environment 'XDG_CONFIG_HOME', "${sleighSettingsDir.get().asFile}"
-	// -a compiles every .slaspec in the directory: aeonR2 (-EB) and aeonR2le (-EL)
+	// -a compiles every .slaspec in the directory: aeonR2 (-EB), aeonR2le (-EL)
+	// and aeonR2le_harvard (-EL, data in its own space)
 	commandLine "${ghidraInstallDir}/support/sleigh", '-l', '-c', '-n', '-u', '-t', '-f',
 		'-a', 'data/languages'
 }
@@ -271,6 +273,20 @@ headless('emuTestLe',
 	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases_le.json').absolutePath],
 	'AEON EMU OK', 'aeon-emu-le', 'AEON:LE:32:R2')
 
+// The same -EL cases with every load and store in the data space: the results
+// only match if stores and the loads that read them back agree on the space.
+headless('emuTestHarvard',
+	'Replay the vendor simulator\'s -EL test cases through the Harvard language',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases_le.json').absolutePath],
+	'AEON EMU OK', 'aeon-emu-harvard', 'AEON:LE:32:R2-harvard')
+
+headless('smokeTestHarvard',
+	'Decode the committed test program with the Harvard language',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonSmoke.java'],
+	'AEON SMOKE OK', 'aeon-smoke-harvard', 'AEON:LE:32:R2-harvard')
+
 // Census of what flow-based disassembly actually reaches, which is the list
 // that says whether a pseudo-op is worth real p-code. Needs a fixture and its
 // entry points:
@@ -305,6 +321,8 @@ tasks.register('census', Exec) {
 	}
 	doLast {
 		def text = output.toString()
+		// the full headless output, for when the summary is not enough
+		smokeDir.get().file('census.log').asFile.text = text
 		if (!text.contains('AEON CENSUS DONE')) {
 			logger.error(text)
 			throw new GradleException('census: the script did not complete')
@@ -354,6 +372,8 @@ tasks.register('decompileCheck', Exec) {
 	] + args)
 	doLast {
 		def text = output.toString()
+		// the full headless output, for when the summary is not enough
+		smokeDir.get().file('decompileCheck.log').asFile.text = text
 		if (!text.contains('AEON DECOMPILE CHECK DONE')) {
 			logger.error(text)
 			throw new GradleException('decompileCheck: the script did not complete')
@@ -367,7 +387,8 @@ tasks.register('verify') {
 	group = 'Verification'
 	description = 'smokeTest + emuTest, for both languages'
 	dependsOn tasks.named('checkPackaging'), tasks.named('smokeTest'), tasks.named('emuTest'),
-		tasks.named('smokeTestLe'), tasks.named('emuTestLe')
+		tasks.named('smokeTestLe'), tasks.named('emuTestLe'),
+		tasks.named('smokeTestHarvard'), tasks.named('emuTestHarvard')
 }
 
 // ------------------------------------------------------------- acceptance --

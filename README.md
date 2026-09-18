@@ -8,10 +8,11 @@ are two languages:
 | language | data | use for |
 |---|---|---|
 | `AEON:LE:32:R2` | little-endian | MStar firmware (built `-EL`, which the vendor gcc turns into `-EL -EBinst`) |
+| `AEON:LE:32:R2-harvard` | little-endian, in its own `data` space | MStar firmware whose data addresses reuse code addresses (the MST9U main firmware) |
 | `AEON:BE:32:R2` | big-endian | code built `-EB`, the toolchain's default |
 
-They decode identically. They differ in every load and store, and in the order of 64-bit
-register pairs.
+All three decode identically. They differ in every load and store (byte order, and in the
+Harvard variant the address space), and in the order of 64-bit register pairs.
 
 ## What the core looks like
 
@@ -251,14 +252,33 @@ pieces make the difference, and they apply to both languages:
 `./gradlew decompileCheck` lists non-returning functions, so a regression like that shows. Its
 `-PaeonDisable=<analyzer>,…` option switches analyzers off for an A/B comparison.
 
-## Known limit: data addresses that coincide with code
+## Data addresses that coincide with code: the Harvard variant
 
 In the MST9U main firmware, data addresses share their numbers with code, but not their bytes.
 `0x3241e9` is used as a printf format string, but code sits at that address. `0x3c027c` is a
 global next to a real function, and `0x3305da` is both a struct base and a function entry.
-Ghidra's decompiler treats any address inside a function body as read-only. So a load from
-such a global folds to the instruction bytes that happen to be there, and whole branches
-disappear: `FUN_0030e7f3` decompiles to `return 0`. The same thing happens in both languages.
-The fix is a language variant with a separate data space (`AEON:LE:32:R2-harvard`, reviewed
-with `dailydriver`, not built yet), in which loads and stores resolve somewhere other than
-instruction fetches.
+Ghidra's decompiler treats any address inside a function body as read-only
+(`DecompileCallback.encodeFunction` gives the containing range a CONSTANT hole, whatever the
+block permissions). So in one space, a load from such a global folded to the instruction
+bytes that happened to be there. `FUN_0030e7f3` decompiled to `return 0`, with 13 blocks
+removed as unreachable, in both plain languages.
+
+`AEON:LE:32:R2-harvard` keeps instruction fetches and branch targets in `ram` and puts every
+load and store, the stack included, in `data`:
+- The generator names the space of every memory access and refuses to emit a code-space
+  access that isn't a branch target.
+- The cspec has `<global>` over both spaces and a stack pointer in `data`.
+- The pspec creates `data_ram` at `data:0x200000`–`0x1affffff` (uninitialized, writable) and
+  a volatile `mmio` block at `data:0x1b000000`. The floor is 0x200000 because mapping from 0
+  turned every small constant and struct offset into a reference (over 20,000 of them).
+
+On a fresh import, `FUN_0030e7f3` decompiles all 162 instructions: four double-buffered queues
+of ordinary `DAT_data_003c0xxx` globals. The "Read-only address is written" warnings are
+gone, and so are 36 "jump tables" whose one non-fall-through target was garbage read from
+instruction bytes.
+
+What it cannot do yet is show data contents. sBoot places the image's rodata into data space
+at runtime, scattered rather than at one offset, and until that placement is known the data
+space is empty. Strings like the printf formats have no text, and a function pointer stored
+in data gives its indirect call no target. Address data-space locations as `data:0x…`; a
+bare number means code.

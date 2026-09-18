@@ -13,6 +13,18 @@
     <compiler name="default" spec="aeonR2le.cspec" id="default"/>
   </language>
   <language processor="AEON"
+            endian="little"
+            instructionEndian="big"
+            size="32"
+            variant="R2-harvard"
+            version="1.0"
+            slafile="aeonR2le_harvard.sla"
+            processorspec="aeonR2le_harvard.pspec"
+            id="AEON:LE:32:R2-harvard">
+    <description>MStar AEON R2 (aeonR2) built -EL, with loads and stores in a separate data space: for firmware whose data addresses reuse the numbers of code addresses (MST9U scaler)</description>
+    <compiler name="default" spec="aeonR2le_harvard.cspec" id="default"/>
+  </language>
+  <language processor="AEON"
             endian="big"
             size="32"
             variant="R2"

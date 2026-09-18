@@ -1,10 +1,16 @@
 # Everything below the endianness line, shared by aeonR2.slaspec (big-endian
-# data) and aeonR2le.slaspec (little-endian data). Instructions are
-# big-endian in both: the tokens carry endian=big.
+# data), aeonR2le.slaspec (little-endian data) and aeonR2le_harvard.slaspec
+# (little-endian data in its own space). Instructions are big-endian in all
+# three: the tokens carry endian=big. Each slaspec defines DATA, the space
+# every load and store names.
 define alignment=1;
 
 define space ram     type=ram_space     size=4 default;
 define space register type=register_space size=4;
+@ifdef HARVARD
+# Loads and stores (aeonR2le_harvard.slaspec only)
+define space data type=ram_space size=4;
+@endif
 # Special-purpose registers, addressed by index * 4 (see bg.mfspr/bg.mtspr).
 define space spr type=ram_space size=4;
 

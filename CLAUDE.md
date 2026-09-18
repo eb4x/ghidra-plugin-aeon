@@ -245,8 +245,14 @@ A **processor module** first: `data/languages/` holds the SLEIGH language, the `
 `.pspec` and `.cspec`, and `data/patterns/` the function-start patterns. There are two
 languages, differing only in data byte order:
 - `AEON:LE:32:R2` (`aeonR2le.slaspec`, `aeonR2le.cspec`): MStar firmware.
+- `AEON:LE:32:R2-harvard` (`aeonR2le_harvard.*`): the same, with loads, stores and the stack
+  in a separate `data` space, for firmware whose data addresses reuse code addresses.
 - `AEON:BE:32:R2` (`aeonR2.slaspec`, `aeonR2.cspec`).
-Both include `aeonR2_common.sinc` and the generated `aeonR2.sinc`, and share the pspec. The
+All include `aeonR2_common.sinc` and the generated `aeonR2.sinc`. Each slaspec defines
+`DATA`, the space every load and store names (`ram`, or `data` for the Harvard variant). The
+generator refuses to emit a memory access in any other space, except exported branch
+targets (`ram`) and constants. The plain languages share `aeonR2.pspec`; the Harvard variant
+has its own pspec and cspec. The
 one Java class that ships is `src/main/java/aeon/AeonAddressAnalyzer.java`: the AEON constant
 propagation, which claims the processor from the stock one and so must keep doing everything
 the stock one does. `ghidra_scripts/` holds the verification scripts.

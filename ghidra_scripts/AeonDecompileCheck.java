@@ -90,6 +90,7 @@ public class AeonDecompileCheck extends GhidraScript {
 			int resolved = 0;
 			int targets = 0;
 			List<String> unresolvedList = new ArrayList<>();
+		List<String> resolvedList = new ArrayList<>();
 			for (ghidra.program.model.listing.Instruction insn :
 					currentProgram.getListing().getInstructions(true)) {
 				if (!insn.getFlowType().isComputed() || !insn.getFlowType().isJump()) {
@@ -108,6 +109,15 @@ public class AeonDecompileCheck extends GhidraScript {
 				if (n > 1) {
 					resolved++;
 					targets += n;
+					if (resolvedList.size() < 12) {
+						var to = new ArrayList<String>();
+						for (var r : insn.getReferencesFrom()) {
+							if (r.getReferenceType().isJump() && r.getReferenceType().isComputed()) {
+								to.add(r.getToAddress().toString());
+							}
+						}
+						resolvedList.add(insn.getAddress() + "  " + insn + "  -> " + to);
+					}
 				}
 				else if (unresolvedList.size() < 40) {
 					Function fn = getFunctionContaining(insn.getAddress());
@@ -137,6 +147,8 @@ public class AeonDecompileCheck extends GhidraScript {
 			for (String f : failures) {
 				println("    failure: " + f);
 			}
+			println("  --- computed jumps with a recovered table (first 12) ---");
+			resolvedList.forEach(x -> println("    " + x));
 			println("  --- computed jumps with no recovered table ---");
 			unresolvedList.forEach(x -> println("    " + x));
 			println("  --- decompiler warnings by kind ---");

@@ -21,7 +21,7 @@
   </properties>
   <programcounter register="pc"/>
   <!-- Instructions are 2, 3 or 4 bytes and may start at any address. -->
-  <data_space space="ram"/>
+  <data_space space="data"/>
   <default_symbols>
     <!-- OpenRISC-style exception vectors, confirmed in sBoot: 0x100 is the
          reset entry, and 0x200/0x300/0x400/0xc00 each start with the same
@@ -43,6 +43,20 @@
     <symbol name="vector_fp"          address="0xd00" entry="true"/>
     <symbol name="vector_trap"        address="0xe00" entry="true"/>
   </default_symbols>
+  <default_memory_blocks>
+    <!-- Created uninitialized and writable, so the decompiler treats loads as
+         ordinary memory. The data RAM contents are placed at runtime by sBoot,
+         so an import has nothing to fill them with yet. -->
+    <!-- Starts at 0x200000, not 0: with the low 2 MB mapped, every small
+         constant, struct offset and stack adjustment became a data reference
+         (20,359 below 0x10000 on stream 0, 3,755 more below 0x200000, e.g.
+         99999 = 0x1869f). The data seen in use starts near 0x2ce000. -->
+    <memory_block name="data_ram" start_address="data:0x00200000" length="0x1ae00000"
+                  initialized="false" mode="rw"/>
+    <!-- 0x1b06_xxxx / 0x1b07_xxxx register accesses in the MST9U firmware -->
+    <memory_block name="mmio" start_address="data:0x1b000000" length="0x01000000"
+                  initialized="false" mode="rwv"/>
+  </default_memory_blocks>
   <context_data>
     <tracked_set space="ram">
       <!-- r0 is hardwired to zero (verified in aeon-elf-sim). -->
