@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processor_spec>
+  <programcounter register="pc"/>
+  <!-- Instructions are 2, 3 or 4 bytes and may start at any address. -->
+  <data_space space="ram"/>
+  <default_symbols>
+    <!-- OpenRISC-style exception vectors; the R2 reset entry is 0x100. -->
+    <symbol name="vector_reset"       address="0x100" entry="true"/>
+    <symbol name="vector_bus_error"   address="0x200" entry="true"/>
+    <symbol name="vector_data_page"   address="0x300" entry="true"/>
+    <symbol name="vector_insn_page"   address="0x400" entry="true"/>
+    <symbol name="vector_tick_timer"  address="0x500" entry="true"/>
+    <symbol name="vector_alignment"   address="0x600" entry="true"/>
+    <symbol name="vector_illegal"     address="0x700" entry="true"/>
+    <symbol name="vector_external_int" address="0x800" entry="true"/>
+    <symbol name="vector_dtlb_miss"   address="0x900" entry="true"/>
+    <symbol name="vector_itlb_miss"   address="0xa00" entry="true"/>
+    <symbol name="vector_range"       address="0xb00" entry="true"/>
+    <symbol name="vector_syscall"     address="0xc00" entry="true"/>
+    <symbol name="vector_fp"          address="0xd00" entry="true"/>
+    <symbol name="vector_trap"        address="0xe00" entry="true"/>
+  </default_symbols>
+  <context_data>
+    <tracked_set space="ram">
+      <!-- r0 is hardwired to zero (verified in aeon-elf-sim). -->
+      <set name="r0" val="0"/>
+    </tracked_set>
+  </context_data>
+</processor_spec>

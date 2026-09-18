@@ -1,0 +1,805 @@
+b.movi	1			bt.movi
+b.addi	3			bn.addi | bg.addi
+b.xori	1			bn.xori | bg.xori
+b.mov	1			bt.mov
+b.add	1			bn.add
+b.add_s	1			bn.add_s
+b.sub_s	1			bn.sub_s
+b.addp_s	1			bn.addp_s
+b.subp_s	1			bn.subp_s
+b.addc_s	1			bn.addp_s
+b.subc_s	1			bn.subp_s
+b.addcn_s	1			bn.addcn_s
+b.subcn_s	1			bn.subcn_s
+b.addcqq_s	1			bn.addcqq_s
+b.subcqq_s	1			bn.subcqq_s
+b.addcnqq_s	1			bn.addcnqq_s
+b.subcnqq_s	1			bn.subcnqq_s
+b.addc_s_lwq	1			bn.addc_s_lwq
+b.subc_s_lwq	1			bn.subc_s_lwq
+b.addcn_s_lwq	1			bn.addcn_s_lwq
+b.subcn_s_lwq	1			bn.subcn_s_lwq
+b.addc_s_lwqq	1			bn.addc_s_lwqq
+b.subc_s_lwqq	1			bn.subc_s_lwqq
+b.addcn_s_lwqq	1			bn.addcn_s_lwqq
+b.subcn_s_lwqq	1			bn.subcn_s_lwqq
+l.add_s	1			bn.add_s
+l.sub_s	1			bn.sub_s
+l.addp_s	1			bn.addp_s
+l.subp_s	1			bn.subp_s
+l.addc_s	1			bn.addp_s
+l.subc_s	1			bn.subp_s
+l.addcn_s	1			bn.addcn_s
+l.subcn_s	1			bn.subcn_s
+l.addcqq_s	1			bn.addcqq_s
+l.subcqq_s	1			bn.subcqq_s
+l.addcnqq_s	1			bn.addcnqq_s
+l.subcnqq_s	1			bn.subcnqq_s
+l.addc_s_lwq	1			bn.addc_s_lwq
+l.subc_s_lwq	1			bn.subc_s_lwq
+l.addcn_s_lwq	1			bn.addcn_s_lwq
+l.subcn_s_lwq	1			bn.subcn_s_lwq
+l.addc_s_lwqq	1			bn.addc_s_lwqq
+l.subc_s_lwqq	1			bn.subc_s_lwqq
+l.addcn_s_lwqq	1			bn.addcn_s_lwqq
+l.subcn_s_lwqq	1			bn.subcn_s_lwqq
+b.j	3			bt.j | bn.j | bg.j
+b.sb	3			bn.sb | bg.sb
+b.lbz	3			bn.lbz | bg.lbz
+b.lbs	3			bn.lbs | bg.lbs
+b.sh	3			bn.sh | bg.sh
+b.lhz	3			bn.lhz | bg.lhz
+b.lhs	3			bn.lhs | bg.lhs
+b.sw	3			bn.sw | bg.sw
+b.lwz	3			bn.lwz | bg.lwz
+b.pclwz	3			bn.pclwz | bg.pclwz
+b.andi	3			bn.andi | bg.andi
+b.ori	3			bn.ori | bg.ori
+b.sfeqi	3			bn.sfeqi | bg.sfeqi
+b.sfnei	3			bn.sfnei | bg.sfnei
+b.sfgtsi	3			bn.sfgtsi | bg.sfgtsi
+b.sfgtui	3			bn.sfgtui | bg.sfgtui
+b.sflesi	3			bn.sflesi | bg.sflesi
+b.sfleui	3			bn.sfleui | bg.sfleui
+b.sfeq	1			bn.sfeq
+b.sfne	1			bn.sfne
+b.sfges	0	rA,rB	rB,rA	bn.sfles
+b.sfgeu	0	rA,rB	rB,rA	bn.sfleu
+b.sfgts	1			bn.sfgts
+b.sfgtu	1			bn.sfgtu
+b.sfles	1			bn.sfles
+b.sfleu	1			bn.sfleu
+b.sflts	0	rA,rB	rB,rA	bn.sfgts
+b.sfltu	0	rA,rB	rB,rA	bn.sfgtu
+bn.sflts	0	rA,rB	rB,rA	bn.sfgts
+bn.sfltu	0	rA,rB	rB,rA	bn.sfgtu
+b.extbz	1			bn.extbz
+b.extbs	1			bn.extbs
+b.exthz	1			bn.exthz
+b.exths	1			bn.exths
+b.ff1	1			bn.ff1
+b.fl1	1			bn.fl1
+b.exp	1			bn.exp
+b.exp16	1			bn.exp16
+b.abs	1			bg.abs
+b.count1	1			bn.count1
+b.clz	1			bn.clz
+b.bitrev	1			bn.bitrev
+b.swab	1			bn.swab
+b.sgn	1			bn.sgn
+b.sgnz1	1			bn.sgnz1
+b.sgnz_1	1			bn.sgnz_1
+b.sgnp	1			bn.sgnp
+b.sgnpz1	1			bn.sgnpz1
+b.sgnpz_1	1			bn.sgnpz_1
+b.crc_le	1			bn.crc_le
+b.pack_s	1			bn.pack_s
+b.conjc	1			bn.conjc
+b.absc	1			bg.absc
+b.chk_lu	1			bg.chk_lu
+b.chk_ll	1			bg.chk_ll
+l.chk_lu	1			bg.chk_lu
+l.chk_ll	1			bg.chk_ll
+b.beqi	3			bn.beqi | bg.beqi
+b.bnei	3			bn.bnei | bg.bnei
+b.bgtsi	3			bn.bgtsi | bg.bgtsi
+b.blesi	3			bn.blesi | bg.blesi
+b.bf	3			bn.bf | bg.bf
+b.bnf	3			bn.bnf | bg.bnf
+b.entri	1			bn.entri
+b.reti	1			bn.reti
+b.rtnei	1			bn.rtnei
+b.cnreti	1			bn.cnreti
+b.creti	1			bn.creti
+b.return	1			bt.return
+b.jalr	1			bt.jalr
+b.jr	1			bt.jr
+b.jal	3			bn.jal | bg.jal
+b.mlwz	1			bn.mlwz
+b.msw	1			bn.msw
+b.and	1			bn.and
+b.nand	1			bn.nand
+b.not	1	rD,rA	rD,rA,rA	bn.nand
+bn.not	0	rD,rA	rD,rA,rA	bn.nand
+b.or	1			bn.or
+b.xor	1			bn.xor
+b.sub	1			bn.sub
+b.sll	1			bn.sll
+b.srl	1			bn.srl
+b.sra	1			bn.sra
+b.ror	1			bn.ror
+b.cmov	1			bn.cmov
+b.cmovri	1			bn.cmovri
+b.cmovir	1			bn.cmovir
+b.cmovii	1			bn.cmovii
+b.mul	1			bn.mul
+b.mulu	1			bn.mulu
+b.div	1			bn.div
+b.divu	1			bn.divu
+b.addc	1			bn.addc
+b.subb	1			bn.subb
+b.flb	1			bn.flb
+b.andn	1			bn.andn
+b.slli	1			bn.slli
+b.srli	1			bn.srli
+b.srai	1			bn.srai
+b.rori	1			bn.rori
+b.max	1			bg.max
+b.maxu	1			bg.maxu
+b.min	1			bg.min
+b.minu	1			bg.minu
+b.btb	1			bg.btb
+b.loop	1			bg.loop
+b.loopi	1			bg.loopi
+b.amac	1			bg.amac
+b.amsb	1			bg.amsb
+b.amul	1			bg.amul
+b.amul16c	1			bg.amul16c
+b.amul16cn	1			bg.amul16cn
+b.amulqq	1			bg.amulqq
+b.amul16qq	1			bg.amul16qq
+b.amul16cqq	1			bg.amul16cqq
+b.amul16cnqq	1			bg.amul16cnqq
+b.amul16q	1			bg.amul16q
+b.amul16cq	1			bg.amul16cq
+b.amul16cnq	1			bg.amul16cnq
+b.amuldq	1			bg.amuldq
+b.amul16dq	1			bg.amul16dq
+b.amul16cdq	1			bg.amul16cdq
+b.amul16cndq	1			bg.amul16cndq
+b.amul_lwqq	1			bg.amul_lwqq
+b.amul16_lhqq	1			bg.amul16_lhqq
+b.amul16c_lwqq	1			bg.amul16c_lwqq
+b.amul16cn_lwqq	1			bg.amul16cn_lwqq
+b.amul_lwq	1			bg.amul_lwq
+b.amul16_lhq	1			bg.amul16_lhq
+b.amul16c_lwq	1			bg.amul16c_lwq
+b.amul16cn_lwq	1			bg.amul16cn_lwq
+b.amul_lwdq	1			bg.amul_lwdq
+b.amul16_lhdq	1			bg.amul16_lhdq
+b.amul16c_lwdq	1			bg.amul16c_lwdq
+b.amul16cn_lwdq	1			bg.amul16cn_lwdq
+b.amac16c	1			bg.amac16c
+b.amac16cn	1			bg.amac16cn
+b.amacqq	1			bg.amacqq
+b.amac16qq	1			bg.amac16qq
+b.amac16cqq	1			bg.amac16cqq
+b.amac16cnqq	1			bg.amac16cnqq
+b.amac16q	1			bg.amac16q
+b.amac16cq	1			bg.amac16cq
+b.amac16cnq	1			bg.amac16cnq
+b.amacdq	1			bg.amacdq
+b.amac16dq	1			bg.amac16dq
+b.amac16cdq	1			bg.amac16cdq
+b.amac16cndq	1			bg.amac16cndq
+b.amac_lwqq	1			bg.amac_lwqq
+b.amac16_lhqq	1			bg.amac16_lhqq
+b.amac16c_lwqq	1			bg.amac16c_lwqq
+b.amac16cn_lwqq	1			bg.amac16cn_lwqq
+b.amac_lwq	1			bg.amac_lwq
+b.amac16_lhq	1			bg.amac16_lhq
+b.amac16c_lwq	1			bg.amac16c_lwq
+b.amac16cn_lwq	1			bg.amac16cn_lwq
+b.amac_lwdq	1			bg.amac_lwdq
+b.amac16_lhdq	1			bg.amac16_lhdq
+b.amac16c_lwdq	1			bg.amac16c_lwdq
+b.amac16cn_lwdq	1			bg.amac16cn_lwdq
+b.amsb16c	1			bg.amsb16c
+b.amsb16cn	1			bg.amsb16cn
+b.amsbqq	1			bg.amsbqq
+b.amsb16qq	1			bg.amsb16qq
+b.amsb16cqq	1			bg.amsb16cqq
+b.amsb16cnqq	1			bg.amsb16cnqq
+b.amsb16q	1			bg.amsb16q
+b.amsb16cq	1			bg.amsb16cq
+b.amsb16cnq	1			bg.amsb16cnq
+b.amsbdq	1			bg.amsbdq
+b.amsb16dq	1			bg.amsb16dq
+b.amsb16cdq	1			bg.amsb16cdq
+b.amsb16cndq	1			bg.amsb16cndq
+b.amsb_lwqq	1			bg.amsb_lwqq
+b.amsb16_lhqq	1			bg.amsb16_lhqq
+b.amsb16c_lwqq	1			bg.amsb16c_lwqq
+b.amsb16cn_lwqq	1			bg.amsb16cn_lwqq
+b.amsb_lwq	1			bg.amsb_lwq
+b.amsb16_lhq	1			bg.amsb16_lhq
+b.amsb16c_lwq	1			bg.amsb16c_lwq
+b.amsb16cn_lwq	1			bg.amsb16cn_lwq
+b.amsb_lwdq	1			bg.amsb_lwdq
+b.amsb16_lhdq	1			bg.amsb16_lhdq
+b.amsb16c_lwdq	1			bg.amsb16c_lwdq
+b.amsb16cn_lwdq	1			bg.amsb16cn_lwdq
+b.amacu	1			bg.amacu
+b.amsbu	1			bg.amsbu
+b.amulu	1			bg.amulu
+b.amac_wl	1			bg.amac_wl
+b.amsb_wl	1			bg.amsb_wl
+b.amul_wl	1			bg.amul_wl
+b.amac_wh	1			bg.amac_wh
+b.amsb_wh	1			bg.amsb_wh
+b.amul_wh	1			bg.amul_wh
+b.amac_ll	1			bg.amac_ll
+b.amsb_ll	1			bg.amsb_ll
+b.amul_ll	1			bg.amul_ll
+b.amac_lh	1			bg.amac_lh
+b.amsb_lh	1			bg.amsb_lh
+b.amul_lh	1			bg.amul_lh
+b.amac_hl	1			bg.amac_hl
+b.amsb_hl	1			bg.amsb_hl
+b.amul_hl	1			bg.amul_hl
+b.amac_hh	1			bg.amac_hh
+b.amsb_hh	1			bg.amsb_hh
+b.amul_hh	1			bg.amul_hh
+l.amac_ll	1			bg.amac_ll
+l.amsb_ll	1			bg.amsb_ll
+l.amul_ll	1			bg.amul_ll
+l.amac_lh	1			bg.amac_lh
+l.amsb_lh	1			bg.amsb_lh
+l.amul_lh	1			bg.amul_lh
+l.amac_hl	1			bg.amac_hl
+l.amsb_hl	1			bg.amsb_hl
+l.amul_hl	1			bg.amul_hl
+l.amac_hh	1			bg.amac_hh
+l.amsb_hh	1			bg.amsb_hh
+l.amul_hh	1			bg.amul_hh
+b.amacw	1			bg.amacw
+b.amacrq	1			bg.amacrq
+b.amacwq	1			bg.amacwq
+b.amacwq2	1			bg.amacwq2
+b.amacwqaddr	1			bg.amacwqaddr
+b.amacwq2addr	1			bg.amacwq2addr
+b.amacwqaddr_length	1			bg.amacwqaddr_length
+b.pamacrq	1			bg.pamacrq
+b.pamacwq	1			bg.pamacwq
+b.pamacwq2	1			bg.pamacwq2
+b.pamacwqaddr	1			bg.pamacwqaddr
+b.pamacwq2addr	1			bg.pamacwq2addr
+b.pamacwqaddr_length	1			bg.pamacwqaddr_length
+b.amadd	1			bg.amadd
+b.amsub	1			bg.amsub
+b.pamac	1			bg.pamac
+b.amacq	1			bg.amacq
+b.amsbq	1			bg.amsbq
+b.amulq	1			bg.amulq
+b.amacqu	1			bg.amacqu
+b.amsbqu	1			bg.amsbqu
+b.amulqu	1			bg.amulqu
+b.amacq_wl	1			bg.amacq_wl
+b.amsbq_wl	1			bg.amsbq_wl
+b.amulq_wl	1			bg.amulq_wl
+b.amacq_wh	1			bg.amacq_wh
+b.amsbq_wh	1			bg.amsbq_wh
+b.amulq_wh	1			bg.amulq_wh
+b.amacq_ll	1			bg.amacq_ll
+b.amsbq_ll	1			bg.amsbq_ll
+b.amulq_ll	1			bg.amulq_ll
+b.amacq_lh	1			bg.amacq_lh
+b.amsbq_lh	1			bg.amsbq_lh
+b.amulq_lh	1			bg.amulq_lh
+b.amacq_hl	1			bg.amacq_hl
+b.amsbq_hl	1			bg.amsbq_hl
+b.amulq_hl	1			bg.amulq_hl
+b.amacq_hh	1			bg.amacq_hh
+b.amsbq_hh	1			bg.amsbq_hh
+b.amulq_hh	1			bg.amulq_hh
+l.amacq_ll	1			bg.amacq_ll
+l.amsbq_ll	1			bg.amsbq_ll
+l.amulq_ll	1			bg.amulq_ll
+l.amacq_lh	1			bg.amacq_lh
+l.amsbq_lh	1			bg.amsbq_lh
+l.amulq_lh	1			bg.amulq_lh
+l.amacq_hl	1			bg.amacq_hl
+l.amsbq_hl	1			bg.amsbq_hl
+l.amulq_hl	1			bg.amulq_hl
+l.amacq_hh	1			bg.amacq_hh
+l.amsbq_hh	1			bg.amsbq_hh
+l.amulq_hh	1			bg.amulq_hh
+b.bsl	1			bn.bsl
+b.bsa	1			bn.bsa
+b.bsa_s	1			bn.bsa_s
+b.dsl	1			bn.dsl
+b.dsr	1			bn.dsr
+b.muladdh	1			bn.muladdh
+b.muladdhx	1			bn.muladdhx
+b.mulsubh	1			bn.mulsubh
+b.mulsubhx	1			bn.mulsubhx
+b.sat	1			bn.sat
+b.satu	1			bn.satu
+b.satsu	1			bn.satsu
+b.satus	1			bn.satus
+b.addsf	1			bn.addsf
+b.subsf	1			bn.subsf
+b.mulsf	1			bn.mulsf
+b.divsf	1			bn.divsf
+b.remsf	1			bn.remsf
+b.adddf	1			bn.adddf
+b.subdf	1			bn.subdf
+b.muldf	1			bn.muldf
+b.divdf	1			bn.divdf
+b.remdf	1			bn.remdf
+b.sfeqsf	1			bn.sfeqsf
+b.sflesf	1			bn.sflesf
+b.sfeqdf	1			bn.sfeqdf
+b.sfledf	1			bn.sfledf
+b.sfnesf	1			bn.sfnesf
+b.sfgtsf	1			bn.sfgtsf
+b.sfnedf	1			bn.sfnedf
+b.sfgtdf	1			bn.sfgtdf
+b.sfltsf	0	rA,rB	rB,rA	bn.sfgtsf
+b.sfgesf	0	rA,rB	rB,rA	bn.sflesf
+b.sfltdf	0	rA,rB	rB,rA	bn.sfgtdf
+b.sfgedf	0	rA,rB	rB,rA	bn.sfledf
+b.lhq	1			bg.lhq
+b.lhqq	1			bg.lhqq
+b.lwq	1			bg.lwq
+b.lwqq	1			bg.lwqq
+b.maddsf	1			bn.maddsf
+b.madddf	1			bn.madddf
+b.prefetch	1			bg.prefetch
+b.syncwritebuffer	1			bg.syncwritebuffer
+b.flush_line	1			bg.flush_line
+b.flush	1			bg.flush
+b.invalidate_line	1			bg.invalidate_line
+b.invalidate	1			bg.invalidate
+b.flush_invalidate	1			bg.flush_invalidate
+b.flush_invalidate_line	1			bg.flush_invalidate_line
+b.dma_op	1			bg.dma_op
+b.fft	1			bg.fft
+b.fftr	1			bg.fftr
+b.ifft	1			bg.ifft
+b.ifftr	1			bg.ifftr
+b.ldww	1			bg.ldww
+b.ldwwx	1			bg.ldwwx
+b.ldww2	1			bg.ldww2
+b.ldww2x	1			bg.ldww2x
+b.amacr	1			bg.amacr
+b.amacr_ex	1			bg.amacr_ex
+b.amacr_exr	1			bg.amacr_exr
+b.amacr40_32	1			bg.amacr40_32
+b.amacr40_32r	1			bg.amacr40_32r
+b.amacr40r_32	1			bg.amacr40r_32
+b.amacr40r_32r	1			bg.amacr40r_32r
+b.amacr40_16	1			bg.amacr40_16
+b.amacr40_16r	1			bg.amacr40_16r
+b.amacr40r_16	1			bg.amacr40r_16
+b.amacr40r_16r	1			bg.amacr40r_16r
+b.amacrc40_16	1			bg.amacrc40_16
+b.amacrc40_16r	1			bg.amacrc40_16r
+b.amacrc40r_16	1			bg.amacrc40r_16
+b.amacrc40r_16r	1			bg.amacrc40r_16r
+b.divl	1			bg.divl
+b.divlu	1			bg.divlu
+b.divlr	1			bg.divlr
+b.divlru	1			bg.divlru
+b.ext	1			bg.ext
+b.extu	1			bg.extu
+b.exti	1			bg.exti
+b.extui	1			bg.extui
+b.extr	1			bg.extr
+b.extru	1			bg.extru
+b.extri	1			bg.extri
+b.extrui	1			bg.extrui
+b.dep	1			bg.dep
+b.depi	1			bg.depi
+b.srlri	1			bn.srlri
+b.srari	1			bn.srari
+b.srarzi	1			bn.srarzi
+b.dsli	1			bn.dsli
+b.dsri	1			bn.dsri
+b.maxi	1			bg.maxi
+b.mini	1			bg.mini
+b.maxui	1			bg.maxui
+b.minui	1			bg.minui
+b.bgtui	3			bn.bgtui | bg.bgtui
+b.bleui	3			bn.bleui | bg.bleui
+b.beq	3			bg.beq
+b.bne	3			bg.bne
+b.bges	2	rA,rB,&	rB,rA,&	bg.bles
+b.bgts	3			bg.bgts
+b.bgeu	2	rA,rB,&	rB,rA,&	bg.bleu
+b.bgtu	3			bg.bgtu
+b.bles	3			bg.bles
+b.blts	2	rA,rB,&	rB,rA,&	bg.bgts
+b.bleu	3			bg.bleu
+b.bltu	2	rA,rB,&	rB,rA,&	bg.bgtu
+bg.bges	0	rA,rB,&	rB,rA,&	bg.bles
+bg.blts	0	rA,rB,&	rB,rA,&	bg.bgts
+bg.bgeu	0	rA,rB,&	rB,rA,&	bg.bleu
+bg.bltu	0	rA,rB,&	rB,rA,&	bg.bgtu
+b.mfspr	1			bg.mfspr
+b.mtspr	1			bg.mtspr
+b.mfspri	1			bg.mfspr1
+b.mtspri	1			bg.mtspr1
+b.mfspr1	1			bg.mfspr1
+b.mtspr1	1			bg.mtspr1
+b.getpcofs	1			bg.getpcofs
+b.addpcofs	1			bg.addpcofs
+l.getpcofs	1			bg.getpcofs
+l.addpcofs	1			bg.addpcofs
+b.stack	1			bt.stack
+b.nop	3			bt.nop | bn.nop
+b.rfe	1			bt.rfe
+b.trap	1			bt.trap
+b.ei	1			bt.ei
+b.di	1			bt.di
+b.em	1			bt.em
+b.dm	1			bt.dm
+b.sys	1			bt.sys
+b.wait	1			bt.wait
+b.synci	1			bt.synci
+b.syncd	1			bt.syncd
+b.pop	1			bt.pop
+b.push	1			bt.push
+b.addic	0			bg.addic
+b.muli	1			bg.muli
+b.movhi	3			bt.movhi | bn.movhi | bg.movhi
+l.movi	0			bt.movi
+l.addi	2			bn.addi | bg.addi
+l.xori	0			bg.xori
+l.mov	0			bt.mov
+l.add	0			bn.add
+l.j	2			bt.j | bn.j | bg.j
+l.sb	2			bn.sb | bg.sb
+l.lbz	2			bn.lbz | bg.lbz
+l.lbs	2			bn.lbs | bg.lbs
+l.sh	2			bn.sh | bg.sh
+l.lhz	2			bn.lhz | bg.lhz
+l.lhs	2			bn.lhs | bg.lhs
+l.sw	2			bn.sw | bg.sw
+l.lwz	2			bn.lwz | bg.lwz
+l.pclwz	2			bn.pclwz | bg.pclwz
+l.cmov	0			bn.cmov
+l.cmovri	0			bn.cmovri
+l.cmovir	0			bn.cmovir
+l.cmovii	0			bn.cmovii
+l.andi	2			bn.andi | bg.andi
+l.ori	2			bn.ori | bg.ori
+l.sfeqi	2			bn.sfeqi | bg.sfeqi
+l.sfnei	2			bn.sfnei | bg.sfnei
+l.sfgtsi	2			bn.sfgtsi | bg.sfgtsi
+l.sfgtui	2			bn.sfgtui | bg.sfgtui
+l.sflesi	2			bn.sflesi | bg.sflesi
+l.sfleui	2			bn.sfleui | bg.sfleui
+l.sfeq	0			bn.sfeq
+l.sfne	0			bn.sfne
+l.sfges	0	rA,rB	rB,rA	bn.sfles
+l.sfgeu	0	rA,rB	rB,rA	bn.sfleu
+l.sfgts	0			bn.sfgts
+l.sfgtu	0			bn.sfgtu
+l.sfles	0			bn.sfles
+l.sfleu	0			bn.sfleu
+l.sflts	0	rA,rB	rB,rA	bn.sfgts
+l.sfltu	0	rA,rB	rB,rA	bn.sfgtu
+l.extbz	0			bn.extbz
+l.extbs	0			bn.extbs
+l.exthz	0			bn.exthz
+l.exths	0			bn.exths
+l.ff1	0			bn.ff1
+l.fl1	0			bn.fl1
+l.exp	0			bn.exp
+l.exp16	0			bn.exp16
+l.abs	0			bg.abs
+l.count1	0			bn.count1
+l.clz	0			bn.clz
+l.beqi	2			bn.beqi | bg.beqi | bw.sfeqi_bf | bx.sfeqi_bf
+l.bnei	2			bn.bnei | bg.bnei | bw.sfnei_bf | bx.sfnei_bf
+l.bgtsi	2			bn.bgtsi | bg.bgtsi | bw.sfgtsi_bf | bx.sfgtsi_bf
+l.blesi	2			bn.blesi | bg.blesi | bw.sflesi_bf | bx.sflesi_bf
+l.jr	0			bt.jr
+l.bf	2			bn.bf | bg.bf
+l.bnf	2			bn.bnf | bg.bnf
+l.entri	0			bn.entri
+l.reti	0			bn.reti
+l.rtnei	0			bn.rtnei
+l.jal	2			bn.jal | bg.jal
+l.jalr	0			bt.jalr
+l.mlwz	0			bn.mlwz
+l.msw	0			bn.msw
+l.and	0			bn.and
+l.nand	0			bn.nand
+l.or	0			bn.or
+l.xor	0			bn.xor
+l.addc	0			bn.addc
+l.sub	0			bn.sub
+l.subb	0			bn.subb
+l.sll	0			bn.sll
+l.srl	0			bn.srl
+l.sra	0			bn.sra
+l.ror	0			bn.ror
+l.mul	0			bn.mul
+l.mulu	0			bn.mulu
+l.div	0			bn.div
+l.divu	0			bn.divu
+l.slli	0			bn.slli
+l.srli	0			bn.srli
+l.srai	0			bn.srai
+l.rori	0			bn.rori
+l.max	1			bg.max
+l.maxu	1			bg.maxu
+l.min	1			bg.min
+l.minu	1			bg.minu
+l.btb	1			bg.btb
+l.loop	1			bg.loop
+l.loopi	1			bg.loopi
+l.amac	1			bg.amac
+l.amsb	1			bg.amsb
+l.amul	1			bg.amul
+l.amul16c	1			bg.amul16c
+l.amul16cn	1			bg.amul16cn
+l.amulqq	1			bg.amulqq
+l.amul16qq	1			bg.amul16qq
+l.amul16cqq	1			bg.amul16cqq
+l.amul16cnqq	1			bg.amul16cnqq
+l.amul16q	1			bg.amul16q
+l.amul16cq	1			bg.amul16cq
+l.amul16cnq	1			bg.amul16cnq
+l.amuldq	1			bg.amuldq
+l.amul16dq	1			bg.amul16dq
+l.amul16cdq	1			bg.amul16cdq
+l.amul16cndq	1			bg.amul16cndq
+l.amul_lwqq	1			bg.amul_lwqq
+l.amul16_lhqq	1			bg.amul16_lhqq
+l.amul16c_lwqq	1			bg.amul16c_lwqq
+l.amul16cn_lwqq	1			bg.amul16cn_lwqq
+l.amul_lwq	1			bg.amul_lwq
+l.amul16_lhq	1			bg.amul16_lhq
+l.amul16c_lwq	1			bg.amul16c_lwq
+l.amul16cn_lwq	1			bg.amul16cn_lwq
+l.amul_lwdq	1			bg.amul_lwdq
+l.amul16_lhdq	1			bg.amul16_lhdq
+l.amul16c_lwdq	1			bg.amul16c_lwdq
+l.amul16cn_lwdq	1			bg.amul16cn_lwdq
+l.amac16c	1			bg.amac16c
+l.amac16cn	1			bg.amac16cn
+l.amacqq	1			bg.amacqq
+l.amac16qq	1			bg.amac16qq
+l.amac16cqq	1			bg.amac16cqq
+l.amac16cnqq	1			bg.amac16cnqq
+l.amac16q	1			bg.amac16q
+l.amac16cq	1			bg.amac16cq
+l.amac16cnq	1			bg.amac16cnq
+l.amacdq	1			bg.amacdq
+l.amac16dq	1			bg.amac16dq
+l.amac16cdq	1			bg.amac16cdq
+l.amac16cndq	1			bg.amac16cndq
+l.amac_lwqq	1			bg.amac_lwqq
+l.amac16_lhqq	1			bg.amac16_lhqq
+l.amac16c_lwqq	1			bg.amac16c_lwqq
+l.amac16cn_lwqq	1			bg.amac16cn_lwqq
+l.amac_lwq	1			bg.amac_lwq
+l.amac16_lhq	1			bg.amac16_lhq
+l.amac16c_lwq	1			bg.amac16c_lwq
+l.amac16cn_lwq	1			bg.amac16cn_lwq
+l.amac_lwdq	1			bg.amac_lwdq
+l.amac16_lhdq	1			bg.amac16_lhdq
+l.amac16c_lwdq	1			bg.amac16c_lwdq
+l.amac16cn_lwdq	1			bg.amac16cn_lwdq
+l.amsb16c	1			bg.amsb16c
+l.amsb16cn	1			bg.amsb16cn
+l.amsbqq	1			bg.amsbqq
+l.amsb16qq	1			bg.amsb16qq
+l.amsb16cqq	1			bg.amsb16cqq
+l.amsb16cnqq	1			bg.amsb16cnqq
+l.amsb16q	1			bg.amsb16q
+l.amsb16cq	1			bg.amsb16cq
+l.amsb16cnq	1			bg.amsb16cnq
+l.amsbdq	1			bg.amsbdq
+l.amsb16dq	1			bg.amsb16dq
+l.amsb16cdq	1			bg.amsb16cdq
+l.amsb16cndq	1			bg.amsb16cndq
+l.amsb_lwqq	1			bg.amsb_lwqq
+l.amsb16_lhqq	1			bg.amsb16_lhqq
+l.amsb16c_lwqq	1			bg.amsb16c_lwqq
+l.amsb16cn_lwqq	1			bg.amsb16cn_lwqq
+l.amsb_lwq	1			bg.amsb_lwq
+l.amsb16_lhq	1			bg.amsb16_lhq
+l.amsb16c_lwq	1			bg.amsb16c_lwq
+l.amsb16cn_lwq	1			bg.amsb16cn_lwq
+l.amsb_lwdq	1			bg.amsb_lwdq
+l.amsb16_lhdq	1			bg.amsb16_lhdq
+l.amsb16c_lwdq	1			bg.amsb16c_lwdq
+l.amsb16cn_lwdq	1			bg.amsb16cn_lwdq
+l.amacu	1			bg.amacu
+l.amsbu	1			bg.amsbu
+l.amulu	1			bg.amulu
+l.amac_wl	1			bg.amac_wl
+l.amsb_wl	1			bg.amsb_wl
+l.amul_wl	1			bg.amul_wl
+l.amac_wh	1			bg.amac_wh
+l.amsb_wh	1			bg.amsb_wh
+l.amul_wh	1			bg.amul_wh
+l.amacw	1			bg.amacw
+l.amacrq	1			bg.amacrq
+l.amacwq	1			bg.amacwq
+l.amacwq2	1			bg.amacwq2
+l.amacwqaddr	1			bg.amacwqaddr
+l.amacwq2addr	1			bg.amacwq2addr
+l.amacwqaddr_length	1			bg.amacwqaddr_length
+l.pamacrq	1			bg.pamacrq
+l.pamacwq	1			bg.pamacwq
+l.pamacwq2	1			bg.pamacwq2
+l.pamacwqaddr	1			bg.pamacwqaddr
+l.pamacwq2addr	1			bg.pamacwq2addr
+l.pamacwqaddr_length	1			bg.pamacwqaddr_length
+l.amadd	1			bg.amadd
+l.amsub	1			bg.amsub
+l.pamac	1			bg.pamac
+l.amacq	1			bg.amacq
+l.amsbq	1			bg.amsbq
+l.amulq	1			bg.amulq
+l.amacqu	1			bg.amacqu
+l.amsbqu	1			bg.amsbqu
+l.amulqu	1			bg.amulqu
+l.amacq_wl	1			bg.amacq_wl
+l.amsbq_wl	1			bg.amsbq_wl
+l.amulq_wl	1			bg.amulq_wl
+l.amacq_wh	1			bg.amacq_wh
+l.amsbq_wh	1			bg.amsbq_wh
+l.amulq_wh	1			bg.amulq_wh
+l.bsl	1			bn.bsl
+l.bsa	1			bn.bsa
+l.dsl	1			bn.dsl
+l.dsr	1			bn.dsr
+l.muladdh	1			bn.muladdh
+l.muladdhx	1			bn.muladdhx
+l.mulsubh	1			bn.mulsubh
+l.mulsubhx	1			bn.mulsubhx
+l.sat	1			bn.sat
+l.satu	1			bn.satu
+l.satsu	1			bn.satsu
+l.satus	1			bn.satus
+l.satdep	1			bg.satdep
+l.satdepu	1			bg.satdepu
+l.satdepi	1			bg.satdepi
+l.satdepui	1			bg.satdepui
+l.addsf	1			bn.addsf
+l.subsf	1			bn.subsf
+l.mulsf	1			bn.mulsf
+l.divsf	1			bn.divsf
+l.remsf	1			bn.remsf
+l.adddf	1			bn.adddf
+l.subdf	1			bn.subdf
+l.muldf	1			bn.muldf
+l.divdf	1			bn.divdf
+l.remdf	1			bn.remdf
+lf.add.s	1			bn.addsf
+lf.sub.s	1			bn.subsf
+lf.itof.s	1			bn.i2sf
+lf.ftoi.s	1			bn.sf2i
+lf.mul.s	1			bn.mulsf
+lf.mac.s	1			bn.maddsf
+lf.div.s	1			bn.divsf
+lf.rem.s	1			bn.remsf
+l.sfeqsf	1			bn.sfeqsf
+l.sflesf	1			bn.sflesf
+l.sfeqdf	1			bn.sfeqdf
+l.sfledf	1			bn.sfledf
+l.sfnesf	1			bn.sfnesf
+l.sfgtsf	1			bn.sfgtsf
+l.sfnedf	1			bn.sfnedf
+l.sfgtdf	1			bn.sfgtdf
+lf.sfeq.s	1			bn.sfeqsf
+lf.sfle.s	1			bn.sflesf
+lf.sfeq.d	1			bn.sfeqdf
+lf.sfle.d	1			bn.sfledf
+lf.sfne.s	1			bn.sfnesf
+lf.sfgt.s	1			bn.sfgtsf
+lf.sfne.d	1			bn.sfnedf
+lf.sfgt.d	1			bn.sfgtdf
+l.sfltsf	0	rA,rB	rB,rA	bn.sfgtsf
+l.sfgesf	0	rA,rB	rB,rA	bn.sflesf
+l.sfltdf	0	rA,rB	rB,rA	bn.sfgtdf
+l.sfgedf	0	rA,rB	rB,rA	bn.sfledf
+l.lhq	1			bg.lhq
+l.lhqq	1			bg.lhqq
+l.lwq	1			bg.lwq
+l.lwqq	1			bg.lwqq
+l.maddsf	1			bn.maddsf
+l.madddf	1			bn.madddf
+l.prefetch	1			bg.prefetch
+l.syncwritebuffer	1			bg.syncwritebuffer
+l.flush_line	1			bg.flush_line
+l.flush	1			bg.flush
+l.invalidate_line	1			bg.invalidate_line
+l.invalidate	1			bg.invalidate
+l.flush_invalidate	1			bg.flush_invalidate
+l.flush_invalidate_line	1			bg.flush_invalidate_line
+l.dma_op	1			bg.dma_op
+l.fft	1			bg.fft
+l.fftr	1			bg.fftr
+l.ifft	1			bg.ifft
+l.ifftr	1			bg.ifftr
+l.ldww	1			bg.ldww
+l.ldwwx	1			bg.ldwwx
+l.ldww2	1			bg.ldww2
+l.ldww2x	1			bg.ldww2x
+l.amacr	1			bg.amacr
+l.amacr_ex	1			bg.amacr_ex
+l.amacr_exr	1			bg.amacr_exr
+l.amacr40_32	1			bg.amacr40_32
+l.amacr40_32r	1			bg.amacr40_32r
+l.amacr40r_32	1			bg.amacr40r_32
+l.amacr40r_32r	1			bg.amacr40r_32r
+l.amacr40_16	1			bg.amacr40_16
+l.amacr40_16r	1			bg.amacr40_16r
+l.amacr40r_16	1			bg.amacr40r_16
+l.amacr40r_16r	1			bg.amacr40r_16r
+l.amacrc40_16	1			bg.amacrc40_16
+l.amacrc40_16r	1			bg.amacrc40_16r
+l.amacrc40r_16	1			bg.amacrc40r_16
+l.amacrc40r_16r	1			bg.amacrc40r_16r
+l.divl	1			bg.divl
+l.divlu	1			bg.divlu
+l.divlr	1			bg.divlr
+l.divlru	1			bg.divlru
+l.ext	1			bg.ext
+l.extu	1			bg.extu
+l.exti	1			bg.exti
+l.extui	1			bg.extui
+l.extr	1			bg.extr
+l.extru	1			bg.extru
+l.extri	1			bg.extri
+l.extrui	1			bg.extrui
+l.dep	1			bg.dep
+l.depi	1			bg.depi
+l.srlri	1			bn.srlri
+l.srari	1			bn.srari
+l.srarzi	1			bn.srarzi
+l.dsli	1			bn.dsli
+l.dsri	1			bn.dsri
+l.maxi	1			bg.maxi
+l.mini	1			bg.mini
+l.maxui	1			bg.maxui
+l.minui	1			bg.minui
+l.bgtui	2			bn.bgtui | bg.bgtui | bw.sfgtui_bf | bx.sfgtui_bf
+l.bleui	2			bn.bleui | bg.bleui | bw.sfleui_bf | bx.sfleui_bf
+l.beq	2			bg.beq | bw.sfeq_bf | bx.sfeq_bf
+l.bne	2			bg.bne | bw.sfne_bf | bx.sfne_bf
+l.bges	2	rA,rB,&	rB,rA,&	bg.bles | bw.sfles_bf | bx.sfles_bf
+l.bgts	2			bg.bgts | bw.sfgts_bf | bx.sfgts_bf
+l.bgeu	2	rA,rB,&	rB,rA,&	bg.bleu | bw.sfleu_bf | bx.sfleu_bf
+l.bgtu	2			bg.bgtu | bw.sfgtu_bf | bx.sfgtu_bf
+l.mfspr	0			bg.mfspr
+l.mtspr	0			bg.mtspr
+l.stack	1			bt.stack
+l.nop	3			bt.nop | bn.nop
+l.rfe	1			bt.rfe
+l.sys	1			bt.sys
+l.addic	0			bg.addic
+l.muli	0			bg.muli
+l.movhi	3			bt.movhi | bn.movhi | bg.movhi
+l.sim	0	U	U	bn.nop
+l.byteswap	1			bn.swab
+l.swab	1			bn.swab
+l.bitswap	1			bn.bitrev
+l.bitrev	1			bn.bitrev
+l.sgn	1			bn.sgn
+l.sgnz1	1			bn.sgnz1
+l.sgnz_1	1			bn.sgnz_1
+l.sgnp	1			bn.sgnp
+l.sgnpz1	1			bn.sgnpz1
+l.sgnpz_1	1			bn.sgnpz_1
+l.crc_le	1			bn.crc_le
+l.pack_s	1			bn.pack_s
+l.conjc	1			bn.conjc
+l.absc	1			bg.absc
