@@ -299,7 +299,11 @@ rather than a mnemonic histogram over a listing. The census counts only what flo
 disassembly reaches from seeded entry points, and splits the count by whether the function
 reaches a return, because a seed that was really data produces a function that runs off the
 end. It was the census that showed MAC/DSP/SIMD breadth was not worth chasing: under 0.1% of
-the instructions in trustworthy functions are pseudo-ops at all. The fixtures belong to the
+the instructions in trustworthy functions are pseudo-ops at all.
+
+Seed with `tools/jal_targets.py <listing> <base> <size> strong`, not the raw target list: a
+b.jal decoded inside data points anywhere, and seeding those makes the module look broken
+(1,734 bogus functions in stream 0 against 31 with the filter). The fixtures belong to the
 `hp-z27k-g3` session and are gitignored; ask that session for them.
 
 The vendor toolchain lives in `vendor/` (gitignored, ~100 MB, from the `CUB3D/Ghidra-Aeon`

@@ -151,4 +151,16 @@ with three.
 |---|---|---|---|---|
 | sBoot (seeded from the reset vector alone) | 102 | 3,957 | 96 | 169 |
 | HDCP module (212 seeds from hp-z27k-g3) | 218 | 13,165 | 210 | 16 |
-| stream 0 (6,321 seeds from b.jal targets) | 5,622 | 221,011 | 3,119 | 14,501 |
+| stream 0 (2,516 filtered b.jal targets) | 3,143 | 216,210 | 3,074 | 13,757 |
+
+**Seeding matters more than it looks.** Raw `b.jal` targets from a linear sweep include calls
+decoded inside data, which point anywhere: of stream 0's 7,268 raw targets, 2,959 do not even
+land on an instruction boundary. Seeding all of them produced 1,734 "functions" that ran off
+the end and made the module look far worse than it is. `tools/jal_targets.py … strong` keeps
+targets that start with a recognisable prologue or are called more than once, which drops the
+run-off count from 1,734 to 31 — 97.8% of the seeded functions then reach a return or end in a
+tail call. A function ending in a tail call is healthy too, and the census counts it as such.
+
+In sBoot every function is accounted for: 96 return, 3 tail-call, and the remaining 3 are a
+boot hand-off trampoline (`b.jr r3`, where the caller loads the address of the next image) and
+two deliberate hang loops (`b.j` to themselves). No gaps in the spec.
