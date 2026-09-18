@@ -203,6 +203,43 @@ headless('emuTest',
 	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases.json').absolutePath],
 	'AEON EMU OK', 'aeon-emu')
 
+// Census of what flow-based disassembly actually reaches, which is the list
+// that says whether a pseudo-op is worth real p-code. Needs a fixture and its
+// entry points:
+//   ./gradlew census -PaeonFixture=fixtures/hdcp.bin -PaeonSeeds=<file> -PaeonBase=0x157000
+tasks.register('census', Exec) {
+	group = 'Verification'
+	description = 'Count the instructions real control flow reaches in a fixture'
+	dependsOn tasks.named('smokeExtract')
+	def fixture = file(project.findProperty('aeonFixture') ?: 'fixtures/sboot.bin')
+	def seeds = file(project.findProperty('aeonSeeds') ?: 'tests/sboot_entries.txt')
+	def base = project.findProperty('aeonBase') ?: '0x0'
+	def output = new ByteArrayOutputStream()
+	standardOutput = output
+	errorOutput = output
+	ignoreExitValue = true
+	doFirst { smokeDir.get().dir('project').asFile.mkdirs() }
+	environment 'GHIDRA_JAVA_OPTIONS',
+		"-Dapplication.settingsdir=${smokeDir.get().dir('settings').asFile}"
+	commandLine "${ghidraInstallDir}/support/analyzeHeadless",
+		"${smokeDir.get().dir('project').asFile}", 'aeon-census',
+		'-import', fixture.absolutePath,
+		'-processor', 'AEON:BE:32:R2',
+		'-loader', 'BinaryLoader', '-loader-baseAddr', base,
+		'-scriptPath', file('ghidra_scripts').absolutePath,
+		'-postScript', 'AeonCensus.java', "seed=${seeds.absolutePath}",
+		'-deleteProject'
+	doLast {
+		def text = output.toString()
+		if (!text.contains('AEON CENSUS DONE')) {
+			logger.error(text)
+			throw new GradleException('census: the script did not complete')
+		}
+		text.readLines().findAll { it.contains('AeonCensus.java>') }
+			.each { logger.lifecycle(it.replaceAll(/.*AeonCensus\.java> /, '').replaceAll(/ \(GhidraScript\).*/, '')) }
+	}
+}
+
 tasks.register('verify') {
 	group = 'Verification'
 	description = 'smokeTest + emuTest'

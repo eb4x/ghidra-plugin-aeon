@@ -440,5 +440,124 @@
    "r20": 0,
    "flag": 1
   }
+ },
+ {
+  "name": "msw stores 2 registers",
+  "asm": "b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\nb.msw 0x0(r1),r3,0x0\nb.lwz r6,0x0(r1)\nb.lwz r7,0x4(r1)",
+  "bytes": "94301c60331c80443461000cc1020ce106",
+  "expected": {
+   "r1": 1048576,
+   "r3": 51,
+   "r4": 68,
+   "r5": 0,
+   "r6": 51,
+   "r7": 68,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "msw stores 4 registers",
+  "asm": "b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\nb.addi r5,r0,0x55\nb.addi r6,r0,0x66\nb.msw 0x0(r1),r3,0x2\nb.lwz r7,0x8(r1)\nb.lwz r8,0xc(r1)",
+  "bytes": "94301c60331c80441ca0551cc0663461020ce10a0d010e",
+  "expected": {
+   "r1": 1048576,
+   "r3": 51,
+   "r4": 68,
+   "r5": 85,
+   "r6": 102,
+   "r7": 85,
+   "r8": 102,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "mlwz loads 3 registers",
+  "asm": "b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\nb.addi r5,r0,0x55\nb.msw 0x0(r1),r3,0x1\nb.mlwz r6,0x0(r1),0x1",
+  "bytes": "94301c60331c80441ca05534610130c101",
+  "expected": {
+   "r1": 1048576,
+   "r3": 51,
+   "r4": 68,
+   "r5": 85,
+   "r6": 51,
+   "r7": 68,
+   "r8": 85,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "divl shifts then divides",
+  "asm": "b.addi r3,r0,100\nb.addi r4,r0,8\n.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x40",
+  "bytes": "1c60641c8008a0c32040",
+  "expected": {
+   "r1": 0,
+   "r3": 100,
+   "r4": 8,
+   "r5": 0,
+   "r6": 50,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "divl rounds half up",
+  "asm": "b.addi r3,r0,7\nb.addi r4,r0,2\n.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x01",
+  "bytes": "1c60071c8002a0c32001",
+  "expected": {
+   "r1": 0,
+   "r3": 7,
+   "r4": 2,
+   "r5": 0,
+   "r6": 4,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "divl rounds negatives",
+  "asm": "b.addi r3,r0,-7\nb.addi r4,r0,2\n.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x01",
+  "bytes": "1c60f91c8002a0c32001",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967289,
+   "r4": 2,
+   "r5": 0,
+   "r6": 4294967293,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "mlwz offset scales by 4",
+  "asm": "b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\nb.msw 0x4(r1),r3,0x0\nb.mlwz r6,0x4(r1),0x0",
+  "bytes": "94301c60331c804434610430c104",
+  "expected": {
+   "r1": 1048576,
+   "r3": 51,
+   "r4": 68,
+   "r5": 0,
+   "r6": 51,
+   "r7": 68,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
  }
 ]

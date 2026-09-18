@@ -243,10 +243,28 @@ SEMANTICS = {
     'bt.syncd':  'aeon_sync_dcache();',
     'bt.syncp':  'aeon_sync_pipeline();',
     'bg.syncwritebuffer': 'aeon_sync_write_buffer();',
-    'bg.mtspr':  'aeon_mtspr({A} + {PIPE}:4, {B});',
-    'bg.mfspr':  '{Dw} = aeon_mfspr({A} + {PIPE}:4);',
-    'bg.mtspr1': 'aeon_mtspr({U}:4, {B});',
-    'bg.mfspr1': '{Dw} = aeon_mfspr({U}:4);',
+    # Special-purpose registers live in their own address space rather than
+    # behind a pseudo-op: the decompiler can then propagate a constant SPR
+    # number, and each SPR gets an address that can be named and cross
+    # referenced. The census found these in all three fixtures, which is why
+    # they were worth modelling. SPR n is at spr:n*4.
+    'bg.mtspr':  'local n:4 = ({A} + {PIPE}) * 4; *[spr]:4 (n) = {B};',
+    'bg.mfspr':  'local n:4 = ({A} + {PIPE}) * 4; {Dw} = *[spr]:4 (n);',
+    'bg.mtspr1': 'local n:4 = {U} * 4; *[spr]:4 (n) = {B};',
+    'bg.mfspr1': 'local n:4 = {U} * 4; {Dw} = *[spr]:4 (n);',
+    # rD is hardwired to 0 here, and the simulator shows no architectural
+    # effect, so this is a load whose result is discarded. Modelling it as a
+    # load rather than a pseudo-op is what gives it a data reference.
+    'bn.pclwz':  'local discard:4 = *:4 ({A} + {z});',
+    'bg.pclwz':  'local discard:4 = *:4 ({A} + {Y});',
+    # divl computes (rA << b) / rB; the r variants round half up, which
+    # (2*x + B) / (2*B) reproduces exactly (measured across signs).
+    'bg.divl':   'local x:4 = {A} << {b}; {Dw} = x s/ {B};',
+    'bg.divlu':  'local x:4 = {A} << {b}; {Dw} = x / {B};',
+    'bg.divlr':  ('local x:4 = ({A} << {b}) * 2; local d:4 = {B} * 2; '
+                  '{Dw} = (x + {B}) s/ d;'),
+    'bg.divlru': ('local x:4 = ({A} << {b}) * 2; local d:4 = {B} * 2; '
+                  '{Dw} = (x + {B}) / d;'),
 }
 
 # Opcodes whose display repeats the destination as a source (objdump prints the
@@ -273,6 +291,15 @@ SPLIT = {
 }
 
 DEST_LETTERS = set('D?Z')
+
+# bn.mlwz / bn.msw move a run of consecutive registers to or from memory. The
+# count comes from the 2-bit c field and the base register from rD/rB, so the
+# only way to give them real register p-code (rather than opaque stores into the
+# register space, which the decompiler cannot follow) is to enumerate base and
+# count. All measured in aeon-elf-sim: c selects 2, 3, 4 or 8 registers, the K
+# offset scales by 4, and the run does NOT wrap at r31 — a store past r31 writes
+# zeros, so the registers that exist are the only ones worth modelling.
+MULTIWORD_COUNTS = {0: 2, 1: 3, 2: 4, 3: 8}
 
 
 def sanitize(name):
@@ -459,6 +486,10 @@ class Gen:
                     constraints.append(f'{fname}{pri_op}')
                     self.priority_notes.append((name, f'{fname}{pri_op}', note))
 
+            if name in ('bn.mlwz', 'bn.msw'):
+                self.emit_multiword(name, rec, op, enc, pos, symbols, constraints)
+                continue
+
             variants = SPLIT.get(name)
             if variants is None:
                 variants = [(None, None, SEMANTICS.get(name))]
@@ -474,6 +505,38 @@ class Gen:
                 self.ctors.append(self.emit_ctor(name, mnem, disp, cons,
                                                  extra + binds, symbols, sem,
                                                  op, order))
+
+    def emit_multiword(self, name, rec, op, enc, pos, symbols, constraints):
+        """One constructor per (base register, count) for bn.mlwz / bn.msw."""
+        load = name == 'bn.mlwz'
+        reg_letter = 'D' if load else 'B'
+        base_field = symbols[reg_letter][0]
+        base_dup = self.dup_field(enc, reg_letter, pos[reg_letter])
+        count_dup = self.dup_field(enc, 'c', pos['c'])
+        addr_sym = symbols['K'][0]
+        a_read = symbols['A'][1]
+        disp = self.display(name, op, symbols, enc)
+        for c, n in MULTIWORD_COUNTS.items():
+            for base in range(32):
+                body = [f'local ea:4 = {a_read} + {addr_sym};']
+                for i in range(n):
+                    reg = base + i
+                    off = f'ea + {i * 4}' if i else 'ea'
+                    if reg > 31:
+                        # past r31 the hardware stores zero and loads nowhere
+                        body.append(f'*:4 ({off}) = 0:4;' if not load else '')
+                        continue
+                    body.append(f'r{reg} = *:4 ({off});' if load
+                                else f'*:4 ({off}) = r{reg};')
+                sem = ' '.join(x for x in body if x)
+                pat = ' & '.join(constraints + [f'{base_dup}={base}', f'{count_dup}={c}'] +
+                                 sorted({base_field, addr_sym, symbols['A'][0],
+                                         symbols['c'][0], symbols['A'][1]}))
+                self.ctors.append(f':{rec["display"]} {disp} is {pat} {{ {sem} }}')
+        self.priority_notes.append(
+            (name, f'{base_dup}=0..31 & {count_dup}=0..3',
+             'enumerated so the transferred registers are real registers in the '
+             'p-code; c selects 2, 3, 4 or 8 registers (measured in aeon-elf-sim)'))
 
     def emit_ctor(self, name, mnem, disp, constraints, extra, symbols, sem, op, order):
         if sem is None:
