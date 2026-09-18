@@ -117,6 +117,44 @@ tasks.named('buildExtension') { dependsOn 'compileSleigh' }
 
 def buildZipProvider = tasks.named('buildExtension', Zip).flatMap { it.archiveFile }
 
+// buildExtension packages the whole project directory minus an exclude list, so
+// forgetting one entry silently ships whatever happens to be lying around — it
+// shipped every firmware fixture once. This is the allowlist version of that
+// rule: anything in the zip that is not part of a processor extension fails the
+// build, so correctness does not depend on remembering.
+def ALLOWED_PACKAGED = [
+	~/^[^\/]+\/$/,                                   // the top-level directory entry
+	~/^[^\/]+\/(extension\.properties|Module\.manifest|LICENSE|README\.md|version\.properties)$/,
+	~/^[^\/]+\/data\/languages\/[^\/]+\.(slaspec|sinc|sla|ldefs|pspec|cspec)$/,
+	~/^[^\/]+\/data\/(languages\/)?$/,
+	~/^[^\/]+\/lib\/$/,
+	~/^[^\/]+\/lib\/[^\/]+\.jar$/,
+]
+
+tasks.register('checkPackaging') {
+	group = 'Verification'
+	description = 'Fail if the built extension contains anything but the language and its metadata'
+	dependsOn tasks.named('buildExtension')
+	doLast {
+		def zip = buildZipProvider.get().asFile
+		def unexpected = []
+		new java.util.zip.ZipFile(zip).withCloseable { zf ->
+			zf.entries().each { entry ->
+				if (!ALLOWED_PACKAGED.any { entry.name ==~ it }) {
+					unexpected << entry.name
+				}
+			}
+		}
+		if (unexpected) {
+			throw new GradleException("${zip.name} contains files that do not belong in the " +
+				"extension:\n  " + unexpected.join('\n  ') +
+				"\nAdd them to the buildExtension.exclude list, or to ALLOWED_PACKAGED if they " +
+				"really are part of the language.")
+		}
+		logger.lifecycle("checkPackaging: ${zip.name} contains only the language and its metadata")
+	}
+}
+
 tasks.register('cleanExtractedExtension', Delete) {
 	group = "Ghidra"
 	description = "Delete the extracted extension from Ghidra's user Extensions folder"
@@ -294,7 +332,7 @@ tasks.register('decompileCheck', Exec) {
 tasks.register('verify') {
 	group = 'Verification'
 	description = 'smokeTest + emuTest'
-	dependsOn tasks.named('smokeTest'), tasks.named('emuTest')
+	dependsOn tasks.named('checkPackaging'), tasks.named('smokeTest'), tasks.named('emuTest')
 }
 
 // ------------------------------------------------------------- acceptance --
