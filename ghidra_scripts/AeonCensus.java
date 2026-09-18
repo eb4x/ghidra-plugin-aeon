@@ -94,6 +94,7 @@ public class AeonCensus extends GhidraScript {
 		}
 
 		int dataRefs = 0;
+		int pairRefs = 0;
 		int movhiPairs = 0;
 		for (Instruction insn : currentProgram.getListing().getInstructions(true)) {
 			if (getFunctionContaining(insn.getAddress()) == null) {
@@ -106,6 +107,10 @@ public class AeonCensus extends GhidraScript {
 				if (r.getReferenceType().isData() &&
 					currentProgram.getMemory().contains(r.getToAddress())) {
 					dataRefs++;
+					String m = insn.getMnemonicString();
+					if (m.equals("b.addi") || m.equals("b.ori")) {
+						pairRefs++;
+					}
 				}
 			}
 		}
@@ -127,6 +132,7 @@ public class AeonCensus extends GhidraScript {
 		println("  healthy (either of the two):  " + (endsWithReturn + tailCalls));
 		println("  b.movhi in functions:       " + movhiPairs);
 		println("  in-memory data references:  " + dataRefs);
+		println("    of which on b.addi/b.ori (completed movhi addresses): " + pairRefs);
 		println("  distinct mnemonics:         " + rows.size());
 		println("  --- reached mnemonics, pseudo-ops marked ---");
 		println("  mnemonic                  all  in returning functions");

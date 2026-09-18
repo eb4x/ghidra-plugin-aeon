@@ -1,0 +1,36 @@
+<patternlist>
+  <!-- Function starts for the vendor gcc (-march=aeonR2). Encodings are from
+       aeon-elf-as; instructions are big-endian in both languages, so one file
+       serves both.
+
+       A non-leaf function opens by growing the stack and saving the link
+       register, which gcc stores in the top word of the new frame:
+         b.addi r1,r1,-N    9c 0011..00          N = 4..0x10   (bt.addi)
+                            1c 21 1.....00       N = 0x14..0x80
+                            fc 21 1111.... ......00  N > 0x80
+         b.sw   M(r1),r9    0d 21 0.....00       M < 0x80
+                            ed 21 0000.... ......00  M >= 0x80
+       The pair is 34 to 43 fixed bits with nothing but the return address
+       stored, which is distinctive enough to stand without a pre-pattern.
+       Leaf functions have no prologue and are left to call following. -->
+  <pattern>
+    <data>0x9c 0011..00 0x0d 0x21 0.....00</data>
+    <funcstart/>
+  </pattern>
+  <pattern>
+    <data>0x1c 0x21 1.....00 0x0d 0x21 0.....00</data>
+    <funcstart/>
+  </pattern>
+  <pattern>
+    <data>0x1c 0x21 1.....00 0xed 0x21 0000.... ......00</data>
+    <funcstart/>
+  </pattern>
+  <pattern>
+    <data>0xfc 0x21 1111.... ......00 0xed 0x21 0000.... ......00</data>
+    <funcstart/>
+  </pattern>
+  <pattern>
+    <data>0xfc 0x21 1111.... ......00 0x0d 0x21 0.....00</data>
+    <funcstart/>
+  </pattern>
+</patternlist>

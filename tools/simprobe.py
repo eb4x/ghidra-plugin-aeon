@@ -28,8 +28,20 @@ CLEAR_CY = f'{INIT}\nb.add r5,r0,r0'                 # 0 + 0 does not
 PROBE_CY = 'b.addc r20,r0,r0'                              # r20 = CY
 
 
-def probe(body, steps=40):
+# How each data byte order is built. -EL also needs -EBinst, as the vendor gcc
+# passes it: instructions stay big-endian, only data turns little-endian. The
+# -EL link comes from lib/el and starts at the reset vector itself, because the
+# simulator's own boot stub at 0x100 is big-endian and jumps nowhere under -EL.
+MODES = {
+    'big': (['-EB'], ['-EB', f'-L{T}/aeon-elf/lib'], '0x700', []),
+    'little': (['-EL', '-EBinst'], ['-EL', f'-L{T}/aeon-elf/lib/el', f'-L{T}/aeon-elf/lib'],
+               '0x100', ['-EL']),
+}
+
+
+def probe(body, steps=40, endian='big'):
     """Assemble and run one snippet; return the register file as a dict."""
+    as_flags, ld_flags, text, sim_flags = MODES[endian]
     with tempfile.TemporaryDirectory() as d:
         src = os.path.join(d, 'p.s')
         with open(src, 'w') as fh:
@@ -38,12 +50,12 @@ def probe(body, steps=40):
                 fh.write('\t' + line.strip() + '\n')
             fh.write('\tb.trap 0\n')
         obj, elf = os.path.join(d, 'p.o'), os.path.join(d, 'p.elf')
-        subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', '-EB', '-munknown', '-mmulti', src, '-o', obj],
+        subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', *as_flags, '-munknown', '-mmulti',
+                        src, '-o', obj], check=True, env=ENV, capture_output=True)
+        subprocess.run([f'{T}/bin/aeon-elf-ld', '-maeonR2_elf', *ld_flags,
+                        '-Ttext', text, '-e', '_start', obj, '-o', elf],
                        check=True, env=ENV, capture_output=True)
-        subprocess.run([f'{T}/bin/aeon-elf-ld', '-maeonR2_elf', f'-L{T}/aeon-elf/lib',
-                        '-Ttext', '0x700', '-e', '_start', obj, '-o', elf],
-                       check=True, env=ENV, capture_output=True)
-        out = subprocess.run([f'{T}/bin/aeon-elf-sim', '-q', '-i', '-f',
+        out = subprocess.run([f'{T}/bin/aeon-elf-sim', *sim_flags, '-q', '-i', '-f',
                               f'{T}/config_file/sim.cfg', elf],
                              input=f'run {steps}\nr\nq\n', capture_output=True,
                              text=True, env=ENV, timeout=120).stdout

@@ -99,19 +99,20 @@ def sleighSettingsDir = layout.buildDirectory.dir('sleigh-settings')
 
 tasks.register('compileSleigh', Exec) {
 	group = 'Ghidra'
-	description = 'Compile data/languages/aeonR2.slaspec; fails the build on a spec error'
+	description = 'Compile both AEON languages; fails the build on a spec error'
 	inputs.files fileTree('data/languages') {
 		include '**/*.slaspec'
 		include '**/*.sinc'
 	}
-	outputs.file file('data/languages/aeonR2.sla')
+	outputs.files file('data/languages/aeonR2.sla'), file('data/languages/aeonR2le.sla')
 	doFirst { sleighSettingsDir.get().asFile.mkdirs() }
 	// support/sleigh ignores GHIDRA_JAVA_OPTIONS, but honours XDG_CONFIG_HOME
 	// (measured by ghidra-plugin-keil8051), which keeps its logs out of
 	// ~/.config/ghidra. Linux-only, which is what this repo builds on.
 	environment 'XDG_CONFIG_HOME', "${sleighSettingsDir.get().asFile}"
+	// -a compiles every .slaspec in the directory: aeonR2 (-EB) and aeonR2le (-EL)
 	commandLine "${ghidraInstallDir}/support/sleigh", '-l', '-c', '-n', '-u', '-t', '-f',
-		'data/languages/aeonR2.slaspec'
+		'-a', 'data/languages'
 }
 
 tasks.named('buildExtension') { dependsOn 'compileSleigh' }
@@ -127,9 +128,11 @@ def ALLOWED_PACKAGED = [
 	~/^[^\/]+\/$/,                                   // the top-level directory entry
 	~/^[^\/]+\/(extension\.properties|Module\.manifest|LICENSE|README\.md|version\.properties)$/,
 	~/^[^\/]+\/data\/languages\/[^\/]+\.(slaspec|sinc|sla|ldefs|pspec|cspec)$/,
-	~/^[^\/]+\/data\/(languages\/)?$/,
+	~/^[^\/]+\/data\/(languages\/|patterns\/)?$/,
+	~/^[^\/]+\/data\/patterns\/[^\/]+\.xml$/,
 	~/^[^\/]+\/lib\/$/,
 	~/^[^\/]+\/lib\/[^\/]+\.jar$/,
+	~/^[^\/]+\/lib\/[^\/]+-src\.zip$/,                // our own source, as buildExtension packs it
 ]
 
 tasks.register('checkPackaging') {
@@ -202,8 +205,12 @@ tasks.register('smokeExtract', Copy) {
 
 // analyzeHeadless exits 0 even when a script throws, so every headless task
 // takes its verdict from a fixed line in the script's own output.
+// MStar firmware is built -EL (little-endian data), so the fixture tasks default
+// to that language; -PaeonLanguage=AEON:BE:32:R2 selects the -EB one.
+def fixtureLanguage = project.findProperty('aeonLanguage') ?: 'AEON:LE:32:R2'
+
 def headless = { String taskName, String description, List<String> extraArgs,
-                 String requiredLine, String projectName ->
+                 String requiredLine, String projectName, String language ->
 	tasks.register(taskName, Exec) {
 		group = 'Verification'
 		it.description = description
@@ -221,7 +228,7 @@ def headless = { String taskName, String description, List<String> extraArgs,
 			"${ghidraInstallDir}/support/analyzeHeadless",
 			"${smokeDir.get().dir('project').asFile}", projectName,
 			'-scriptPath', file('ghidra_scripts').absolutePath,
-			'-processor', 'AEON:BE:32:R2',
+			'-processor', language,
 			'-deleteProject',
 		] + extraArgs)
 		doLast {
@@ -239,7 +246,14 @@ headless('smokeTest',
 	'Decode the committed test program and compare with the vendor objdump',
 	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
 	 '-postScript', 'AeonSmoke.java'],
-	'AEON SMOKE OK', 'aeon-smoke')
+	'AEON SMOKE OK', 'aeon-smoke', 'AEON:BE:32:R2')
+
+// The same bytes through the -EL language: instructions must decode identically.
+headless('smokeTestLe',
+	'Decode the committed test program with the little-endian-data language',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonSmoke.java'],
+	'AEON SMOKE OK', 'aeon-smoke-le', 'AEON:LE:32:R2')
 
 // Differential p-code test: the expected register values come from the vendor
 // simulator (tools/gen_emu_cases.py), so this checks the semantics, not just
@@ -248,7 +262,14 @@ headless('emuTest',
 	'Replay the vendor simulator\'s test cases through Ghidra\'s p-code emulator',
 	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
 	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases.json').absolutePath],
-	'AEON EMU OK', 'aeon-emu')
+	'AEON EMU OK', 'aeon-emu', 'AEON:BE:32:R2')
+
+// The simulator run with an -EL -EBinst build, for the little-endian language
+headless('emuTestLe',
+	'Replay the vendor simulator\'s -EL test cases through Ghidra\'s p-code emulator',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases_le.json').absolutePath],
+	'AEON EMU OK', 'aeon-emu-le', 'AEON:LE:32:R2')
 
 // Census of what flow-based disassembly actually reaches, which is the list
 // that says whether a pseudo-op is worth real p-code. Needs a fixture and its
@@ -273,11 +294,15 @@ tasks.register('census', Exec) {
 	commandLine "${ghidraInstallDir}/support/analyzeHeadless",
 		"${smokeDir.get().dir('project').asFile}", 'aeon-census',
 		'-import', fixture.absolutePath,
-		'-processor', 'AEON:BE:32:R2',
+		'-processor', fixtureLanguage,
 		'-loader', 'BinaryLoader', '-loader-baseAddr', base,
 		'-scriptPath', file('ghidra_scripts').absolutePath,
 		'-postScript', 'AeonCensus.java', "seed=${seeds.absolutePath}",
 		'-deleteProject'
+	if (project.hasProperty('aeonDisable')) {
+		args(['-preScript', 'AeonDisableAnalyzers.java'] +
+			project.property('aeonDisable').toString().split(',').toList())
+	}
 	doLast {
 		def text = output.toString()
 		if (!text.contains('AEON CENSUS DONE')) {
@@ -300,6 +325,14 @@ tasks.register('decompileCheck', Exec) {
 	def seeds = file(project.findProperty('aeonSeeds') ?: 'tests/sboot_entries.txt')
 	def base = project.findProperty('aeonBase') ?: '0x157000'
 	def args = ['-postScript', 'AeonDecompileCheck.java', "seed=${seeds.absolutePath}"]
+	// -PaeonDisable='A,B' turns those analyzers off, to see what a result depends on
+	if (project.hasProperty('aeonDisable')) {
+		args = ['-preScript', 'AeonDisableAnalyzers.java'] +
+			project.property('aeonDisable').toString().split(',').toList() + args
+	}
+	if (project.hasProperty('aeonFunctions')) {
+		args += "functions=${file(project.property('aeonFunctions')).absolutePath}"
+	}
 	if (project.hasProperty('aeonShow')) {
 		args += "show=${project.property('aeonShow')}"
 	}
@@ -314,7 +347,7 @@ tasks.register('decompileCheck', Exec) {
 		"${ghidraInstallDir}/support/analyzeHeadless",
 		"${smokeDir.get().dir('project').asFile}", 'aeon-decompile',
 		'-import', fixture.absolutePath,
-		'-processor', 'AEON:BE:32:R2',
+		'-processor', fixtureLanguage,
 		'-loader', 'BinaryLoader', '-loader-baseAddr', base,
 		'-scriptPath', file('ghidra_scripts').absolutePath,
 		'-deleteProject',
@@ -332,8 +365,9 @@ tasks.register('decompileCheck', Exec) {
 
 tasks.register('verify') {
 	group = 'Verification'
-	description = 'smokeTest + emuTest'
-	dependsOn tasks.named('checkPackaging'), tasks.named('smokeTest'), tasks.named('emuTest')
+	description = 'smokeTest + emuTest, for both languages'
+	dependsOn tasks.named('checkPackaging'), tasks.named('smokeTest'), tasks.named('emuTest'),
+		tasks.named('smokeTestLe'), tasks.named('emuTestLe')
 }
 
 // ------------------------------------------------------------- acceptance --
@@ -363,7 +397,7 @@ tasks.register('acceptanceDump', Exec) {
 	commandLine "${ghidraInstallDir}/support/analyzeHeadless",
 		"${smokeDir.get().dir('project').asFile}", 'aeon-acceptance',
 		'-import', fixture.absolutePath,
-		'-processor', 'AEON:BE:32:R2',
+		'-processor', fixtureLanguage,
 		'-noanalysis',
 		'-scriptPath', file('ghidra_scripts').absolutePath,
 		'-postScript', 'AeonDumpDisasm.java', dump.get().asFile.absolutePath,

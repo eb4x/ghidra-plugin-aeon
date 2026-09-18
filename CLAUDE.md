@@ -241,21 +241,30 @@ So, in this order:
 
 ## What this repo is
 
-A **processor module**, not a Java analyzer: `data/languages/` holds the SLEIGH language
-(`aeonR2.slaspec` + the generated `aeonR2.sinc`), the `.ldefs`, `.pspec` and `.cspec`. The
-only Java is two verification scripts under `ghidra_scripts/`. Language id `AEON:BE:32:R2`.
+A **processor module** first: `data/languages/` holds the SLEIGH language, the `.ldefs`,
+`.pspec` and `.cspec`, and `data/patterns/` the function-start patterns. There are two
+languages, differing only in data byte order:
+- `AEON:LE:32:R2` (`aeonR2le.slaspec`, `aeonR2le.cspec`): MStar firmware.
+- `AEON:BE:32:R2` (`aeonR2.slaspec`, `aeonR2.cspec`).
+Both include `aeonR2_common.sinc` and the generated `aeonR2.sinc`, and share the pspec. The
+one Java class that ships is `src/main/java/aeon/AeonAddressAnalyzer.java`: the AEON constant
+propagation, which claims the processor from the stock one and so must keep doing everything
+the stock one does. `ghidra_scripts/` holds the verification scripts.
 
 The common section covers this repo's two departures from a Java analyzer plugin explicitly:
-the extension ships a processor spec rather than Java, and the acceptance diff against
+the extension is mostly a processor spec, and the acceptance diff against
 MStar's `aeon-elf-objdump` is the sanctioned reference-oracle case. Everything about a
 program already imported into Ghidra goes through the MCP tools as the rule says.
 
 ## The core
 
-Big-endian, OpenRISC-derived, 32 GPRs, instructions of 2, 3 or 4 bytes chosen by the **top
-three bits** of byte 0 (`0xx`=3, `100`=2, `101`=4, `11x`=4). No delay slots. `r0` reads as
-zero in hardware. `r1` stack, `r9` link, args `r3`..`r8` then stack, result `r3` (`r3:r4` for
-64 bits, high word first), callee-saved `r10`..`r22`. Addresses are loaded as
+OpenRISC-derived, 32 GPRs, instructions of 2, 3 or 4 bytes chosen by the **top three bits** of
+byte 0 (`0xx`=3, `100`=2, `101`=4, `11x`=4). Instructions are always big-endian (the tokens
+carry `endian=big`). Data is little-endian in MStar firmware (`-EL`, which gcc turns into
+`-EL -EBinst`) and big-endian under `-EB`. No delay slots. `r0` reads as zero in hardware.
+`r1` stack, `r9` link, args `r3`..`r8` then stack, result `r3`. A 64-bit value goes in `r3`
+and `r4`, with the high word in `r3` under `-EB` and the low word in `r3` under `-EL`.
+Callee-saved `r10`..`r22`. Addresses are loaded as
 `movhi rN,hi` + `addi/ori rN,rN,lo`, with a signed `addi`. Each of these was measured — see
 the table in README.md for what established which.
 
@@ -278,15 +287,20 @@ ignored). `tools/verify_letters.py` checks the operand model against every calib
 ## Verifying a change
 
 ```bash
-./gradlew verify                                     # smokeTest + emuTest
+./gradlew verify        # checkPackaging + smokeTest + emuTest, for both languages
 ./gradlew acceptanceTest -PaeonFixture=fixtures/sboot.bin -PaeonListing=fixtures-out/sboot.asm
 ```
 
-`smokeTest` decodes a committed 19-byte program; `emuTest` replays 26 sequences through
-Ghidra's p-code emulator and compares the register file with MStar's `aeon-elf-sim`, which is
+`smokeTest` decodes a committed 19-byte program; `emuTest`/`emuTestLe` replay 35 sequences
+through Ghidra's p-code emulator and compare the register file with MStar's `aeon-elf-sim`
+(run on an `-EB` and an `-EL -EBinst` build respectively), which is
 the only way semantics get checked at all — objdump can only confirm decoding. Regenerate the
 expectations with `tools/gen_emu_cases.py` after changing what an instruction computes, and
 sanity-check a new case by breaking the semantics on purpose and watching it fail.
+
+The fixture tasks (`acceptanceTest`, `census`, `decompileCheck`) default to `AEON:LE:32:R2`;
+pass `-PaeonLanguage=AEON:BE:32:R2` for the other. `census` and `decompileCheck` take
+`-PaeonDisable=<analyzer>,…` to A/B an analyzer.
 
 `acceptanceTest` is the real check: a full linear sweep diffed against the vendor objdump,
 address by address, mnemonic and operands and length, failing on any unexplained difference.
@@ -316,8 +330,8 @@ that objdump cannot (it is how `r0` was confirmed hardwired): link with
 
 ## Scope and state
 
-Decoding is complete and verified: every instruction in all four fixtures, 1.16 million of
-them, matches the vendor objdump, and the p-code for the integer core is checked against the
+Decoding is complete and verified: every instruction in all five fixtures, 1.22 million of
+them, matches the vendor objdump in both languages, and the p-code for the integer core is checked against the
 vendor simulator. P-code is real for the integer core, branches, loads/stores,
 `movhi`, compares and the flag, stack ops and system instructions. MAC/DSP/SIMD/float, the
 cache ops and `entri`/`reti`/`creti` decode correctly but carry pseudo-op semantics, so the

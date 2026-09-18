@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language_definitions>
   <language processor="AEON"
+            endian="little"
+            instructionEndian="big"
+            size="32"
+            variant="R2"
+            version="1.0"
+            slafile="aeonR2le.sla"
+            processorspec="aeonR2.pspec"
+            id="AEON:LE:32:R2">
+    <description>MStar AEON R2 (aeonR2) built -EL, as MStar scaler firmware is: little-endian data, big-endian instructions, variable-length (2/3/4 byte) OpenRISC-derived core</description>
+    <compiler name="default" spec="aeonR2le.cspec" id="default"/>
+  </language>
+  <language processor="AEON"
             endian="big"
             size="32"
             variant="R2"
@@ -8,7 +20,7 @@
             slafile="aeonR2.sla"
             processorspec="aeonR2.pspec"
             id="AEON:BE:32:R2">
-    <description>MStar AEON R2 (aeonR2), big-endian, variable-length (2/3/4 byte) OpenRISC-derived core</description>
+    <description>MStar AEON R2 (aeonR2) built -EB: big-endian data and instructions, variable-length (2/3/4 byte) OpenRISC-derived core</description>
     <compiler name="default" spec="aeonR2.cspec" id="default"/>
   </language>
 </language_definitions>
