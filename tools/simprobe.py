@@ -38,7 +38,7 @@ def probe(body, steps=40):
                 fh.write('\t' + line.strip() + '\n')
             fh.write('\tb.trap 0\n')
         obj, elf = os.path.join(d, 'p.o'), os.path.join(d, 'p.elf')
-        subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', '-EB', '-munknown', src, '-o', obj],
+        subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', '-EB', '-munknown', '-mmulti', src, '-o', obj],
                        check=True, env=ENV, capture_output=True)
         subprocess.run([f'{T}/bin/aeon-elf-ld', '-maeonR2_elf', f'-L{T}/aeon-elf/lib',
                         '-Ttext', '0x700', '-e', '_start', obj, '-o', elf],

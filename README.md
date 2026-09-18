@@ -82,6 +82,7 @@ which runs `ghidra_scripts/AeonDumpDisasm.java` (the linear-sweep dump) and
 | HDCP module (base 0x157000) | 18,516 | 0 |
 | stream 0, EIM153 (main firmware, base ~0x300000) | 550,514 | 0 |
 | stream 0, EIM162 (the same code, a later build) | 549,323 | 0 |
+| TSUM_G slice (HP M24fd, a different MStar chip) | 58,987 | 0 |
 
 Bytes where objdump emits a one-byte `.word` are counted separately: they do not decode, and
 Ghidra leaves them undefined.
@@ -101,3 +102,35 @@ that corrupts decompiled 64-bit arithmetic silently rather than failing. Deliber
 reverting that one line makes 4 of the 26 cases fail, so the test has teeth.
 
 Fixtures come from the `hp-z27k-g3` session and are not committed here.
+
+**The acceptance diff proves decoding, not code coverage.** Both tools sweep linearly, which
+is what makes the comparison fair, but a linear sweep decodes .rodata as instructions too. No
+instruction count from this table says anything about how much of a fixture is really code.
+
+The TSUM_G slice also answered a question for `hp-z27k-g3`: that chip's core is aeonR2, not an
+earlier AEON. Decoded as `aeon:aeonR2` 12.6% of the sweep fails to decode, against 67.2% as
+`aeon1` and 52.6% as `aeon2`, and the `b.jr r9` return idiom appears 194 times under aeonR2 and
+never under the other two.
+
+## What the module actually meets: the census
+
+`./gradlew census -PaeonFixture=… -PaeonSeeds=… -PaeonBase=…` seeds entry points, lets
+flow-based disassembly run, and counts only the instructions inside functions — the list that
+says which pseudo-ops are worth replacing with real p-code. It marks an instruction as a
+pseudo-op when its p-code contains a `CALLOTHER`, which is what the decompiler shows as an
+opaque call, and reports the histogram twice: over all seeded functions, and over those that
+reach a return, since a seed that was really data produces a function that runs off the end.
+
+The census overturned my assumption about what to model next. In stream 0, pseudo-ops are
+**183 of 195,110 instructions** in functions that return — under 0.1% — and the MAC/DSP/SIMD
+breadth I had expected to matter is almost entirely in the non-returning functions, i.e. in
+data swept as code. What did show up in real code was mundane: special-purpose register
+access, `b.divl`, and `b.pclwz`. Those now have real p-code, which leaves sBoot with one
+pseudo-op instruction reachable (`b.syncwritebuffer`, correctly opaque) and the HDCP module
+with three.
+
+| fixture | functions | reachable instructions | with a return | in-memory data refs |
+|---|---|---|---|---|
+| sBoot (seeded from the reset vector alone) | 102 | 3,957 | 96 | 169 |
+| HDCP module (212 seeds from hp-z27k-g3) | 218 | 13,165 | 210 | 16 |
+| stream 0 (6,321 seeds from b.jal targets) | 5,622 | 221,011 | 3,119 | 14,501 |

@@ -54,6 +54,23 @@ CASES = [
                                  'b.lhz r6,0x18(r1)\nb.lhs r7,0x18(r1)'),
     ('push and pop move r1',     'b.movhi r1,0x10\nb.addi r5,r0,0x2a\nb.push r5\nb.pop r6'),
     ('conditional move, taken',  'b.movi r3,1\nb.movi r4,2\nb.sfeq r3,r3\nb.cmov r6,r3,r4'),
+    # multi-word transfers: c selects 2/3/4/8 registers, offset scales by 4
+    ('msw stores 2 registers',   'b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\n'
+                                 'b.msw 0x0(r1),r3,0x0\nb.lwz r6,0x0(r1)\nb.lwz r7,0x4(r1)'),
+    ('msw stores 4 registers',   'b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\n'
+                                 'b.addi r5,r0,0x55\nb.addi r6,r0,0x66\n'
+                                 'b.msw 0x0(r1),r3,0x2\nb.lwz r7,0x8(r1)\nb.lwz r8,0xc(r1)'),
+    ('mlwz loads 3 registers',   'b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\n'
+                                 'b.addi r5,r0,0x55\nb.msw 0x0(r1),r3,0x1\n'
+                                 'b.mlwz r6,0x0(r1),0x1'),
+    ('divl shifts then divides', 'b.addi r3,r0,100\nb.addi r4,r0,8\n'
+                                 '.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x40'),
+    ('divl rounds half up',      'b.addi r3,r0,7\nb.addi r4,r0,2\n'
+                                 '.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x01'),
+    ('divl rounds negatives',    'b.addi r3,r0,-7\nb.addi r4,r0,2\n'
+                                 '.byte 0xa0\n.byte 0xc3\n.byte 0x20\n.byte 0x01'),
+    ('mlwz offset scales by 4',  'b.movhi r1,0x10\nb.addi r3,r0,0x33\nb.addi r4,r0,0x44\n'
+                                 'b.msw 0x4(r1),r3,0x0\nb.mlwz r6,0x4(r1),0x0'),
 ]
 
 # registers worth comparing: the ones the cases write
@@ -68,7 +85,7 @@ def assemble(body):
             for line in body.strip().splitlines():
                 fh.write('\t' + line.strip() + '\n')
         obj, binf = os.path.join(d, 'c.o'), os.path.join(d, 'c.bin')
-        r = subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', '-EB', '-munknown',
+        r = subprocess.run([f'{T}/bin/aeon-elf-as', '-maeonR2', '-EB', '-munknown', '-mmulti',
                             src, '-o', obj], env=ENV, capture_output=True, text=True)
         if r.returncode:
             raise SystemExit(f'assembling failed:\n{body}\n{r.stderr}')

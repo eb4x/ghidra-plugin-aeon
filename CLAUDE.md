@@ -290,7 +290,16 @@ sanity-check a new case by breaking the semantics on purpose and watching it fai
 
 `acceptanceTest` is the real check: a full linear sweep diffed against the vendor objdump,
 address by address, mnemonic and operands and length, failing on any unexplained difference.
-Run it on all three fixtures before saying a spec change is good. The fixtures belong to the
+Run it on every fixture before saying a spec change is good. It proves decoding and says
+nothing about code coverage: both tools sweep linearly, so both decode .rodata as
+instructions.
+
+To decide what to model next, use `./gradlew census -PaeonFixture=… -PaeonSeeds=… -PaeonBase=…`
+rather than a mnemonic histogram over a listing. The census counts only what flow-based
+disassembly reaches from seeded entry points, and splits the count by whether the function
+reaches a return, because a seed that was really data produces a function that runs off the
+end. It was the census that showed MAC/DSP/SIMD breadth was not worth chasing: under 0.1% of
+the instructions in trustworthy functions are pseudo-ops at all. The fixtures belong to the
 `hp-z27k-g3` session and are gitignored; ask that session for them.
 
 The vendor toolchain lives in `vendor/` (gitignored, ~100 MB, from the `CUB3D/Ghidra-Aeon`
