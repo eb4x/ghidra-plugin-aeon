@@ -112,6 +112,24 @@ earlier AEON. Decoded as `aeon:aeonR2` 12.6% of the sweep fails to decode, again
 `aeon1` and 52.6% as `aeon2`, and the `b.jr r9` return idiom appears 194 times under aeonR2 and
 never under the other two.
 
+## Verified against the decompiler, not just the listing
+
+`./gradlew decompileCheck -PaeonFixture=… -PaeonSeeds=… -PaeonBase=…` decompiles every
+function and reports failures, warnings by kind, and how many computed jumps recovered a jump
+table. A clean listing and correct p-code say nothing about what a reader sees.
+
+| fixture | functions | decompile failures | computed jumps | with a recovered table |
+|---|---|---|---|---|
+| HDCP module | 218 | 0 | 31 | 0 |
+| stream 0 | 5,622 | 0 | 120 | 39 (78 targets) |
+
+The `b.jr` split is doing its job: functions close at `b.jr r9` and the remaining computed
+jumps are real switches. The HDCP module recovers none of its 31 because its dispatch tables
+live in RAM — the pattern is `b.bgtui` bound check, `b.slli` index, `movhi`+`addi` table base
+of 0xb000828, `b.lwz`, `b.jr` — and that RAM is not part of the module blob. Mapping the RAM
+region (or importing the module alongside the firmware that fills it) is what would recover
+them; nothing in the spec can.
+
 ## What the module actually meets: the census
 
 `./gradlew census -PaeonFixture=… -PaeonSeeds=… -PaeonBase=…` seeds entry points, lets
