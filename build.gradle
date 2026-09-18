@@ -54,6 +54,7 @@ buildExtension.exclude 'fixtures/**'
 buildExtension.exclude 'fixtures-out/**'
 buildExtension.exclude 'tests/**'
 buildExtension.exclude 'CLAUDE.md'
+buildExtension.exclude '.mcp.json'
 buildExtension.exclude '*.rawlob'
 
 def extensionName = project.name

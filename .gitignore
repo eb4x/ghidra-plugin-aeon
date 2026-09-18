@@ -17,6 +17,9 @@ fixtures-out/
 # machine-specific build config (absolute GHIDRA_INSTALL_DIR / extensions dir)
 gradle.properties
 
+# local dev config: MCP endpoints on this host
+.mcp.json
+
 # compiled SLEIGH: a build product of data/languages/*.slaspec
 data/languages/*.sla
 fixtures/
