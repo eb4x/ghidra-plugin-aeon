@@ -1,0 +1,145 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Ghidra version this module is developed and tested against. The matrix
+  # also builds against the latest official release; only the pinned build is
+  # required for a release to go out.
+  PINNED_GHIDRA: "12.1.3"
+
+jobs:
+  versions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.resolve.outputs.matrix }}
+    steps:
+      - name: Resolve Ghidra versions (pinned + latest official)
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest="$(gh api repos/NationalSecurityAgency/ghidra/releases/latest -q .tag_name)"
+          latest="${latest#Ghidra_}"
+          latest="${latest%_build}"
+          if [ "$latest" = "$PINNED_GHIDRA" ]; then
+            echo "matrix=[\"$PINNED_GHIDRA\"]" >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix=[\"$PINNED_GHIDRA\",\"$latest\"]" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ghidra: ${{ fromJSON(needs.versions.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Cache Ghidra ${{ matrix.ghidra }}
+        id: cache-ghidra
+        uses: actions/cache@v4
+        with:
+          path: ~/ghidra
+          key: ghidra-${{ matrix.ghidra }}
+
+      - name: Download Ghidra ${{ matrix.ghidra }}
+        if: steps.cache-ghidra.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p ~/ghidra
+          gh release download "Ghidra_${{ matrix.ghidra }}_build" \
+            --repo NationalSecurityAgency/ghidra \
+            --pattern '*.zip' --output ~/ghidra/ghidra.zip
+          unzip -q ~/ghidra/ghidra.zip -d ~/ghidra
+          rm ~/ghidra/ghidra.zip
+
+      # buildExtension depends on compileSleigh, so a spec error, a pattern
+      # conflict or a colliding operand fails here rather than at load time.
+      - name: Build extension
+        run: |
+          export GHIDRA_INSTALL_DIR="$(echo "$HOME"/ghidra/ghidra_*)"
+          ./gradlew buildExtension
+
+      # checkPackaging: nothing but the language in the zip.
+      # smokeTest:      decodes the committed test program, compared with the
+      #                 vendor objdump's output recorded in the script.
+      # emuTest:        replays committed sequences through Ghidra's p-code
+      #                 emulator and compares registers with the vendor
+      #                 simulator's recorded results.
+      # The acceptance diff is not here: it needs the vendor toolchain and
+      # proprietary firmware, neither of which is in this repo.
+      - name: Verify
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q xvfb
+          export GHIDRA_INSTALL_DIR="$(echo "$HOME"/ghidra/ghidra_*)"
+          xvfb-run -a ./gradlew verify
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zip-ghidra-${{ matrix.ghidra }}
+          path: dist/*.zip
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' && !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read extension version
+        id: version
+        run: |
+          echo "version=$(grep '^version=' version.properties | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing release
+        id: guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "v${{ steps.version.outputs.version }}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/download-artifact@v4
+        if: steps.guard.outputs.exists == 'false'
+        with:
+          pattern: zip-ghidra-*
+          merge-multiple: true
+          path: dist
+
+      - name: Create release v${{ steps.version.outputs.version }}
+        if: steps.guard.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The pinned build is required; the latest-official leg may lag behind.
+          ls dist/ghidra_"$PINNED_GHIDRA"_*.zip
+          gh release create "v${{ steps.version.outputs.version }}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes \
+            dist/*.zip
