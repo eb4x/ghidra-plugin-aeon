@@ -45,7 +45,9 @@ public class AeonCensus extends GhidraScript {
 		int reached = 0;
 		int functions = 0;
 		int endsWithReturn = 0;
+		int tailCalls = 0;
 		int fallsThrough = 0;
+		List<String> unhealthy = new ArrayList<>();
 
 		for (Function f : currentProgram.getFunctionManager().getFunctions(true)) {
 			functions++;
@@ -75,8 +77,19 @@ public class AeonCensus extends GhidraScript {
 			if (sawReturn) {
 				endsWithReturn++;
 			}
+			else if (last != null && endsInTailCall(f, last)) {
+				// a function ending in a jump to another function's entry is
+				// perfectly formed; it just never reaches a return of its own
+				tailCalls++;
+			}
 			else if (last != null && last.getFlowType().isFallthrough()) {
 				fallsThrough++;
+				unhealthy.add(f.getEntryPoint() + " ends at " + last.getAddress() +
+					": " + last + "  (runs off the end)");
+			}
+			else if (last != null) {
+				unhealthy.add(f.getEntryPoint() + " ends at " + last.getAddress() +
+					": " + last);
 			}
 		}
 
@@ -97,6 +110,11 @@ public class AeonCensus extends GhidraScript {
 			}
 		}
 
+		if (!unhealthy.isEmpty()) {
+			println("  --- functions that neither return nor tail-call ---");
+			unhealthy.stream().limit(25).forEach(x -> println("    " + x));
+		}
+
 		List<Map.Entry<String, int[]>> rows = new ArrayList<>(counts.entrySet());
 		rows.sort((a, b) -> b.getValue()[0] - a.getValue()[0]);
 
@@ -104,7 +122,9 @@ public class AeonCensus extends GhidraScript {
 		println("  functions:                  " + functions);
 		println("  instructions in functions:  " + reached);
 		println("  functions with a return:    " + endsWithReturn);
+		println("  functions ending in a tail call: " + tailCalls);
 		println("  functions running off the end: " + fallsThrough);
+		println("  healthy (either of the two):  " + (endsWithReturn + tailCalls));
 		println("  b.movhi in functions:       " + movhiPairs);
 		println("  in-memory data references:  " + dataRefs);
 		println("  distinct mnemonics:         " + rows.size());
@@ -116,6 +136,23 @@ public class AeonCensus extends GhidraScript {
 				c[1] > 0 ? "   PSEUDO-OP" : ""));
 		}
 		println("AEON CENSUS DONE");
+	}
+
+	/** A jump out of the function to another function's entry point. */
+	private boolean endsInTailCall(Function f, Instruction last) {
+		if (!last.getFlowType().isJump()) {
+			return false;
+		}
+		for (Address to : last.getFlows()) {
+			if (f.getBody().contains(to)) {
+				continue;
+			}
+			Function other = getFunctionAt(to);
+			if (other != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isPseudo(Instruction insn) {

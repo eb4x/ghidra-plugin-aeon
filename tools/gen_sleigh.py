@@ -235,7 +235,11 @@ SEMANTICS = {
     'bn.nop':    '',
     'bt.trap':   'aeon_trap({G}:4);',
     'bt.sys':    'aeon_syscall();',
-    'bt.rfe':    'aeon_return_from_exception(); return [pc];',
+    # Measured in aeon-elf-sim: b.rfe jumps to the address in SPR 0x20, the
+    # OpenRISC EPCR. Writing a target there and stepping through the rfe lands
+    # on it exactly; SPR 0x30 has no effect.
+    'bt.rfe':    ('local addr:4 = 0x80; local epc:4 = *[spr]:4 (addr); '
+                  'aeon_restore_exception_state(); return [epc];'),
     'bt.ei':     'aeon_enable_interrupts();',
     'bt.di':     'aeon_disable_interrupts();',
     'bt.wait':   'aeon_wait();',
