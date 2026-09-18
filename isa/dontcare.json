@@ -1,0 +1,3129 @@
+{
+ "bt.trap": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.nop": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.stack": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.rfe": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.ei": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.di": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.sys": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.wait": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.synci": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.syncd": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.return": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.jalr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.jr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.pop": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.push": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.syncp": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.sfgtui_minus32769": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.sfleui_minus32769": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.sfgtsi_minus32769": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.sflesi_minus32769": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.add16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.mov16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.dm": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.em": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bt.mov": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.add": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.j": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.movhi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.movi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bt.addi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.nop": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.movhi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.lhs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.lhz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.lwz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.lbz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.lbs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sb": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.pclwz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.div": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.divu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mulu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mul": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.add": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sub": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subb": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.flb": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.andn": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sub_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.add_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.and": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.or": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.xor": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.nand": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.cmov": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.cmovir": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.cmovri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.cmovii": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.slli": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srli": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srai": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.rori": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sll": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sra": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.ror": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.ori": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.andi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.xori": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfeqi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfnei": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sflesi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgtsi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfleui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgtui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfeq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfne": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfles": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgts": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.cnreti": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.creti": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfleu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgtu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.extbz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.extbs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.exthz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.exths": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.ff1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.exp": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.exp16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.fl1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.clz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.swab": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bitrev": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgn": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgnz1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgnz_1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgnp": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgnpz1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sgnpz_1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.count1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.entri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.reti": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.rtnei": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.beqi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bnei": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bnf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.blesi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bgtsi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bleui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bgtui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.jal": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.j": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mlwz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.msw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srlri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srari": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.srarzi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addcqq_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subcqq_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addcnqq_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subcnqq_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.dsl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bsl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.dsr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bsa": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.bsa_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.crc_le": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.conjc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.pack_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.dsli": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.dsri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.muladdh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.muladdhx": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mulsubh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mulsubhx": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addp_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subp_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addcn_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subcn_s": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sat": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.satu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.satsu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.satus": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sf2df": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.df2sf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.i2sf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sf2i": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.mulsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.maddsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.divsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.remsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfeqsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sflesf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfeqdf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfledf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfnesf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgtsf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfnedf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.sfgtdf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addc_s_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subc_s_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addcn_s_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subcn_s_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addc_s_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subc_s_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.addcn_s_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subcn_s_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.jal": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.j": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lhs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lhz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lwz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lbz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.pclwz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lbs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.prefetch": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.flush": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.invalidate": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.flush_invalidate": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.syncwritebuffer": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.flush_line": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.invalidate_line": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.flush_invalidate_line": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.dma_op": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sb": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.addi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sfeqi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sfnei": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sflesi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sfgtsi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sfleui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.sfgtui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.movhi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.getpcofs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.addpcofs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.mtspr1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.mfspr1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.mtspr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.mfspr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.andi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.ori": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.muli": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.blesi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bleui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.beqi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.chk_lu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bgtsi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bgtui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bnei": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.chk_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bles": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bleu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.beq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bgts": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bgtu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bne": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.bnf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.xori": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.addic": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.divl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.divlr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.divlu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.divlru": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.ldww": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.ldwwx": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.ldww2": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.ldww2x": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr_ex": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr_exr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.dummy1": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40_32": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40_32r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40r_32": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40r_32r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40_16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40_16r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40r_16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacr40r_16r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacrc40_16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacrc40_16r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacrc40r_16": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacrc40r_16r": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.btb": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6
+  ],
+  "_i": 0
+ },
+ "bg.loop": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.loopi": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacrq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.amacwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacwqaddr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacwqaddr_length": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacwq2": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacwq2addr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamacrq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.pamacwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamacwqaddr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamacwqaddr_length": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamacwq2": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamacwq2addr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.pamac": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.lhq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.lhqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.dummy3": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16c": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cn": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amul16qq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amul16cqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amul16cnqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amul16q": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cnq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amuldq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16dq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cndq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amul16_lhqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amul16c_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amul16cn_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amul_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16_lhq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16c_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cn_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16_lhdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16c_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul16cn_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16c": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cn": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amac16qq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amac16cqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amac16cnqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amac16q": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cnq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16dq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cndq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amac16_lhqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amac16c_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amac16cn_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amac_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16_lhq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16c_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cn_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16_lhdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16c_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac16cn_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16c": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cn": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amsb16qq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cnqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "_i": 0
+ },
+ "bg.amsb16q": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cnq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16dq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cndq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amsb16_lhqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amsb16c_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cn_lwqq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7,
+   11,
+   12,
+   13,
+   14
+  ],
+  "_i": 0
+ },
+ "bg.amsb_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16_lhq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16c_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cn_lwq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16_lhdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16c_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb16cn_lwdq": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacw": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulqu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacqu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbqu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbu": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amadd": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_wl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsub": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_ll": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_hl": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_wh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_lh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amulq_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amacq_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsbq_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amul_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amac_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.amsb_hh": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.ext": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.exti": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extru": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.extrui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.dep": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.depi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.depr": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.depri": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.satdep": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.satdepu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.satdepi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.satdepui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.abs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.absc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.minui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.maxi": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.mini": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.maxui": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.minu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.max": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.min": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.maxu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.adddf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.subdf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.i2df": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.df2i": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.muldf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.madddf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.divdf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bn.remdf": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "bg.fft": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.fftr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.ifft": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "bg.ifftr": {
+  "baseline_ok": true,
+  "ignored_bits": [
+   6,
+   7
+  ],
+  "_i": 0
+ },
+ "mv.add": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.addu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.add.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.addu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sad.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sub": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.subu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sub.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.subu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avgu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avgu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg0": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg0u": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg0.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.avg0u.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.abs": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.saddl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.saddh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mulu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sra": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.srl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sll": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.and": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.or": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.xor": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.seq": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.seq.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.slt": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sltu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.slt.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sltu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.textnz": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.lzc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.rand": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.ror": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.min": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.minu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.max": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.maxu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.clip3u": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.clip3": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.dup": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.upckl": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.upckh": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.cat": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mfv": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mfvu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mfv.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mfvu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mfvw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mtv": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mtvw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.mmk": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.pckx": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sacc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.rnd": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.rndu": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.rnd.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.rndu.b": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.opt": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.opc": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.opv": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.opm": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.ldv": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sdv": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.ldw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ },
+ "mv.sdw": {
+  "baseline_ok": true,
+  "ignored_bits": [],
+  "_i": 0
+ }
+}

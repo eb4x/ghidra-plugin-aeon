@@ -1,0 +1,24 @@
+.gradle/
+build/
+dist/
+lib/
+bin/
+.settings/
+.classpath
+.project
+os/
+
+# vendor toolchain and ISA sources (large, redistributable separately)
+vendor/
+
+# generated disassembly listings used for the acceptance diff
+fixtures-out/
+
+# machine-specific build config (absolute GHIDRA_INSTALL_DIR / extensions dir)
+gradle.properties
+
+# compiled SLEIGH: a build product of data/languages/*.slaspec
+data/languages/*.sla
+fixtures/
+__pycache__/
+*.pyc

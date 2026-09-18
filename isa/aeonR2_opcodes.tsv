@@ -1,0 +1,532 @@
+bt.trap	G	100 000 00000 GGGG 0	it_sys	2097152	0	1
+bt.nop	G	100 000 00000 GGGG 1	it_arith	65536	0	1
+bt.stack	r?,F,f	100 000 ????? FFFF f	it_store	786464	0	2
+bt.rfe		100 001 ----- 00000	it_sys	0	0	1
+bt.ei		100 001 ----- 00001	it_sys	0	0	1
+bt.di		100 001 ----- 00010	it_sys	0	0	1
+bt.sys		100 001 ----- 00011	it_sys	2097152	0	1
+bt.wait		100 001 ----- 00100	it_sys	0	0	1
+bt.synci		100 001 ----- 00101	it_sys	0	0	4096
+bt.syncd		100 001 ----- 00110	it_sys	0	0	4096
+bt.return		100 001 ----- 00111	it_return	0	0	4096
+bt.jalr	rA	100 001 AAAAA 01000	it_call	4192	0	1
+bt.jr	rA	100 001 AAAAA 01001	it_indirect_jump	32	0	1
+bt.pop	rD	100 001 DDDDD 01010	it_load	295008	0	4096
+bt.push	rA	100 001 AAAAA 01011	it_store	295008	0	4096
+bt.syncp		100 001 ----- 01100	it_sys	0	0	4096
+bt.sfgtui_minus32769	rA	100 001 AAAAA 10000	it_compare	32	0	1
+bt.sfleui_minus32769	rA	100 001 AAAAA 10001	it_compare	32	0	1
+bt.sfgtsi_minus32769	rA	100 001 AAAAA 10010	it_compare	32	0	1
+bt.sflesi_minus32769	rA	100 001 AAAAA 10011	it_compare	32	0	1
+bt.add16	rD	100 001 DDDDD 10100	it_arith	16496	0	8192
+bt.mov16	rD	100 001 DDDDD 10101	it_arith	64	0	8192
+bt.dm		100 001 ----- 10110	it_sys	0	0	8192
+bt.em		100 001 ----- 10111	it_sys	0	0	8192
+bt.mov	rD,rA	100 010 DDDDD AAAAA	it_arith	96	0	1
+bt.add	rD,rA	100 011 DDDDD AAAAA	it_arith	16496	0	1
+bt.j	T	100 100 TTTTT TTTTT	it_uncond_branch	0	0	1
+bt.movhi	rD,H	100 101 DDDDD HHHHH	it_movimm	64	0	1
+bt.movi	rD,I	100 110 DDDDD IIIII	it_arith	64	0	1
+bt.addi	rD,I	100 111 DDDDD IIIII	it_arith	16496	0	1
+bn.nop	t	000 000 --tttttttttttttttt	it_arith	65536	0	1
+bn.movhi	rD,$	000 001 DDDDD $$$$$$$$$$$$$	it_movimm	64	0	1
+bn.lhs	rD,_(rA)	000 010 DDDDD AAAAA _______ 0	it_load	786528	0	1
+bn.lhz	rD,_(rA)	000 010 DDDDD AAAAA _______ 1	it_load	786528	0	1
+bn.sh	_(rA),rB	000 011 BBBBB AAAAA _______ 1	it_store	786464	0	1
+bn.sw	:(rA),rB	000 011 BBBBB AAAAA :::::: 00	it_store	786464	0	1
+bn.lwz	rD,:(rA)	000 011 DDDDD AAAAA :::::: 10	it_load	786528	0	1
+bn.lbz	r?,z(rA)	000 100 ????? AAAAA zzzzzzzz	it_load	786528	0	1
+bn.lbs	rD,z(rA)	000 101 DDDDD AAAAA zzzzzzzz	it_load	786528	0	1
+bn.sb	z(rA),rB	000 110 BBBBB AAAAA zzzzzzzz	it_store	786464	0	1
+bn.pclwz	z(rA)	000 100 00000 AAAAA zzzzzzzz	it_load	794656	0	16384
+bn.addi	rD,rA,O	000 111 DDDDD AAAAA OOOOOOOO	it_arith	112	0	1
+bn.div	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 000	it_arith	524384	0	1
+bn.divu	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 001	it_arith	524384	0	1
+bn.mulu	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 010	it_arith	96	0	1
+bn.mul	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 011	it_arith	96	0	1
+bn.add	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 100	it_arith	112	0	1
+bn.sub	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 101	it_arith	112	0	1
+bn.subb	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 110	it_arith	120	0	1
+bn.addc	rD,rA,rB	010 000 DDDDD AAAAA BBBBB 111	it_arith	120	0	1
+bn.flb	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 000	it_arith	96	0	1
+bn.andn	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 001	it_arith	96	0	8192
+bn.sub_s	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 010	it_arith	112	0	8192
+bn.add_s	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 011	it_arith	112	0	8192
+bn.and	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 100	it_arith	96	0	1
+bn.or	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 101	it_arith	96	0	1
+bn.xor	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 110	it_arith	96	0	1
+bn.nand	rD,rA,rB	010 001 DDDDD AAAAA BBBBB 111	it_arith	96	0	1
+bn.cmov	rD,rA,rB	010 010 DDDDD AAAAA BBBBB 000	it_arith	98	0	1
+bn.cmovir	rD,I,rB	010 010 DDDDD IIIII BBBBB 001	it_arith	98	0	1
+bn.cmovri	rD,rA,I	010 010 DDDDD AAAAA IIIII 010	it_arith	98	0	1
+bn.cmovii	rD,I,L	010 010 DDDDD IIIII LLLLL 011	it_arith	66	0	1
+bn.slli	rD,rA,H	010 011 DDDDD AAAAA HHHHH 000	it_shift	96	0	1
+bn.srli	rD,rA,H	010 011 DDDDD AAAAA HHHHH 001	it_shift	96	0	1
+bn.srai	rD,rA,H	010 011 DDDDD AAAAA HHHHH 010	it_shift	96	0	1
+bn.rori	rD,rA,H	010 011 DDDDD AAAAA HHHHH 011	it_shift	96	0	1
+bn.sll	rD,rA,rB	010 011 DDDDD AAAAA BBBBB 100	it_shift	96	0	1
+bn.srl	rD,rA,rB	010 011 DDDDD AAAAA BBBBB 101	it_shift	96	0	1
+bn.sra	rD,rA,rB	010 011 DDDDD AAAAA BBBBB 110	it_shift	96	0	1
+bn.ror	rD,rA,rB	010 011 DDDDD AAAAA BBBBB 111	it_shift	96	0	1
+bn.ori	rD,rA,N	010 100 DDDDD AAAAA NNNNNNNN	it_arith	96	0	1
+bn.andi	rD,rA,N	010 101 DDDDD AAAAA NNNNNNNN	it_arith	96	0	1
+bn.xori	rD,rA,O	010 110 DDDDD AAAAA OOOOOOOO	it_arith	96	0	1
+bn.sfeqi	rA,O	010 111 AAAAA OOOOOOOO 0000 1	it_compare	36	0	1
+bn.sfnei	rA,O	010 111 AAAAA OOOOOOOO 0100 1	it_compare	36	0	1
+bn.sflesi	rA,O	010 111 AAAAA OOOOOOOO 1000 1	it_compare	36	0	1
+bn.sfgtsi	rA,O	010 111 AAAAA OOOOOOOO 1100 1	it_compare	36	0	1
+bn.sfleui	rA,O	010 111 AAAAA OOOOOOOO 1001 1	it_compare	36	0	1
+bn.sfgtui	rA,O	010 111 AAAAA OOOOOOOO 1101 1	it_compare	36	0	1
+bn.sfeq	rA,rB	010 111 AAAAA BBBBB--- 0010 1	it_compare	36	0	1
+bn.sfne	rA,rB	010 111 AAAAA BBBBB--- 0110 1	it_compare	36	0	1
+bn.sfles	rA,rB	010 111 AAAAA BBBBB--- 1010 1	it_compare	36	0	1
+bn.sfgts	rA,rB	010 111 AAAAA BBBBB--- 1110 1	it_compare	36	0	1
+bn.cnreti	F,V	010 111 FFFF VVVVVVVVV 0011 1	it_return	298082	0	32
+bn.creti	F,V	010 111 FFFF VVVVVVVVV 0111 1	it_return	298082	0	32
+bn.sfleu	rA,rB	010 111 AAAAA BBBBB--- 1011 1	it_compare	36	0	1
+bn.sfgtu	rA,rB	010 111 AAAAA BBBBB--- 1111 1	it_compare	36	0	1
+bn.extbz	rD,rA	010 111 DDDDD AAAAA--- 0000 0	it_move	96	0	1
+bn.extbs	rD,rA	010 111 DDDDD AAAAA--- 0001 0	it_move	96	0	1
+bn.exthz	rD,rA	010 111 DDDDD AAAAA--- 0010 0	it_move	96	0	1
+bn.exths	rD,rA	010 111 DDDDD AAAAA--- 0011 0	it_move	96	0	1
+bn.ff1	rD,rA	010 111 DDDDD AAAAA--- 0100 0	it_arith	96	0	1
+bn.exp	rD,rA	010 111 DDDDD AAAAA--0 0101 0	it_arith	96	0	8192
+bn.exp16	rD,rA	010 111 DDDDD AAAAA--1 0101 0	it_arith	96	0	8192
+bn.fl1	rD,rA	010 111 DDDDD AAAAA--- 0110 0	it_arith	96	0	1
+bn.clz	rD,rA	010 111 DDDDD AAAAA--- 0111 0	it_arith	96	0	1
+bn.swab	rD,rA	010 111 DDDDD AAAAA--- 1000 0	it_arith	96	0	8
+bn.bitrev	rD,rA	010 111 DDDDD AAAAA--- 1001 0	it_arith	96	0	8
+bn.sgn	rD,rA	010 111 DDDDD AAAAA000 1010 0	it_arith	96	0	8192
+bn.sgnz1	rD,rA	010 111 DDDDD AAAAA001 1010 0	it_arith	96	0	8192
+bn.sgnz_1	rD,rA	010 111 DDDDD AAAAA010 1010 0	it_arith	96	0	8192
+bn.sgnp	rD,rA	010 111 DDDDD AAAAA100 1010 0	it_arith	96	0	8192
+bn.sgnpz1	rD,rA	010 111 DDDDD AAAAA101 1010 0	it_arith	96	0	8192
+bn.sgnpz_1	rD,rA	010 111 DDDDD AAAAA110 1010 0	it_arith	96	0	8192
+bn.count1	rD,rA	010 111 DDDDD AAAAA--- 1011 0	it_arith	96	0	8192
+bn.entri	F,V	010 111 FFFF VVVVVVVVV 1100 0	it_store	295520	0	32
+bn.reti	F,V	010 111 FFFF VVVVVVVVV 1101 0	it_return	298080	0	32
+bn.rtnei	F,V	010 111 FFFF VVVVVVVVV 1110 0	it_load	298080	0	32
+bn.beqi	rA,%,`	001 000 AAAAA %%% ```````` 00	it_cond_branch	32	0	1
+bn.bnei	rA,%,`	001 000 AAAAA %%% ```````` 10	it_cond_branch	32	0	1
+bn.bf	~	001 000 ~~~~~~~~~~~~~~~~   01	it_cond_branch	2	0	1
+bn.bnf	~	001 000 ~~~~~~~~~~~~~~~~   11	it_cond_branch	2	0	1
+bn.blesi	rA,%,`	001 001 AAAAA %%% ```````` 00	it_cond_branch	32	0	1
+bn.bgtsi	rA,%,`	001 001 AAAAA %%% ```````` 10	it_cond_branch	32	0	1
+bn.bleui	rA,%,`	001 001 AAAAA %%% ```````` 01	it_cond_branch	32	0	1
+bn.bgtui	rA,%,`	001 001 AAAAA %%% ```````` 11	it_cond_branch	32	0	1
+bn.jal	s	001 010 ssssssssssssssssss	it_call	4160	0	1
+bn.j	s	001 011 ssssssssssssssssss	it_uncond_branch	0	0	1
+bn.mlwz	rD,K(rA),c	001 100 DDDDD AAAAA KKKKKK cc	it_load	787552	0	32
+bn.msw	K(rA),rB,c	001 101 BBBBB AAAAA KKKKKK cc	it_store	786976	0	32
+bn.srlri	rD,rA,H	011 000 DDDDD AAAAA HHHHH 000	it_shift	96	0	8192
+bn.srari	rD,rA,H	011 000 DDDDD AAAAA HHHHH 001	it_shift	96	0	8192
+bn.srarzi	rD,rA,H	011 000 DDDDD AAAAA HHHHH 010	it_shift	96	0	8192
+bn.addcqq_s	rD	011 000 DDDDD ----- ----- 100	it_arith	80	0	8192
+bn.subcqq_s	rD	011 000 DDDDD ----- ----- 101	it_arith	80	0	8192
+bn.addcnqq_s	rD	011 000 DDDDD ----- ----- 110	it_arith	80	0	8192
+bn.subcnqq_s	rD	011 000 DDDDD ----- ----- 111	it_arith	80	0	8192
+bn.dsl	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 000	it_shift	16480	0	8192
+bn.bsl	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 001	it_shift	96	0	8192
+bn.dsr	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 010	it_shift	16480	0	8192
+bn.bsa	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 011	it_shift	96	0	8192
+bn.bsa_s	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 111	it_shift	96	0	8192
+bn.crc_le	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 100	it_arith	96	0	8192
+bn.conjc	rD,rA	011 001 DDDDD AAAAA ----- 101	it_arith	96	0	8192
+bn.pack_s	rD,rA,rB	011 001 DDDDD AAAAA BBBBB 110	it_move	96	0	8192
+bn.dsli	rD,rA,b	011 010 DDDDD AAAAA bbbbbb 00	it_shift	16480	0	8192
+bn.dsri	rD,rA,b	011 010 DDDDD AAAAA bbbbbb 01	it_shift	16480	0	8192
+bn.muladdh	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 000	it_arith	96	0	8192
+bn.muladdhx	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 001	it_arith	96	0	8192
+bn.mulsubh	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 010	it_arith	96	0	8192
+bn.mulsubhx	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 011	it_arith	96	0	8192
+bn.addp_s	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 100	it_arith	112	0	8192
+bn.subp_s	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 101	it_arith	112	0	8192
+bn.addcn_s	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 110	it_arith	112	0	8192
+bn.subcn_s	rD,rA,rB	011 011 DDDDD AAAAA BBBBB 111	it_arith	112	0	8192
+bn.sat	rD,rA,H	011 100 DDDDD AAAAA HHHHH -00	it_subword	1048672	0	8192
+bn.satu	rD,rA,H	011 100 DDDDD AAAAA HHHHH -01	it_subword	1048672	0	8192
+bn.satsu	rD,rA,H	011 100 DDDDD AAAAA HHHHH -10	it_subword	1048672	0	8192
+bn.satus	rD,rA,H	011 100 DDDDD AAAAA HHHHH -11	it_subword	1048672	0	8192
+bn.sf2df	rD,rA	011 100 DDDDD AAAAA ----- 100	it_float	352	0	2048
+bn.df2sf	rD,rA	011 100 DDDDD AAAAA ----- 101	it_float	224	0	2048
+bn.addsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 000	it_float	96	0	1024
+bn.subsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 001	it_float	96	0	1024
+bn.i2sf	rD,rA	011 101 DDDDD AAAAA ----0 010	it_float	96	0	1024
+bn.sf2i	rD,rA	011 101 DDDDD AAAAA ----0 011	it_float	96	0	1024
+bn.mulsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 100	it_float	96	0	1024
+bn.maddsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 101	it_float	96	0	1024
+bn.divsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 110	it_float	96	0	1024
+bn.remsf	rD,rA,rB	011 101 DDDDD AAAAA BBBBB 111	it_float	96	0	1024
+bn.sfeqsf	rA,rB	011 110 ----- AAAAA BBBBB 000	it_float	36	0	1024
+bn.sflesf	rA,rB	011 110 ----- AAAAA BBBBB 001	it_float	36	0	1024
+bn.sfeqdf	rA,rB	011 110 ----- AAAAA BBBBB 010	it_float	164	0	2048
+bn.sfledf	rA,rB	011 110 ----- AAAAA BBBBB 011	it_float	164	0	2048
+bn.sfnesf	rA,rB	011 110 ----- AAAAA BBBBB 100	it_float	36	0	1024
+bn.sfgtsf	rA,rB	011 110 ----- AAAAA BBBBB 101	it_float	36	0	1024
+bn.sfnedf	rA,rB	011 110 ----- AAAAA BBBBB 110	it_float	164	0	2048
+bn.sfgtdf	rA,rB	011 110 ----- AAAAA BBBBB 111	it_float	164	0	2048
+bn.addc_s_lwq	rD,rA,qd,f	011 111 DDDDD AAAAA --ddf 000	it_arith	112	0	8192
+bn.subc_s_lwq	rD,rA,qd,f	011 111 DDDDD AAAAA --ddf 001	it_arith	112	0	8192
+bn.addcn_s_lwq	rD,rA,qd,f	011 111 DDDDD AAAAA --ddf 010	it_arith	112	0	8192
+bn.subcn_s_lwq	rD,rA,qd,f	011 111 DDDDD AAAAA --ddf 011	it_arith	112	0	8192
+bn.addc_s_lwqq	rD,Q,f	011 111 DDDDD ----Q ----f 100	it_arith	80	0	8192
+bn.subc_s_lwqq	rD,Q,f	011 111 DDDDD ----Q ----f 101	it_arith	80	0	8192
+bn.addcn_s_lwqq	rD,Q,f	011 111 DDDDD ----Q ----f 110	it_arith	80	0	8192
+bn.subcn_s_lwqq	rD,Q,f	011 111 DDDDD ----Q ----f 111	it_arith	80	0	8192
+bg.jal	/	111 001 ///////////////////////// 0	it_call	0	0	1
+bg.j	/	111 001 ///////////////////////// 1	it_uncond_branch	0	0	1
+bg.lhs	rD,X(rA)	111 010 DDDDD AAAAA XXXXXXXXXXXXXXX 0	it_load	786528	0	1
+bg.lhz	rD,X(rA)	111 010 DDDDD AAAAA XXXXXXXXXXXXXXX 1	it_load	786528	0	1
+bg.sh	X(rA),rB	111 011 BBBBB AAAAA XXXXXXXXXXXXXXX 1	it_store	786464	0	1
+bg.sw	W(rA),rB	111 011 BBBBB AAAAA WWWWWWWWWWWWWW 00	it_store	786464	0	1
+bg.lwz	rD,W(rA)	111 011 DDDDD AAAAA WWWWWWWWWWWWWW 10	it_load	786528	0	1
+bg.lbz	r?,!(rA)	111 100 ????? AAAAA !!!!!!!!!!!!!!!!	it_load	786528	0	1
+bg.pclwz	Y(rA)	111 100 00000 AAAAA YYYYYYYYYYYYYYYY	it_load	794656	0	1
+bg.lbs	r?,!(rA)	111 101 ????? AAAAA !!!!!!!!!!!!!!!!	it_load	786528	0	1
+bg.prefetch	=(rA)	111 101 00000 AAAAA ==========-- 0001	it_cache	131104	0	1
+bg.flush	=(rA)	111 101 00000 AAAAA ==========-- 0010	it_cache	131104	0	1
+bg.invalidate	=(rA)	111 101 00000 AAAAA ==========-- 0011	it_cache	131104	0	1
+bg.flush_invalidate	=(rA)	111 101 00000 AAAAA ==========-- 0100	it_cache	131104	0	1
+bg.syncwritebuffer		111 101 00000 ----- ------------ 0101	it_cache	131072	0	1
+bg.flush_line	=(rA),d	111 101 00000 AAAAA ==========dd 0110	it_cache	131104	0	1
+bg.invalidate_line	=(rA),d	111 101 00000 AAAAA ==========dd 0111	it_cache	131104	0	1
+bg.flush_invalidate_line	=(rA),d	111 101 00000 AAAAA ==========dd 1001	it_cache	131104	0	2
+bg.dma_op	rA,rB	111 101 00000 AAAAA BBBBB=====00 1010	it_load	787552	0	64
+bg.sb	Y(rA),rB	111 110 BBBBB AAAAA YYYYYYYYYYYYYYYY	it_store	786464	0	1
+bg.addi	rD,rA,Y	111 111 DDDDD AAAAA YYYYYYYYYYYYYYYY	it_arith	112	0	1
+bg.sfeqi	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  000 0	it_compare	36	0	1
+bg.sfnei	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  010 0	it_compare	36	0	1
+bg.sflesi	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  100 0	it_compare	36	0	1
+bg.sfgtsi	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  110 0	it_compare	36	0	1
+bg.sfleui	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  101 0	it_compare	36	0	1
+bg.sfgtui	rA,Y	110 000 AAAAA YYYYYYYYYYYYYYYY-  111 0	it_compare	36	0	1
+bg.movhi	rD,U	110 000 DDDDD UUUUUUUUUUUUUUUU-  000 1	it_movimm	64	0	1
+bg.getpcofs	rD,Y	110 000 DDDDD YYYYYYYYYYYYYYYY0  001 1	it_arith	8256	0	16384
+bg.addpcofs	rD,Y	110 000 DDDDD YYYYYYYYYYYYYYYY1  001 1	it_arith	24672	0	16384
+bg.mtspr1	rB,U	110 000 BBBBB UUUUUUUUUUUUUUUU-  010 1	it_move	32	0	1
+bg.mfspr1	rD,U	110 000 DDDDD UUUUUUUUUUUUUUUU-  011 1	it_move	64	0	1
+bg.mtspr	rA,rB,|	110 000 BBBBB AAAAA |||||||||||| 110 1	it_move	32	0	1
+bg.mfspr	rD,rA,|	110 000 DDDDD AAAAA |||||||||||| 111 1	it_move	96	0	1
+bg.andi	rD,rA,t	110 001 DDDDD AAAAA tttttttttttttttt	it_arith	96	0	1
+bg.ori	rD,rA,t	110 010 DDDDD AAAAA tttttttttttttttt	it_arith	96	0	1
+bg.muli	rD,rA,Y	110 011 DDDDD AAAAA YYYYYYYYYYYYYYYY	it_arith	96	0	1
+bg.blesi	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  000	it_cond_branch	32	0	1
+bg.bleui	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  001	it_cond_branch	32	0	1
+bg.beqi	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  010	it_cond_branch	32	0	1
+bg.chk_lu	rC,N(rA),rB	110 100 CCCCC AAAAA BBBBB NNNNNNNN 011	it_compare	524320	0	8192
+bg.bgtsi	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  100	it_cond_branch	32	0	1
+bg.bgtui	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  101	it_cond_branch	32	0	1
+bg.bnei	rA,I,;	110 100 AAAAA IIIII ;;;;;;;;;;;;;  110	it_cond_branch	32	0	1
+bg.chk_ll	rC,N(rA),rB	110 100 CCCCC AAAAA BBBBB NNNNNNNN 111	it_compare	524320	0	8192
+bg.bles	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  000	it_cond_branch	32	0	1
+bg.bleu	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  001	it_cond_branch	32	0	1
+bg.beq	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  010	it_cond_branch	32	0	1
+bg.bf	'	110 101 '''''''''''''''''''''''    011	it_cond_branch	2	0	1
+bg.bgts	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  100	it_cond_branch	32	0	1
+bg.bgtu	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  101	it_cond_branch	32	0	1
+bg.bne	rA,rB,;	110 101 AAAAA BBBBB ;;;;;;;;;;;;;  110	it_cond_branch	32	0	1
+bg.bnf	'	110 101 '''''''''''''''''''''''    111	it_cond_branch	2	0	1
+bg.xori	rD,rA,Y	110 110 DDDDD AAAAA YYYYYYYYYYYYYYYY	it_arith	96	0	1
+bg.addic	rD,rA,Y	110 111 DDDDD AAAAA YYYYYYYYYYYYYYYY	it_arith	120	0	1
+bw.sfeqi_bf	rA,O,[	010 111 AAAAA OOOOOOOO 0000 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfnei_bf	rA,O,[	010 111 AAAAA OOOOOOOO 0100 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sflesi_bf	rA,O,[	010 111 AAAAA OOOOOOOO 1000 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfgtsi_bf	rA,O,[	010 111 AAAAA OOOOOOOO 1100 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfleui_bf	rA,O,[	010 111 AAAAA OOOOOOOO 1001 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfgtui_bf	rA,O,[	010 111 AAAAA OOOOOOOO 1101 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfeq_bf	rA,rB,[	010 111 AAAAA BBBBB--- 0010 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfne_bf	rA,rB,[	010 111 AAAAA BBBBB--- 0110 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfles_bf	rA,rB,[	010 111 AAAAA BBBBB--- 1010 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfgts_bf	rA,rB,[	010 111 AAAAA BBBBB--- 1110 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfleu_bf	rA,rB,[	010 111 AAAAA BBBBB--- 1011 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bw.sfgtu_bf	rA,rB,[	010 111 AAAAA BBBBB--- 1111 1  001 000 [[[[[[[[[[[[[[[[ 01	it_cond_branch	38	1	32768
+bx.sfeqi_bf	rA,O,]	010 111 AAAAA OOOOOOOO 0000 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfnei_bf	rA,O,]	010 111 AAAAA OOOOOOOO 0100 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sflesi_bf	rA,O,]	010 111 AAAAA OOOOOOOO 1000 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfgtsi_bf	rA,O,]	010 111 AAAAA OOOOOOOO 1100 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfleui_bf	rA,O,]	010 111 AAAAA OOOOOOOO 1001 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfgtui_bf	rA,O,]	010 111 AAAAA OOOOOOOO 1101 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfeq_bf	rA,rB,]	010 111 AAAAA BBBBB--- 0010 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfne_bf	rA,rB,]	010 111 AAAAA BBBBB--- 0110 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfles_bf	rA,rB,]	010 111 AAAAA BBBBB--- 1010 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfgts_bf	rA,rB,]	010 111 AAAAA BBBBB--- 1110 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfleu_bf	rA,rB,]	010 111 AAAAA BBBBB--- 1011 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bx.sfgtu_bf	rA,rB,]	010 111 AAAAA BBBBB--- 1111 1  110 101 ]]]]]]]]]]]]]]]]]]]]]]] 011	it_cond_branch	38	1	32768
+bg.divl	rD,rA,rB,b	101 000 DDDDD AAAAA BBBBB bbbbbb ---00	it_arith	524384	0	8192
+bg.divlr	rD,rA,rB,b	101 000 DDDDD AAAAA BBBBB bbbbbb ---01	it_arith	524384	0	8192
+bg.divlu	rD,rA,rB,b	101 000 DDDDD AAAAA BBBBB bbbbbb ---10	it_arith	524384	0	8192
+bg.divlru	rD,rA,rB,b	101 000 DDDDD AAAAA BBBBB bbbbbb ---11	it_arith	524384	0	8192
+bg.ldww	rD,R(rA),qd,Q	101 001 DDDDD AAAAA RRRRRRRRRRR Q dd 00	it_load	96	0	8192
+bg.ldwwx	rD,R(rA),qd,Q	101 001 DDDDD AAAAA RRRRRRRRRRR Q dd 01	it_load	96	0	8192
+bg.ldww2	rD,R(rA),qd,Q	101 001 DDDDD AAAAA RRRRRRRRRRR Q dd 10	it_load	96	0	8192
+bg.ldww2x	rD,R(rA),qd,Q	101 001 DDDDD AAAAA RRRRRRRRRRR Q dd 11	it_load	96	0	8192
+bg.amacr	rD,ac,H,n	101 010 DDDDD ----- HHHHH 0-cc nnnnnn -	it_mac	64	0	16
+bg.amacr_ex	rD,ac,H,n,Q,d	101 010 DDDDD -Q-dd HHHHH 1-cc nnnnnn -	it_mac	64	0	16
+bg.amacr_exr	rD,ac,H,rA,Q,d	101 010 DDDDD -Q-dd HHHHH 11cc -AAAAA -	it_mac	96	0	16
+bg.dummy1	rD,ac,n,rA	101 010 DDDDD AAAAA ----0 01cc nnnnnn -	it_unknown	96	0	16384
+bg.amacr40_32	rD,ac,n	101 010 DDDDD ----- -0001 01cc nnnnnn -	it_mac	64	0	16
+bg.amacr40_32r	rD,ac,n	101 010 DDDDD ----- -0011 01cc nnnnnn -	it_mac	64	0	16
+bg.amacr40r_32	rD,ac,rA	101 010 DDDDD AAAAA -0101 01cc ------ -	it_mac	96	0	16
+bg.amacr40r_32r	rD,ac,rA	101 010 DDDDD AAAAA -0111 01cc ------ -	it_mac	96	0	16
+bg.amacr40_16	rD,ac,n	101 010 DDDDD ----- -1001 01cc nnnnnn -	it_mac	64	0	16
+bg.amacr40_16r	rD,ac,n	101 010 DDDDD ----- -1011 01cc nnnnnn -	it_mac	64	0	16
+bg.amacr40r_16	rD,ac,rA	101 010 DDDDD AAAAA -1101 01cc ------ -	it_mac	96	0	16
+bg.amacr40r_16r	rD,ac,rA	101 010 DDDDD AAAAA -1111 01cc ------ -	it_mac	96	0	16
+bg.amacrc40_16	rD,ac,n	101 010 DDDDD ----- 11001 01cc nnnnnn -	it_mac	64	0	16
+bg.amacrc40_16r	rD,ac,n	101 010 DDDDD ----- 11011 01cc nnnnnn -	it_mac	64	0	16
+bg.amacrc40r_16	rD,ac,rA	101 010 DDDDD AAAAA 11101 01cc ------ -	it_mac	96	0	16
+bg.amacrc40r_16r	rD,ac,rA	101 010 DDDDD AAAAA 11111 01cc ------ -	it_mac	96	0	16
+bg.btb	c,d,&,P	101 011 -ccdd PPPPPPPPPP &&&&&&&&&& 0	it_hint	131072	0	256
+bg.loop	&,rA	101 011 AAAAA VVVVVVVVV0 &&&&&&&&&& 1	it_loop	32	0	128
+bg.loopi	&,V	101 011 ----- VVVVVVVVV1 &&&&&&&&&& 1	it_loop	0	0	128
+bg.amacrq	rD,qd	101 111 DDDDD ----- ----- dd-- 000 0000	it_mac	1048640	0	16
+bg.amacwq	qd,rA	101 111 ----- AAAAA ----- dd-- 001 0000	it_mac	1048608	0	16
+bg.amacwqaddr	qd,rA	101 111 ----- AAAAA ----- dd-- 010 0000	it_mac	1048608	0	16
+bg.amacwqaddr_length	qd,rA,rB	101 111 ----- AAAAA BBBBB dd-- 011 0000	it_mac	1048608	0	16
+bg.amacwq2	qd,rA,rB	101 111 ----- AAAAA BBBBB dd-- 101 0000	it_mac	1048608	0	16
+bg.amacwq2addr	qd,rA,rB	101 111 ----- AAAAA BBBBB dd-- 110 0000	it_mac	1048608	0	16
+bg.pamacrq	rD,qE	101 111 DDDDD ----- ----- EEE- 000 0001	it_mac	1048640	0	4
+bg.pamacwq	qE,rA	101 111 ----- AAAAA ----- EEE- 001 0001	it_mac	1048608	0	4
+bg.pamacwqaddr	qE,rA	101 111 ----- AAAAA ----- EEE- 010 0001	it_mac	1048608	0	4
+bg.pamacwqaddr_length	qE,rA,rB	101 111 ----- AAAAA BBBBB EEE- 011 0001	it_mac	1048608	0	4
+bg.pamacwq2	qE,rA,rB	101 111 ----- AAAAA BBBBB EEE- 101 0001	it_mac	1048608	0	4
+bg.pamacwq2addr	qE,rA,rB	101 111 ----- AAAAA BBBBB EEE- 110 0001	it_mac	1048608	0	4
+bg.pamac	n,H,b,c,d	101 111 nnnnnnHH cc HHHdd bbbbbb - 0010	it_mac	0	0	4
+bg.lhq	qd,f	101 111 ----- ----- ----f dd ---00 0011	it_load	0	0	8
+bg.lwq	qd,f	101 111 ----- ----- ----f dd ---01 0011	it_load	0	0	8
+bg.lhqq	Q,f	101 111 ----- ----Q ----f -- ---10 0011	it_load	0	0	8
+bg.lwqq	Q,f	101 111 ----- ----Q ----f -- ---11 0011	it_load	0	0	8
+bg.amulq	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1000	it_mac	32	0	16
+bg.amacq	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1000	it_mac	32	0	16
+bg.amsbq	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1000	it_mac	32	0	16
+bg.dummy3	ac,rA,rB,qd	101 111 ----- AAAAA BBBBB ddcc 011 1000	it_unknown	32	0	16384
+bg.amul	ac,rA,rB	101 111 ---00 AAAAA BBBBB --cc 100 1000	it_mac	32	0	16
+bg.amul16c	ac,rA,rB	101 111 ---10 AAAAA BBBBB --cc 100 1000	it_mac	32	0	8
+bg.amul16cn	ac,rA,rB	101 111 ---11 AAAAA BBBBB --cc 100 1000	it_mac	32	0	8
+bg.amulqq	ac	101 111 --1-- ----- 0000- --cc 100 1000	it_mac	0	0	8
+bg.amul16qq	ac	101 111 --1-- ----- 0001- --cc 100 1000	it_mac	0	0	8
+bg.amul16cqq	ac	101 111 --1-- ----- 0010- --cc 100 1000	it_mac	0	0	8
+bg.amul16cnqq	ac	101 111 --1-- ----- 0011- --cc 100 1000	it_mac	0	0	8
+bg.amul16q	ac,rA,qd	101 111 --1-- AAAAA 0101- ddcc 100 1000	it_mac	32	0	8
+bg.amul16cq	ac,rA,qd	101 111 --1-- AAAAA 0110- ddcc 100 1000	it_mac	32	0	8
+bg.amul16cnq	ac,rA,qd	101 111 --1-- AAAAA 0111- ddcc 100 1000	it_mac	32	0	8
+bg.amuldq	ac,qd	101 111 --11- ----- 0100- ddcc 100 1000	it_mac	0	0	8
+bg.amul16dq	ac,qd	101 111 --11- ----- 0101- ddcc 100 1000	it_mac	0	0	8
+bg.amul16cdq	ac,qd	101 111 --11- ----- 0110- ddcc 100 1000	it_mac	0	0	8
+bg.amul16cndq	ac,qd	101 111 --11- ----- 0111- ddcc 100 1000	it_mac	0	0	8
+bg.amul_lwqq	ac,Q,f	101 111 --1-- ----Q 1000f --cc 100 1000	it_mac	0	0	8
+bg.amul16_lhqq	ac,Q,f	101 111 --1-- ----Q 1001f --cc 100 1000	it_mac	0	0	8
+bg.amul16c_lwqq	ac,Q,f	101 111 --1-- ----Q 1010f --cc 100 1000	it_mac	0	0	8
+bg.amul16cn_lwqq	ac,Q,f	101 111 --1-- ----Q 1011f --cc 100 1000	it_mac	0	0	8
+bg.amul_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1100f ddcc 100 1000	it_mac	32	0	8
+bg.amul16_lhq	ac,rA,qd,f	101 111 --1-- AAAAA 1101f ddcc 100 1000	it_mac	32	0	8
+bg.amul16c_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1110f ddcc 100 1000	it_mac	32	0	8
+bg.amul16cn_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1111f ddcc 100 1000	it_mac	32	0	8
+bg.amul_lwdq	ac,qd,f	101 111 --11- ----- 1100f ddcc 100 1000	it_mac	0	0	8
+bg.amul16_lhdq	ac,qd,f	101 111 --11- ----- 1101f ddcc 100 1000	it_mac	0	0	8
+bg.amul16c_lwdq	ac,qd,f	101 111 --11- ----- 1110f ddcc 100 1000	it_mac	0	0	8
+bg.amul16cn_lwdq	ac,qd,f	101 111 --11- ----- 1111f ddcc 100 1000	it_mac	0	0	8
+bg.amac	ac,rA,rB	101 111 ---00 AAAAA BBBBB --cc 101 1000	it_mac	32	0	16
+bg.amac16c	ac,rA,rB	101 111 ---10 AAAAA BBBBB --cc 101 1000	it_mac	32	0	8
+bg.amac16cn	ac,rA,rB	101 111 ---11 AAAAA BBBBB --cc 101 1000	it_mac	32	0	8
+bg.amacqq	ac	101 111 --1-- ----- 0000- --cc 101 1000	it_mac	0	0	8
+bg.amac16qq	ac	101 111 --1-- ----- 0001- --cc 101 1000	it_mac	0	0	8
+bg.amac16cqq	ac	101 111 --1-- ----- 0010- --cc 101 1000	it_mac	0	0	8
+bg.amac16cnqq	ac	101 111 --1-- ----- 0011- --cc 101 1000	it_mac	0	0	8
+bg.amac16q	ac,rA,qd	101 111 --1-- AAAAA 0101- ddcc 101 1000	it_mac	32	0	8
+bg.amac16cq	ac,rA,qd	101 111 --1-- AAAAA 0110- ddcc 101 1000	it_mac	32	0	8
+bg.amac16cnq	ac,rA,qd	101 111 --1-- AAAAA 0111- ddcc 101 1000	it_mac	32	0	8
+bg.amacdq	ac,qd	101 111 --11- ----- 0100- ddcc 101 1000	it_mac	0	0	8
+bg.amac16dq	ac,qd	101 111 --11- ----- 0101- ddcc 101 1000	it_mac	0	0	8
+bg.amac16cdq	ac,qd	101 111 --11- ----- 0110- ddcc 101 1000	it_mac	0	0	8
+bg.amac16cndq	ac,qd	101 111 --11- ----- 0111- ddcc 101 1000	it_mac	0	0	8
+bg.amac_lwqq	ac,Q,f	101 111 --1-- ----Q 1000f --cc 101 1000	it_mac	0	0	8
+bg.amac16_lhqq	ac,Q,f	101 111 --1-- ----Q 1001f --cc 101 1000	it_mac	0	0	8
+bg.amac16c_lwqq	ac,Q,f	101 111 --1-- ----Q 1010f --cc 101 1000	it_mac	0	0	8
+bg.amac16cn_lwqq	ac,Q,f	101 111 --1-- ----Q 1011f --cc 101 1000	it_mac	0	0	8
+bg.amac_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1100f ddcc 101 1000	it_mac	32	0	8
+bg.amac16_lhq	ac,rA,qd,f	101 111 --1-- AAAAA 1101f ddcc 101 1000	it_mac	32	0	8
+bg.amac16c_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1110f ddcc 101 1000	it_mac	32	0	8
+bg.amac16cn_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1111f ddcc 101 1000	it_mac	32	0	8
+bg.amac_lwdq	ac,qd,f	101 111 --11- ----- 1100f ddcc 101 1000	it_mac	0	0	8
+bg.amac16_lhdq	ac,qd,f	101 111 --11- ----- 1101f ddcc 101 1000	it_mac	0	0	8
+bg.amac16c_lwdq	ac,qd,f	101 111 --11- ----- 1110f ddcc 101 1000	it_mac	0	0	8
+bg.amac16cn_lwdq	ac,qd,f	101 111 --11- ----- 1111f ddcc 101 1000	it_mac	0	0	8
+bg.amsb	ac,rA,rB	101 111 ---00 AAAAA BBBBB --cc 110 1000	it_mac	32	0	16
+bg.amsb16c	ac,rA,rB	101 111 ---10 AAAAA BBBBB --cc 110 1000	it_mac	32	0	8
+bg.amsb16cn	ac,rA,rB	101 111 ---11 AAAAA BBBBB --cc 110 1000	it_mac	32	0	8
+bg.amsbqq	ac	101 111 --1-- ----- 0000- --cc 110 1000	it_mac	0	0	8
+bg.amsb16qq	ac	101 111 --1-- ----- 0001- --cc 110 1000	it_mac	0	0	8
+bg.amsb16cqq	ac	101 111 --1-- ----- 0010- --cc 110 1000	it_mac	0	0	8
+bg.amsb16cnqq	ac	101 111 --1-- ----- 0011- --cc 110 1000	it_mac	0	0	8
+bg.amsb16q	ac,rA,qd	101 111 --1-- AAAAA 0101- ddcc 110 1000	it_mac	32	0	8
+bg.amsb16cq	ac,rA,qd	101 111 --1-- AAAAA 0110- ddcc 110 1000	it_mac	32	0	8
+bg.amsb16cnq	ac,rA,qd	101 111 --1-- AAAAA 0111- ddcc 110 1000	it_mac	32	0	8
+bg.amsbdq	ac,qd	101 111 --11- ----- 0100- ddcc 110 1000	it_mac	0	0	8
+bg.amsb16dq	ac,qd	101 111 --11- ----- 0101- ddcc 110 1000	it_mac	0	0	8
+bg.amsb16cdq	ac,qd	101 111 --11- ----- 0110- ddcc 110 1000	it_mac	0	0	8
+bg.amsb16cndq	ac,qd	101 111 --11- ----- 0111- ddcc 110 1000	it_mac	0	0	8
+bg.amsb_lwqq	ac,Q,f	101 111 --1-- ----Q 1000f --cc 110 1000	it_mac	0	0	8
+bg.amsb16_lhqq	ac,Q,f	101 111 --1-- ----Q 1001f --cc 110 1000	it_mac	0	0	8
+bg.amsb16c_lwqq	ac,Q,f	101 111 --1-- ----Q 1010f --cc 110 1000	it_mac	0	0	8
+bg.amsb16cn_lwqq	ac,Q,f	101 111 --1-- ----Q 1011f --cc 110 1000	it_mac	0	0	8
+bg.amsb_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1100f ddcc 110 1000	it_mac	32	0	8
+bg.amsb16_lhq	ac,rA,qd,f	101 111 --1-- AAAAA 1101f ddcc 110 1000	it_mac	32	0	8
+bg.amsb16c_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1110f ddcc 110 1000	it_mac	32	0	8
+bg.amsb16cn_lwq	ac,rA,qd,f	101 111 --1-- AAAAA 1111f ddcc 110 1000	it_mac	32	0	8
+bg.amsb_lwdq	ac,qd,f	101 111 --11- ----- 1100f ddcc 110 1000	it_mac	0	0	8
+bg.amsb16_lhdq	ac,qd,f	101 111 --11- ----- 1101f ddcc 110 1000	it_mac	0	0	8
+bg.amsb16c_lwdq	ac,qd,f	101 111 --11- ----- 1110f ddcc 110 1000	it_mac	0	0	8
+bg.amsb16cn_lwdq	ac,qd,f	101 111 --11- ----- 1111f ddcc 110 1000	it_mac	0	0	8
+bg.amacw	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 111 1000	it_mac	32	0	16
+bg.amulqu	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1001	it_mac	32	0	16
+bg.amacqu	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1001	it_mac	32	0	16
+bg.amsbqu	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1001	it_mac	32	0	16
+bg.amulu	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1001	it_mac	32	0	16
+bg.amacu	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1001	it_mac	32	0	16
+bg.amsbu	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1001	it_mac	32	0	16
+bg.amadd	ac,ad,a>	101 111 ----- ---dd --->> --cc 111 1001	it_mac	0	0	16
+bg.amulq_wl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1100	it_mac	32	0	16
+bg.amacq_wl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1100	it_mac	32	0	16
+bg.amsbq_wl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1100	it_mac	32	0	16
+bg.amul_wl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1100	it_mac	32	0	16
+bg.amac_wl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1100	it_mac	32	0	16
+bg.amsb_wl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1100	it_mac	32	0	16
+bg.amsub	ac,ad,a>	101 111 ----- ---dd --->> --cc 111 1100	it_mac	0	0	16
+bg.amulq_ll	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1010	it_mac	32	0	16
+bg.amacq_ll	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1010	it_mac	32	0	16
+bg.amsbq_ll	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1010	it_mac	32	0	16
+bg.amul_ll	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1010	it_mac	32	0	16
+bg.amac_ll	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1010	it_mac	32	0	16
+bg.amsb_ll	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1010	it_mac	32	0	16
+bg.amulq_hl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1011	it_mac	32	0	16
+bg.amacq_hl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1011	it_mac	32	0	16
+bg.amsbq_hl	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1011	it_mac	32	0	16
+bg.amul_hl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1011	it_mac	32	0	16
+bg.amac_hl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1011	it_mac	32	0	16
+bg.amsb_hl	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1011	it_mac	32	0	16
+bg.amulq_wh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1101	it_mac	32	0	16
+bg.amacq_wh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1101	it_mac	32	0	16
+bg.amsbq_wh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1101	it_mac	32	0	16
+bg.amul_wh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1101	it_mac	32	0	16
+bg.amac_wh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1101	it_mac	32	0	16
+bg.amsb_wh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1101	it_mac	32	0	16
+bg.amulq_lh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1111	it_mac	32	0	16
+bg.amacq_lh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1111	it_mac	32	0	16
+bg.amsbq_lh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1111	it_mac	32	0	16
+bg.amul_lh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1111	it_mac	32	0	16
+bg.amac_lh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1111	it_mac	32	0	16
+bg.amsb_lh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1111	it_mac	32	0	16
+bg.amulq_hh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 000 1110	it_mac	32	0	16
+bg.amacq_hh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 001 1110	it_mac	32	0	16
+bg.amsbq_hh	ac,rA,qd	101 111 ----- AAAAA ----- ddcc 010 1110	it_mac	32	0	16
+bg.amul_hh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 100 1110	it_mac	32	0	16
+bg.amac_hh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 101 1110	it_mac	32	0	16
+bg.amsb_hh	ac,rA,rB	101 111 ----- AAAAA BBBBB --cc 110 1110	it_mac	32	0	16
+bg.ext	rD,rA,H,rB	101 110 DDDDD AAAAA BBBBB HHHHH 00 0000	it_subword	1048672	0	8192
+bg.extu	rD,rA,H,rB	101 110 DDDDD AAAAA BBBBB HHHHH 01 0000	it_subword	1048672	0	8192
+bg.exti	rD,rA,H,e	101 110 DDDDD AAAAA eeeee HHHHH 10 0000	it_subword	1048672	0	8192
+bg.extui	rD,rA,H,e	101 110 DDDDD AAAAA eeeee HHHHH 11 0000	it_subword	1048672	0	8192
+bg.extr	rD,rA,rC,rB	101 110 DDDDD AAAAA BBBBB CCCCC 00 0001	it_subword	1048672	0	8192
+bg.extru	rD,rA,rC,rB	101 110 DDDDD AAAAA BBBBB CCCCC 01 0001	it_subword	1048672	0	8192
+bg.extri	rD,rA,rC,e	101 110 DDDDD AAAAA eeeee CCCCC 10 0001	it_subword	1048672	0	8192
+bg.extrui	rD,rA,rC,e	101 110 DDDDD AAAAA eeeee CCCCC 11 0001	it_subword	1048672	0	8192
+bg.dep	rD,rA,H,rB	101 110 DDDDD AAAAA BBBBB HHHHH 00 0010	it_subword	1065056	0	8192
+bg.depi	rD,rA,H,e	101 110 DDDDD AAAAA eeeee HHHHH 01 0010	it_subword	1065056	0	8192
+bg.depr	rD,rA,rC,rB	101 110 DDDDD AAAAA BBBBB CCCCC 10 0010	it_subword	1065056	0	8192
+bg.depri	rD,rA,rC,e	101 110 DDDDD AAAAA eeeee CCCCC 11 0010	it_subword	1065056	0	8192
+bg.satdep	rD,rA,H,rB	101 110 DDDDD AAAAA BBBBB HHHHH 00 0011	it_subword	1065056	0	8192
+bg.satdepu	rD,rA,H,rB	101 110 DDDDD AAAAA BBBBB HHHHH 01 0011	it_subword	1065056	0	8192
+bg.satdepi	rD,rA,H,e	101 110 DDDDD AAAAA eeeee HHHHH 10 0011	it_subword	1065056	0	8192
+bg.satdepui	rD,rA,H,e	101 110 DDDDD AAAAA eeeee HHHHH 11 0011	it_subword	1065056	0	8192
+bg.abs	rD,rA	101 110 DDDDD AAAAA ----- ----- 01 0100	it_arith	96	0	8192
+bg.absc	rD,rA	101 110 DDDDD AAAAA ----- ----- 11 0100	it_arith	96	0	8192
+bg.minui	rD,rA,<	101 110 DDDDD AAAAA <<<<<<<< 00 10 0100	it_arith	96	0	8192
+bg.maxi	rD,rA,O	101 110 DDDDD AAAAA OOOOOOOO 01 10 0100	it_arith	96	0	8192
+bg.mini	rD,rA,O	101 110 DDDDD AAAAA OOOOOOOO 10 10 0100	it_arith	96	0	8192
+bg.maxui	rD,rA,<	101 110 DDDDD AAAAA <<<<<<<< 11 10 0100	it_arith	96	0	8192
+bg.minu	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---00 00 0100	it_arith	96	0	8192
+bg.max	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---01 00 0100	it_arith	96	0	8192
+bg.min	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---10 00 0100	it_arith	96	0	8192
+bg.maxu	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---11 00 0100	it_arith	96	0	8192
+bn.adddf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 000 0101	it_float	480	0	2048
+bn.subdf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 001 0101	it_float	480	0	2048
+bn.i2df	rD,rA	101 110 DDDDD AAAAA ----- ---- 010 0101	it_float	352	0	2048
+bn.df2i	rD,rA	101 110 DDDDD AAAAA ----- ---- 011 0101	it_float	224	0	2048
+bn.muldf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 100 0101	it_float	480	0	2048
+bn.madddf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 101 0101	it_float	480	0	2048
+bn.divdf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 110 0101	it_float	480	0	2048
+bn.remdf	rD,rA,rB	101 110 DDDDD AAAAA BBBBB ---- 111 0101	it_float	480	0	2048
+bg.fft	F,rA,rB,E	101 110 ----- AAAAA BBBBB EEE FFFF 1000	it_asic	32	0	16384
+bg.fftr	F,rA,rB,E	101 110 ----- AAAAA BBBBB EEE FFFF 1001	it_asic	32	0	16384
+bg.ifft	F,rA,rB,E	101 110 ----- AAAAA BBBBB EEE FFFF 1010	it_asic	32	0	16384
+bg.ifftr	F,rA,rB,E	101 110 ----- AAAAA BBBBB EEE FFFF 1011	it_asic	32	0	16384
+mv.add	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 001010	it_simd	0	0	512
+mv.addu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 001010	it_simd	0	0	512
+mv.add.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00110 001010	it_simd	0	0	512
+mv.addu.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00100 001010	it_simd	0	0	512
+mv.sad.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 10000 001010	it_simd	0	0	16384
+mv.sub	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 011010	it_simd	0	0	512
+mv.subu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 011010	it_simd	0	0	512
+mv.sub.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00110 011010	it_simd	0	0	512
+mv.subu.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00100 011010	it_simd	0	0	512
+mv.avg	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 101010	it_simd	0	0	512
+mv.avgu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 101010	it_simd	0	0	512
+mv.avg.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00110 101010	it_simd	0	0	512
+mv.avgu.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00100 101010	it_simd	0	0	512
+mv.avg0	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 10010 101010	it_simd	0	0	16384
+mv.avg0u	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 10000 101010	it_simd	0	0	16384
+mv.avg0.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 10110 101010	it_simd	0	0	16384
+mv.avg0u.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 10100 101010	it_simd	0	0	16384
+mv.abs	vD,vA	101 100 DDDDD AAAAA 00000 00000 001000	it_simd	0	0	512
+mv.saddl	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 011110	it_simd	0	0	512
+mv.saddh	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00110 011110	it_simd	0	0	512
+mv.mulu.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 101110	it_simd	0	0	512
+mv.sra	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00010 010010	it_simd	0	0	512
+mv.srl	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 100010	it_simd	0	0	512
+mv.sll	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 110010	it_simd	0	0	512
+mv.and	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 000010	it_simd	0	0	512
+mv.or	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 000110	it_simd	0	0	512
+mv.xor	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 001110	it_simd	0	0	512
+mv.seq	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00000 111010	it_simd	0	0	512
+mv.seq.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00100 111010	it_simd	0	0	512
+mv.slt	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00011 001010	it_simd	0	0	512
+mv.sltu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00001 001010	it_simd	0	0	512
+mv.slt.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00111 001010	it_simd	0	0	512
+mv.sltu.b	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00101 001010	it_simd	0	0	512
+mv.textnz	vD,vA	101 100 DDDDD AAAAA 00000 00000 010000	it_simd	0	0	512
+mv.lzc	vD,vA	101 100 DDDDD AAAAA 00000 00000 001100	it_simd	0	0	512
+mv.rand	vD,vA	101 100 DDDDD AAAAA 00000 00000 000000	it_simd	0	0	512
+mv.ror	vD,vA	101 100 DDDDD AAAAA 00000 00000 000100	it_simd	0	0	512
+mv.min	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00011 011010	it_simd	0	0	512
+mv.minu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00001 011010	it_simd	0	0	512
+mv.max	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00011 101010	it_simd	0	0	512
+mv.maxu	vD,vA,vB	101 100 DDDDD AAAAA BBBBB 00001 101010	it_simd	0	0	512
+mv.clip3u	vD,vA,vB,vC	101 100 DDDDD AAAAA BBBBB CCCCC 111000	it_simd	524288	0	512
+mv.clip3	vD,vA,vB,vC	101 100 DDDDD AAAAA BBBBB CCCCC 101000	it_simd	524288	0	512
+mv.dup	vD,vA,d	101 100 DDDDD AAAAA 00000 0dd01 000010	it_simd	0	0	512
+mv.upckl	vD,vA	101 100 DDDDD AAAAA 00000 00000 010100	it_simd	0	0	512
+mv.upckh	vD,vA	101 100 DDDDD AAAAA 00000 00000 011100	it_simd	0	0	512
+mv.cat	vD,vA,vB,E	101 100 DDDDD AAAAA BBBBB EEE00 010110	it_simd	0	0	512
+mv.mfv	rD,vA,H	101 101 DDDDD AAAAA HHHHH 00010 000000	it_simd	64	0	512
+mv.mfvu	rD,vA,H	101 101 DDDDD AAAAA HHHHH 00000 000000	it_simd	64	0	512
+mv.mfv.b	rD,vA,H	101 101 DDDDD AAAAA HHHHH 00110 000000	it_simd	64	0	512
+mv.mfvu.b	rD,vA,H	101 101 DDDDD AAAAA HHHHH 00100 000000	it_simd	64	0	512
+mv.mfvw	rD,vA	101 101 DDDDD AAAAA 01000 01000 000000	it_simd	64	0	512
+mv.mtv	vD,rA,H	101 101 DDDDD AAAAA HHHHH 00000 000010	it_simd	32	0	512
+mv.mtvw	vD,rA,H	101 101 DDDDD AAAAA HHHHH 01000 000010	it_simd	32	0	512
+mv.mmk	rD,vA	101 101 DDDDD AAAAA 00000 00000 001000	it_simd	64	0	512
+mv.pckx	vD,vA,vB,vC	101 100 DDDDD AAAAA BBBBB CCCCC 110000	it_simd	0	0	512
+mv.sacc	vD,vA,vB,vC	101 100 DDDDD AAAAA BBBBB CCCCC 110100	it_simd	0	0	512
+mv.rnd	vD,vA,H	101 100 DDDDD AAAAA HHHHH 00011 111010	it_simd	0	0	512
+mv.rndu	vD,vA,H	101 100 DDDDD AAAAA HHHHH 00001 111010	it_simd	0	0	512
+mv.rnd.b	vD,vA,H	101 100 DDDDD AAAAA HHHHH 00111 111010	it_simd	0	0	512
+mv.rndu.b	vD,vA,H	101 100 DDDDD AAAAA HHHHH 00101 111010	it_simd	0	0	512
+mv.opt	vD,vA,vB,vC,@,d	101 100 DDDDD AAAAA BBBBB CCCCC @@@dd1	it_simd	0	0	512
+mv.opc	vD,vA,vB,vC,f,Q	101 100 DDDDD AAAAA BBBBB CCCCC 111fQ1	it_simd	0	0	512
+mv.opv	vD,vA,vB,vC,#	101 101 DDDDD AAAAA BBBBB CCCCC #####1	it_simd	0	0	512
+mv.opm	vD,vA,vB,vC	101 101 DDDDD AAAAA BBBBB CCCCC 011111	it_simd	0	0	512
+mv.ldv	vD,*(rA)	101 101 DDDDD AAAAA 0**** ***** ***100	it_load	262176	0	512
+mv.sdv	*(rA),vB	101 101 BBBBB AAAAA 0**** ***** ***110	it_store	262176	0	512
+mv.ldw	vD,^(rA)	101 101 DDDDD AAAAA 1^^^^ ^^^^^ ^^^100	it_load	262176	0	512
+mv.sdw	^(rA),vB	101 101 BBBBB AAAAA 1^^^^ ^^^^^ ^^^110	it_store	262176	0	512

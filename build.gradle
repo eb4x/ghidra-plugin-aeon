@@ -1,0 +1,254 @@
+// Builds the AEON R2 processor extension for a given Ghidra installation.
+//
+// GHIDRA_INSTALL_DIR must be an absolute path, supplied either in the
+// environment or as a Gradle property (gradle.properties, gitignored).
+
+//----------------------START "DO NOT MODIFY" SECTION------------------------------
+def ghidraInstallDir
+
+if (System.env.GHIDRA_INSTALL_DIR) {
+	ghidraInstallDir = System.env.GHIDRA_INSTALL_DIR
+}
+else if (project.hasProperty("GHIDRA_INSTALL_DIR")) {
+	ghidraInstallDir = project.getProperty("GHIDRA_INSTALL_DIR")
+}
+else {
+	ghidraInstallDir = "<REPLACE>"
+}
+
+task distributeExtension {
+	group = "Ghidra"
+
+	apply from: new File(ghidraInstallDir).getCanonicalPath() + "/support/buildExtension.gradle"
+	dependsOn ':buildExtension'
+}
+//----------------------END "DO NOT MODIFY" SECTION-------------------------------
+
+repositories {
+	mavenCentral()
+}
+
+// Project clutter that must not end up inside the packaged extension.
+buildExtension.exclude 'ghidra_scripts/**'
+buildExtension.exclude '.github/**'
+buildExtension.exclude '.claude/**'
+buildExtension.exclude 'gradle/**'
+buildExtension.exclude 'gradlew'
+buildExtension.exclude 'gradlew.bat'
+buildExtension.exclude '.gitignore'
+buildExtension.exclude '.settings/**'
+buildExtension.exclude '.project'
+buildExtension.exclude '.classpath'
+buildExtension.exclude 'docs/**'
+buildExtension.exclude 'gradle.properties'
+// The vendor toolchain, the dumped ISA tables and the generator are how the
+// spec is produced, not part of what ships.
+buildExtension.exclude 'vendor/**'
+buildExtension.exclude 'isa/**'
+buildExtension.exclude 'tools/**'
+buildExtension.exclude 'fixtures-out/**'
+
+def extensionName = project.name
+
+def ghidraUserExtensionsDir = {
+	def overrideProp = project.findProperty("GHIDRA_USER_EXTENSIONS_DIR")
+	if (overrideProp) {
+		return file(overrideProp.toString())
+	}
+	def overrideEnv = System.getenv("GHIDRA_USER_EXTENSIONS_DIR")
+	if (overrideEnv) {
+		return file(overrideEnv)
+	}
+
+	def osName = (System.getProperty("os.name") ?: "").toLowerCase(Locale.ROOT)
+	def ghidraUserProfileDirName = "${DISTRO_PREFIX}_${RELEASE_NAME}"
+
+	if (osName.contains("windows")) {
+		def appData = System.getenv("APPDATA")
+		if (appData) {
+			return file("${appData}/ghidra/${ghidraUserProfileDirName}/Extensions")
+		}
+	}
+
+	if (osName.contains("mac") || osName.contains("darwin")) {
+		return file("${System.getProperty('user.home')}/Library/ghidra/${ghidraUserProfileDirName}/Extensions")
+	}
+
+	def xdgConfigHome = System.getenv("XDG_CONFIG_HOME")
+	def linuxConfigDir = xdgConfigHome ?: "${System.getProperty('user.home')}/.config"
+	return file("${linuxConfigDir}/ghidra/${ghidraUserProfileDirName}/Extensions")
+}.call()
+
+// ---------------------------------------------------------------- sleigh --
+// The stock extension build never compiles a .slaspec, so a spec error would
+// only surface when Ghidra loads the language. Compile here instead, with the
+// conflict/quality checks on, so a bad spec fails the build.
+//   -l  report pattern conflicts   -c  colliding operands
+//   -n  NOP constructors           -u  unnecessary p-code
+//   -t  dead temporaries           -f  unused token fields
+def sleighSettingsDir = layout.buildDirectory.dir('sleigh-settings')
+
+tasks.register('compileSleigh', Exec) {
+	group = 'Ghidra'
+	description = 'Compile data/languages/aeonR2.slaspec; fails the build on a spec error'
+	inputs.files fileTree('data/languages') {
+		include '**/*.slaspec'
+		include '**/*.sinc'
+	}
+	outputs.file file('data/languages/aeonR2.sla')
+	doFirst { sleighSettingsDir.get().asFile.mkdirs() }
+	// support/sleigh ignores GHIDRA_JAVA_OPTIONS, but honours XDG_CONFIG_HOME
+	// (measured by ghidra-plugin-keil8051), which keeps its logs out of
+	// ~/.config/ghidra. Linux-only, which is what this repo builds on.
+	environment 'XDG_CONFIG_HOME', "${sleighSettingsDir.get().asFile}"
+	commandLine "${ghidraInstallDir}/support/sleigh", '-l', '-c', '-n', '-u', '-t', '-f',
+		'data/languages/aeonR2.slaspec'
+}
+
+tasks.named('buildExtension') { dependsOn 'compileSleigh' }
+
+def buildZipProvider = tasks.named('buildExtension', Zip).flatMap { it.archiveFile }
+
+tasks.register('cleanExtractedExtension', Delete) {
+	group = "Ghidra"
+	description = "Delete the extracted extension from Ghidra's user Extensions folder"
+	delete new File(ghidraUserExtensionsDir, extensionName)
+}
+
+tasks.register('extractExtension', Copy) {
+	group = "Ghidra"
+	description = "Extract the built extension into Ghidra's user Extensions folder"
+	dependsOn tasks.named('buildExtension'), tasks.named('cleanExtractedExtension')
+	from { zipTree(buildZipProvider.get().asFile) }
+	into ghidraUserExtensionsDir
+}
+
+tasks.register('installExtension') {
+	group = "Ghidra"
+	description = "Extract the built extension into Ghidra's user Extensions folder"
+	dependsOn tasks.named('extractExtension')
+}
+
+tasks.register('uninstallExtension') {
+	group = "Ghidra"
+	description = "Delete the extension extracted into Ghidra's user Extensions folder"
+	dependsOn tasks.named('cleanExtractedExtension')
+}
+
+// ------------------------------------------------------------- smoke test --
+// Hermetic headless checks: their own settings dir and their own copy of the
+// freshly built extension, so a run never touches ~/.config/ghidra or picks up
+// a stale extension. analyzeHeadless is only ever invoked through these tasks.
+def smokeDir = layout.buildDirectory.dir('smoke')
+
+tasks.register('smokeClean', Delete) {
+	delete smokeDir
+}
+
+tasks.register('smokeExtract', Copy) {
+	dependsOn tasks.named('buildExtension'), tasks.named('smokeClean')
+	// Headless searches <settingsdir>/ghidra/<release>/Extensions too, so this
+	// run tests exactly this build and nothing else.
+	from { zipTree(buildZipProvider.get().asFile) }
+	into smokeDir.map { it.dir("settings/ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}/Extensions") }
+}
+
+// analyzeHeadless exits 0 even when a script throws, so every headless task
+// takes its verdict from a fixed line in the script's own output.
+def headless = { String taskName, String description, List<String> extraArgs,
+                 String requiredLine, String projectName ->
+	tasks.register(taskName, Exec) {
+		group = 'Verification'
+		it.description = description
+		dependsOn tasks.named('smokeExtract')
+		def output = new ByteArrayOutputStream()
+		standardOutput = output
+		errorOutput = output
+		ignoreExitValue = true
+		doFirst {
+			smokeDir.get().dir('project').asFile.mkdirs()
+		}
+		environment 'GHIDRA_JAVA_OPTIONS',
+			"-Dapplication.settingsdir=${smokeDir.get().dir('settings').asFile}"
+		commandLine([
+			"${ghidraInstallDir}/support/analyzeHeadless",
+			"${smokeDir.get().dir('project').asFile}", projectName,
+			'-scriptPath', file('ghidra_scripts').absolutePath,
+			'-processor', 'AEON:BE:32:R2',
+			'-deleteProject',
+		] + extraArgs)
+		doLast {
+			def text = output.toString()
+			if (!text.contains(requiredLine)) {
+				logger.error(text)
+				throw new GradleException("${taskName}: \"${requiredLine}\" not in the headless output")
+			}
+			logger.lifecycle(text.readLines().find { it.contains(requiredLine) }.trim())
+		}
+	}
+}
+
+headless('smokeTest',
+	'Decode the committed test program and compare with the vendor objdump',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonSmoke.java'],
+	'AEON SMOKE OK', 'aeon-smoke')
+
+// ------------------------------------------------------------- acceptance --
+// Full linear-sweep diff of a fixture against the vendor objdump listing:
+//   ./gradlew acceptanceTest -PaeonFixture=fixtures/sboot.bin \
+//                            -PaeonListing=fixtures-out/sboot.asm
+// The fixtures belong to the hp-z27k-g3 session and are not committed here.
+tasks.register('acceptanceDump', Exec) {
+	group = 'Verification'
+	description = 'Linear-sweep disassembly of a fixture, for the acceptance diff'
+	dependsOn tasks.named('smokeExtract')
+	def fixture = file(project.findProperty('aeonFixture') ?: 'fixtures/sboot.bin')
+	def dump = smokeDir.map { it.file("${fixture.name}.ghidra.txt") }
+	outputs.file dump
+	def output = new ByteArrayOutputStream()
+	standardOutput = output
+	errorOutput = output
+	ignoreExitValue = true
+	doFirst {
+		if (!fixture.exists()) {
+			throw new GradleException("fixture not found: ${fixture} (pass -PaeonFixture=<path>)")
+		}
+		smokeDir.get().dir('project').asFile.mkdirs()
+	}
+	environment 'GHIDRA_JAVA_OPTIONS',
+		"-Dapplication.settingsdir=${smokeDir.get().dir('settings').asFile}"
+	commandLine "${ghidraInstallDir}/support/analyzeHeadless",
+		"${smokeDir.get().dir('project').asFile}", 'aeon-acceptance',
+		'-import', fixture.absolutePath,
+		'-processor', 'AEON:BE:32:R2',
+		'-noanalysis',
+		'-scriptPath', file('ghidra_scripts').absolutePath,
+		'-postScript', 'AeonDumpDisasm.java', dump.get().asFile.absolutePath,
+		'-deleteProject'
+	doLast {
+		def text = output.toString()
+		if (!text.contains('AeonDumpDisasm: wrote')) {
+			logger.error(text)
+			throw new GradleException('acceptanceDump: the dump script did not complete')
+		}
+	}
+}
+
+tasks.register('acceptanceTest', Exec) {
+	group = 'Verification'
+	description = 'Diff the Ghidra disassembly against the vendor objdump, address by address'
+	dependsOn tasks.named('acceptanceDump')
+	def fixture = file(project.findProperty('aeonFixture') ?: 'fixtures/sboot.bin')
+	def listing = file(project.findProperty('aeonListing') ?:
+		"fixtures-out/${fixture.name.replaceAll(/\.bin$/, '')}.asm")
+	def dump = smokeDir.map { it.file("${fixture.name}.ghidra.txt") }
+	doFirst {
+		if (!listing.exists()) {
+			throw new GradleException("objdump listing not found: ${listing} (pass -PaeonListing=<path>)")
+		}
+	}
+	// exits non-zero on any unexplained difference
+	commandLine 'python3', file('tools/acceptance.py').absolutePath,
+		listing.absolutePath, dump.get().asFile.absolutePath
+}
