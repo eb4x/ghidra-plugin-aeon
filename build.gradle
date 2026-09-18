@@ -194,6 +194,21 @@ headless('smokeTest',
 	 '-postScript', 'AeonSmoke.java'],
 	'AEON SMOKE OK', 'aeon-smoke')
 
+// Differential p-code test: the expected register values come from the vendor
+// simulator (tools/gen_emu_cases.py), so this checks the semantics, not just
+// the decoding, against MStar's own model of the hardware.
+headless('emuTest',
+	'Replay the vendor simulator\'s test cases through Ghidra\'s p-code emulator',
+	['-import', file('tests/smoke.bin').absolutePath, '-noanalysis',
+	 '-postScript', 'AeonEmuTest.java', file('tests/emu_cases.json').absolutePath],
+	'AEON EMU OK', 'aeon-emu')
+
+tasks.register('verify') {
+	group = 'Verification'
+	description = 'smokeTest + emuTest'
+	dependsOn tasks.named('smokeTest'), tasks.named('emuTest')
+}
+
 // ------------------------------------------------------------- acceptance --
 // Full linear-sweep diff of a fixture against the vendor objdump listing:
 //   ./gradlew acceptanceTest -PaeonFixture=fixtures/sboot.bin \

@@ -4,7 +4,11 @@
   <!-- Instructions are 2, 3 or 4 bytes and may start at any address. -->
   <data_space space="ram"/>
   <default_symbols>
-    <!-- OpenRISC-style exception vectors; the R2 reset entry is 0x100. -->
+    <!-- OpenRISC-style exception vectors, confirmed in sBoot: 0x100 is the
+         reset entry, and 0x200/0x300/0x400/0xc00 each start with the same
+         handler prologue (fc 21 fe e4 = b.addi r1,r1,-0x11c). They only apply
+         to an image based at 0; a module loaded elsewhere has no memory at
+         these addresses and Ghidra ignores them. -->
     <symbol name="vector_reset"       address="0x100" entry="true"/>
     <symbol name="vector_bus_error"   address="0x200" entry="true"/>
     <symbol name="vector_data_page"   address="0x300" entry="true"/>

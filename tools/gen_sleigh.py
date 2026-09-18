@@ -79,17 +79,24 @@ def field_name(enc, ch, bits):
 # as 0), immediates by letter id. {next} = inst_next, {this} = inst_start.
 SEMANTICS = {
     # --- moves and arithmetic -------------------------------------------
+    # CY: measured in aeon-elf-sim (tools/simprobe.py). add/addi/sub write it,
+    # addc/subb/addic take it in and write it out, and every other instruction
+    # leaves it alone — so an addc after an add must see the add's carry.
     'bt.mov':    '{Dw} = {A};',
-    'bt.add':    '{Dw} = {D} + {A};',
-    'bt.addi':   '{Dw} = {D} + {I};',
+    'bt.add':    'local a:4 = {D}; local b:4 = {A}; CY = carry(a, b); {Dw} = a + b;',
+    'bt.addi':   'local a:4 = {D}; local b:4 = {I}; CY = carry(a, b); {Dw} = a + b;',
     'bt.movi':   '{Dw} = {I};',
     'bt.movhi':  '{Dw} = {H} << 16;',
-    'bt.add16':  '{Dw} = {D} + 16;',
+    'bt.add16':  'local a:4 = {D}; CY = carry(a, 16:4); {Dw} = a + 16;',
     'bt.mov16':  '{Dw} = 16;',
-    'bn.add':    '{Dw} = {A} + {B};',
-    'bn.sub':    '{Dw} = {A} - {B};',
-    'bn.addc':   'local c = zext(CY); {Dw} = {A} + {B} + c; CY = carry({A}, {B});',
-    'bn.subb':   'local c = zext(CY); {Dw} = {A} - {B} - c; CY = {A} < {B};',
+    'bn.add':    'local a:4 = {A}; local b:4 = {B}; CY = carry(a, b); {Dw} = a + b;',
+    'bn.sub':    'local a:4 = {A}; local b:4 = {B}; CY = a < b; {Dw} = a - b;',
+    'bn.addc':   ('local a:4 = {A}; local b:4 = {B}; local c:4 = zext(CY); '
+                  'local s:4 = a + b; local cy1:1 = carry(a, b); '
+                  '{Dw} = s + c; CY = cy1 || carry(s, c);'),
+    'bn.subb':   ('local a:4 = {A}; local b:4 = {B}; local c:4 = zext(CY); '
+                  'local t:4 = a - b; local b1:1 = a < b; '
+                  '{Dw} = t - c; CY = b1 || (t < c);'),
     'bn.mul':    '{Dw} = {A} * {B};',
     'bn.mulu':   '{Dw} = {A} * {B};',
     'bn.div':    '{Dw} = {A} s/ {B};',
@@ -99,13 +106,15 @@ SEMANTICS = {
     'bn.xor':    '{Dw} = {A} ^ {B};',
     'bn.nand':   '{Dw} = ~({A} & {B});',
     'bn.andn':   '{Dw} = {A} & ~{B};',
-    'bn.addi':   '{Dw} = {A} + {O};',
+    'bn.addi':   'local a:4 = {A}; local b:4 = {O}; CY = carry(a, b); {Dw} = a + b;',
     'bn.andi':   '{Dw} = {A} & {N};',
     'bn.ori':    '{Dw} = {A} | {N};',
     'bn.xori':   '{Dw} = {A} ^ {O};',
     'bn.movhi':  '{Dw} = {DOL} << 16;',
-    'bg.addi':   '{Dw} = {A} + {Y};',
-    'bg.addic':  'local c = zext(CY); {Dw} = {A} + {Y} + c; CY = carry({A}, {Y}:4);',
+    'bg.addi':   'local a:4 = {A}; local b:4 = {Y}; CY = carry(a, b); {Dw} = a + b;',
+    'bg.addic':  ('local a:4 = {A}; local b:4 = {Y}; local c:4 = zext(CY); '
+                  'local s:4 = a + b; local cy1:1 = carry(a, b); '
+                  '{Dw} = s + c; CY = cy1 || carry(s, c);'),
     'bg.andi':   '{Dw} = {A} & {t};',
     'bg.ori':    '{Dw} = {A} | {t};',
     'bg.xori':   '{Dw} = {A} ^ {Y};',
@@ -126,13 +135,15 @@ SEMANTICS = {
     'bn.cmovri': 'local v:4 = {I}; local m:4 = -zext(F != 0); {Dw} = ({A} & m) | (v & ~m);',
     'bn.cmovii': 'local v:4 = {I}; local w:4 = {L}; local m:4 = -zext(F != 0); {Dw} = (v & m) | (w & ~m);',
     # --- bit and byte manipulation ---------------------------------------
+    # ff1/fl1 are 1-based bit positions, 0 for a zero input, as measured in the
+    # simulator: ff1(0x80000010) = 5, fl1(0x80000010) = 32.
     'bn.extbz':  '{Dw} = zext({A}:1);',
     'bn.extbs':  '{Dw} = sext({A}:1);',
     'bn.exthz':  '{Dw} = zext({A}:2);',
     'bn.exths':  '{Dw} = sext({A}:2);',
-    'bn.ff1':    '{Dw} = aeon_find_first_one({A});',
-    'bn.fl1':    '{Dw} = aeon_find_last_one({A});',
-    'bn.clz':    '{Dw} = aeon_count_leading_zeros({A});',
+    'bn.ff1':    'local a:4 = {A}; local low:4 = a & (-a); {Dw} = 32 - lzcount(low);',
+    'bn.fl1':    '{Dw} = 32 - lzcount({A});',
+    'bn.clz':    '{Dw} = lzcount({A});',
     'bn.swab':   '{Dw} = aeon_swap_bytes({A});',
     'bn.bitrev': '{Dw} = aeon_bit_reverse({A});',
     'bn.count1': '{Dw} = popcount({A});',

@@ -14,6 +14,8 @@ registers and instructions of 2, 3 or 4 bytes.
 | Delay slots | **none** | the vendor gcc driver rejects `-minsert-nop-before-branch` for `-march=aeonR2`, and aeonR2 output has no filled slots |
 | `r0` | hardwired zero | wrote r0 in `aeon-elf-sim`, read back 0 |
 | Flag | a single condition flag set by `sf*`, tested by `bf`/`bnf` | ISA tables, simulator register dump (`flag:`) |
+| Carry | `add`/`addi`/`sub` write CY; `addc`/`subb`/`addic` take it in and write it out; everything else leaves it alone | `tools/simprobe.py`, measured instruction by instruction |
+| `subb` polarity | borrow: `0 - 0` with CY set gives `0xffffffff` | simulator |
 | Stack pointer | `r1` | vendor gcc |
 | Link register | `r9` (`b.jal` writes it, `b.jr r9` returns) | vendor gcc, fixtures |
 | Arguments | `r3`..`r8`, then the stack at `0(r1)` | vendor gcc |
@@ -78,9 +80,24 @@ which runs `ghidra_scripts/AeonDumpDisasm.java` (the linear-sweep dump) and
 |---|---|---|
 | sBoot (0x0–0x20000) | 43,752 | 0 |
 | HDCP module (base 0x157000) | 18,516 | 0 |
-| stream 0 (main firmware, base ~0x300000) | 550,514 | 0 |
+| stream 0, EIM153 (main firmware, base ~0x300000) | 550,514 | 0 |
+| stream 0, EIM162 (the same code, a later build) | 549,323 | 0 |
 
-Bytes where objdump emits a one-byte `.word` are counted separately (578 / 353 / 55,682): they
-do not decode, and Ghidra leaves them undefined.
+Bytes where objdump emits a one-byte `.word` are counted separately: they do not decode, and
+Ghidra leaves them undefined.
+
+## P-code is tested against the vendor simulator, not just read off the tables
+
+Decoding can be checked against objdump; semantics cannot. `tools/gen_emu_cases.py` runs short
+sequences in MStar's `aeon-elf-sim` and records the resulting register file;
+`ghidra_scripts/AeonEmuTest.java` replays the same bytes through Ghidra's p-code emulator and
+compares. `./gradlew emuTest` runs the 26 committed cases: carry and borrow chains, 64-bit
+addition, the address-load pair, shifts, logic, extension, multiply and divide, compares and
+conditional moves, loads and stores of each width, and push/pop.
+
+This is what caught the carry semantics. `b.add` sets CY in hardware, so modelling carry as
+"only `addc` touches it" made every `addc` after an `add` read a stale flag — wrong in a way
+that corrupts decompiled 64-bit arithmetic silently rather than failing. Deliberately
+reverting that one line makes 4 of the 26 cases fail, so the test has teeth.
 
 Fixtures come from the `hp-z27k-g3` session and are not committed here.
