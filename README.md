@@ -124,11 +124,37 @@ table. A clean listing and correct p-code say nothing about what a reader sees.
 | stream 0 | 5,622 | 0 | 120 | 39 (78 targets) |
 
 The `b.jr` split is doing its job: functions close at `b.jr r9` and the remaining computed
-jumps are real switches. The HDCP module recovers none of its 31 because its dispatch tables
+jumps are real switches. The compare-and-branch p-code helps here too: `b.bgtui` puts the
+comparison directly in the `CBRANCH` condition, one step from the switch variable, which is
+what lets Ghidra's guard analysis find the bound. That is a consequence of keeping `F` a
+standalone register rather than a bit-field of `sr`.
+
+Recovery needs the table bytes **in the same program**, in a block Ghidra treats as readable.
+A table that lives in a separately imported image will not resolve however correct the spec
+is, so an image whose tables sit outside it should be imported as one program at the right
+base. The HDCP module recovers none of its 31 because its dispatch tables
 live in RAM — the pattern is `b.bgtui` bound check, `b.slli` index, `movhi`+`addi` table base
 of 0xb000828, `b.lwz`, `b.jr` — and that RAM is not part of the module blob. Mapping the RAM
 region (or importing the module alongside the firmware that fills it) is what would recover
 them; nothing in the spec can.
+
+## Read the disassembly, not the summary
+
+Twice in building this, a script I wrote told me something the bytes contradicted, and both
+times the summary was more convincing than it deserved to be.
+
+- A carry-flag battery reported that `b.add` *preserves* CY. It didn't: the two runs it
+  compared initialised the operand registers differently, so the "no carry" run was adding
+  0+0. The real answer — `add`, `addi` and `sub` all write CY — changed four instructions'
+  semantics.
+- A jump-table analysis reported "bound check: NO" for all six sites I sampled. Every one of
+  them has a `b.bgtui` immediately before the branch. The regex had a stray escape.
+
+Neither error was in the module; both were in the tooling that measures it, and both would
+have become findings if the next step had been to act on the summary. The habit that caught
+them was opening the disassembly and reading it. A measurement that disagrees with the bytes
+is a bug in the measurement until proven otherwise — and a peer's summary, including mine,
+deserves the same treatment.
 
 ## What the module actually meets: the census
 
