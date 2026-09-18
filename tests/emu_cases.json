@@ -1,0 +1,444 @@
+[
+ {
+  "name": "add carries into CY",
+  "asm": "b.movi r3,-1\nb.movi r4,1\nb.add r6,r3,r4\nb.addc r20,r0,r0",
+  "bytes": "987f988140c324428007",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 1,
+   "r5": 0,
+   "r6": 0,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 1,
+   "flag": 0
+  }
+ },
+ {
+  "name": "add does not carry",
+  "asm": "b.movi r3,1\nb.movi r4,1\nb.add r6,r3,r4\nb.addc r20,r0,r0",
+  "bytes": "9861988140c324428007",
+  "expected": {
+   "r1": 0,
+   "r3": 1,
+   "r4": 1,
+   "r5": 0,
+   "r6": 2,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "addi carries",
+  "asm": "b.movi r3,-1\nb.addi r6,r3,1\nb.addc r20,r0,r0",
+  "bytes": "987f1cc301428007",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 0,
+   "r5": 0,
+   "r6": 0,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 1,
+   "flag": 0
+  }
+ },
+ {
+  "name": "sub borrows",
+  "asm": "b.movi r4,1\nb.sub r6,r0,r4\nb.addc r20,r0,r0",
+  "bytes": "988140c025428007",
+  "expected": {
+   "r1": 0,
+   "r3": 0,
+   "r4": 1,
+   "r5": 0,
+   "r6": 4294967295,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 1,
+   "flag": 0
+  }
+ },
+ {
+  "name": "sub does not borrow",
+  "asm": "b.movi r4,1\nb.sub r6,r4,r0\nb.addc r20,r0,r0",
+  "bytes": "988140c405428007",
+  "expected": {
+   "r1": 0,
+   "r3": 0,
+   "r4": 1,
+   "r5": 0,
+   "r6": 1,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "addc chains a carry",
+  "asm": "b.movi r3,-1\nb.movi r4,1\nb.add r5,r3,r4\nb.addc r6,r3,r0\nb.addc r20,r0,r0",
+  "bytes": "987f988140a32440c307428007",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 1,
+   "r5": 0,
+   "r6": 0,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 1,
+   "flag": 0
+  }
+ },
+ {
+  "name": "subb takes the borrow",
+  "asm": "b.movi r3,-1\nb.movi r4,1\nb.add r5,r3,r4\nb.movi r7,0\nb.subb r6,r7,r0",
+  "bytes": "987f988140a32498e040c706",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 1,
+   "r5": 0,
+   "r6": 4294967295,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "64-bit add, low carries",
+  "asm": "b.movi r3,-1\nb.movi r4,-1\nb.movi r5,1\nb.movi r6,0\nb.add r7,r3,r5\nb.addc r8,r4,r6",
+  "bytes": "987f989f98a198c040e32c410437",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 4294967295,
+   "r5": 1,
+   "r6": 0,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "movhi + addi address",
+  "asm": "b.movhi r3,0x15\nb.addi r6,r3,0x10",
+  "bytes": "94751cc310",
+  "expected": {
+   "r1": 0,
+   "r3": 1376256,
+   "r4": 0,
+   "r5": 0,
+   "r6": 1376272,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "movhi + ori address",
+  "asm": "b.movhi r3,0x15\nb.ori r6,r3,0x25d0",
+  "bytes": "9475c8c325d0",
+  "expected": {
+   "r1": 0,
+   "r3": 1376256,
+   "r4": 0,
+   "r5": 0,
+   "r6": 1385936,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "movhi + negative addi",
+  "asm": "b.movhi r3,0x1234\nb.addi r6,r3,-0x5678",
+  "bytes": "047234fcc3a988",
+  "expected": {
+   "r1": 0,
+   "r3": 305397760,
+   "r4": 0,
+   "r5": 0,
+   "r6": 305375624,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "shifts",
+  "asm": "b.movi r3,-16\nb.slli r6,r3,2\nb.srli r7,r3,4\nb.srai r8,r3,4",
+  "bytes": "98704cc3104ce3214d0322",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967280,
+   "r4": 0,
+   "r5": 0,
+   "r6": 4294967232,
+   "r7": 268435455,
+   "r8": 4294967295,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "rotate",
+  "asm": "b.movi r3,-16\nb.movi r4,8\nb.ror r6,r3,r4",
+  "bytes": "987098884cc327",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967280,
+   "r4": 8,
+   "r5": 0,
+   "r6": 4043309055,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "logic",
+  "asm": "b.movi r3,-1\nb.movi r4,0x5\nb.and r6,r3,r4\nb.or r7,r0,r4\nb.xor r8,r3,r4\nb.nand r9,r3,r4",
+  "bytes": "987f988544c32444e025450326452327",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 5,
+   "r5": 0,
+   "r6": 5,
+   "r7": 5,
+   "r8": 4294967290,
+   "r9": 4294967290,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "logic immediates",
+  "asm": "b.movi r3,-1\nb.andi r6,r3,0x0f\nb.ori r7,r0,0x0f\nb.xori r8,r3,0x0f",
+  "bytes": "987f54c30f50e00f59030f",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967295,
+   "r4": 0,
+   "r5": 0,
+   "r6": 15,
+   "r7": 15,
+   "r8": 4294967280,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "sign and zero extension",
+  "asm": "b.movhi r3,0x1234\nb.ori r3,r3,0x80ff\nb.extbz r6,r3\nb.extbs r7,r3\nb.exthz r8,r3\nb.exths r9,r3",
+  "bytes": "047234c86380ff5cc3005ce3025d03045d2306",
+  "expected": {
+   "r1": 0,
+   "r3": 305430783,
+   "r4": 0,
+   "r5": 0,
+   "r6": 255,
+   "r7": 4294967295,
+   "r8": 33023,
+   "r9": 4294934783,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "multiply, low word",
+  "asm": "b.movhi r3,1\nb.mul r6,r3,r3\nb.movi r4,-3\nb.movi r5,5\nb.mul r7,r4,r5",
+  "bytes": "946140c31b989d98a540e42b",
+  "expected": {
+   "r1": 0,
+   "r3": 65536,
+   "r4": 4294967293,
+   "r5": 5,
+   "r6": 0,
+   "r7": 4294967281,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "divide",
+  "asm": "b.addi r3,r0,-20\nb.movi r4,5\nb.div r6,r3,r4\nb.addi r5,r0,20\nb.divu r7,r5,r4",
+  "bytes": "1c60ec988540c3201ca01440e521",
+  "expected": {
+   "r1": 0,
+   "r3": 4294967276,
+   "r4": 5,
+   "r5": 20,
+   "r6": 4294967292,
+   "r7": 4,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "compare sets the flag",
+  "asm": "b.movi r3,5\nb.movi r4,7\nb.sfleu r3,r4\nb.cmov r6,r3,r4",
+  "bytes": "986598875c641748c320",
+  "expected": {
+   "r1": 0,
+   "r3": 5,
+   "r4": 7,
+   "r5": 0,
+   "r6": 5,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 1
+  }
+ },
+ {
+  "name": "compare, false case",
+  "asm": "b.movi r3,9\nb.movi r4,7\nb.sfleu r3,r4\nb.cmov r6,r3,r4",
+  "bytes": "986998875c641748c320",
+  "expected": {
+   "r1": 0,
+   "r3": 9,
+   "r4": 7,
+   "r5": 0,
+   "r6": 7,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "find first/last one",
+  "asm": "b.movhi r3,0x8000\nb.ori r3,r3,0x10\nb.ff1 r6,r3\nb.fl1 r7,r3",
+  "bytes": "c07000015063105cc3085ce30c",
+  "expected": {
+   "r1": 0,
+   "r3": 2147483664,
+   "r4": 0,
+   "r5": 0,
+   "r6": 5,
+   "r7": 32,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "store then load word",
+  "asm": "b.movhi r1,0x10\nb.addi r5,r0,0x7b\nb.sw 0x10(r1),r5\nb.lwz r6,0x10(r1)",
+  "bytes": "94301ca07b0ca1100cc112",
+  "expected": {
+   "r1": 1048576,
+   "r3": 0,
+   "r4": 0,
+   "r5": 123,
+   "r6": 123,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "store then load byte",
+  "asm": "b.movhi r1,0x10\nb.movi r5,-1\nb.sb 0x14(r1),r5\nb.lbz r6,0x14(r1)\nb.lbs r7,0x14(r1)",
+  "bytes": "943098bf18a11410c11414e114",
+  "expected": {
+   "r1": 1048576,
+   "r3": 0,
+   "r4": 0,
+   "r5": 4294967295,
+   "r6": 255,
+   "r7": 4294967295,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "store then load half",
+  "asm": "b.movhi r1,0x10\nb.movi r5,-2\nb.sh 0x18(r1),r5\nb.lhz r6,0x18(r1)\nb.lhs r7,0x18(r1)",
+  "bytes": "943098be0ca11908c11908e118",
+  "expected": {
+   "r1": 1048576,
+   "r3": 0,
+   "r4": 0,
+   "r5": 4294967294,
+   "r6": 65534,
+   "r7": 4294967294,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "push and pop move r1",
+  "asm": "b.movhi r1,0x10\nb.addi r5,r0,0x2a\nb.push r5\nb.pop r6",
+  "bytes": "94301ca02a84ab84ca",
+  "expected": {
+   "r1": 1048576,
+   "r3": 0,
+   "r4": 0,
+   "r5": 42,
+   "r6": 42,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 0
+  }
+ },
+ {
+  "name": "conditional move, taken",
+  "asm": "b.movi r3,1\nb.movi r4,2\nb.sfeq r3,r3\nb.cmov r6,r3,r4",
+  "bytes": "986198825c630548c320",
+  "expected": {
+   "r1": 0,
+   "r3": 1,
+   "r4": 2,
+   "r5": 0,
+   "r6": 1,
+   "r7": 0,
+   "r8": 0,
+   "r9": 0,
+   "r20": 0,
+   "flag": 1
+  }
+ }
+]

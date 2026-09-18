@@ -418,16 +418,16 @@ IMM_g_CARET_3_14: val is g_CARET_3_14 [ val = ((g_CARET_3_14) * 4); ] { export *
 :bt.sfleui_minus32769 t_A_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c1_3=0 & t_c0_0=1 & RD_t_A_5_9 & t_A_5_9 { F = (RD_t_A_5_9 <= -32769:4); }
 :bt.sfgtsi_minus32769 t_A_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c2_3=0 & t_c1_1=1 & t_c0_0=0 & RD_t_A_5_9 & t_A_5_9 { F = (RD_t_A_5_9 s> -32769:4); }
 :bt.sflesi_minus32769 t_A_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c2_3=0 & t_c0_1=3 & RD_t_A_5_9 & t_A_5_9 { F = (RD_t_A_5_9 s<= -32769:4); }
-:b.add16 t_D_5_9,RD_t_D_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c3_3=0 & t_c2_2=1 & t_c0_1=0 & RD_t_D_5_9 & t_D_5_9 { t_D_5_9 = RD_t_D_5_9 + 16; }
+:b.add16 t_D_5_9,RD_t_D_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c3_3=0 & t_c2_2=1 & t_c0_1=0 & RD_t_D_5_9 & t_D_5_9 { local a:4 = RD_t_D_5_9; CY = carry(a, 16:4); t_D_5_9 = a + 16; }
 :bt.mov16 t_D_5_9 is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c4_4=1 & t_c3_3=0 & t_c2_2=1 & t_c1_1=0 & t_c0_0=1 & t_D_5_9 { t_D_5_9 = 16; }
 :b.dm is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c5_7=0 & t_c4_4=1 & t_c3_3=0 & t_c1_2=3 & t_c0_0=0 { aeon_dm(); }
 :b.em is t_c15_15=1 & t_c11_14=0 & t_c10_10=1 & t_c5_7=0 & t_c4_4=1 & t_c3_3=0 & t_c0_2=7 { aeon_em(); }
 :b.mov t_D_5_9,t_A_0_4 is t_c15_15=1 & t_c12_14=0 & t_c11_11=1 & t_c10_10=0 & RD_t_A_0_4 & t_A_0_4 & t_D_5_9 { t_D_5_9 = RD_t_A_0_4; }
-:b.add t_D_5_9,RD_t_D_5_9,t_A_0_4 is t_c15_15=1 & t_c12_14=0 & t_c10_11=3 & RD_t_A_0_4 & RD_t_D_5_9 & t_A_0_4 & t_D_5_9 { t_D_5_9 = RD_t_D_5_9 + RD_t_A_0_4; }
+:b.add t_D_5_9,RD_t_D_5_9,t_A_0_4 is t_c15_15=1 & t_c12_14=0 & t_c10_11=3 & RD_t_A_0_4 & RD_t_D_5_9 & t_A_0_4 & t_D_5_9 { local a:4 = RD_t_D_5_9; local b:4 = RD_t_A_0_4; CY = carry(a, b); t_D_5_9 = a + b; }
 :b.j REL_t_T_0_9 is t_c15_15=1 & t_c13_14=0 & t_c12_12=1 & t_c10_11=0 & REL_t_T_0_9 { goto REL_t_T_0_9; }
 :b.movhi t_D_5_9,t_H_0_4 is t_c15_15=1 & t_c13_14=0 & t_c12_12=1 & t_c11_11=0 & t_c10_10=1 & t_D_5_9 & t_H_0_4 { t_D_5_9 = t_H_0_4 << 16; }
 :b.movi t_D_5_9,t_I_0_4 is t_c15_15=1 & t_c13_14=0 & t_c11_12=3 & t_c10_10=0 & t_D_5_9 & t_I_0_4 { t_D_5_9 = t_I_0_4; }
-:b.addi t_D_5_9,RD_t_D_5_9,t_I_0_4 is t_c15_15=1 & t_c13_14=0 & t_c10_12=7 & RD_t_D_5_9 & t_D_5_9 & t_I_0_4 { t_D_5_9 = RD_t_D_5_9 + t_I_0_4; }
+:b.addi t_D_5_9,RD_t_D_5_9,t_I_0_4 is t_c15_15=1 & t_c13_14=0 & t_c10_12=7 & RD_t_D_5_9 & t_D_5_9 & t_I_0_4 { local a:4 = RD_t_D_5_9; local b:4 = t_I_0_4; CY = carry(a, b); t_D_5_9 = a + b; }
 :b.nop n_t_0_15 is n_c18_23=0 & n_c16_17=0 & n_t_0_15 {  }
 :b.movhi n_D_13_17,n_DOL_0_12 is n_c19_23=0 & n_c18_18=1 & n_DOL_0_12 & n_D_13_17 { n_D_13_17 = n_DOL_0_12 << 16; }
 :b.lhs n_D_13_17,IMM_n_UND_1_7(n_A_8_12) is n_c20_23=0 & n_c19_19=1 & n_c18_18=0 & n_c0_0=0 & IMM_n_UND_1_7 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = sext(*:2 (RD_n_A_8_12 + IMM_n_UND_1_7)); }
@@ -439,15 +439,15 @@ IMM_g_CARET_3_14: val is g_CARET_3_14 [ val = ((g_CARET_3_14) * 4); ] { export *
 :b.lbs n_D_13_17,n_z_0_7(n_A_8_12) is n_c21_23=0 & n_c20_20=1 & n_c19_19=0 & n_c18_18=1 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 & n_z_0_7 { n_D_13_17 = sext(*:1 (RD_n_A_8_12 + n_z_0_7)); }
 :b.sb n_z_0_7(n_A_8_12),n_B_13_17 is n_c21_23=0 & n_c19_20=3 & n_c18_18=0 & RD_n_A_8_12 & RD_n_B_13_17 & n_A_8_12 & n_B_13_17 & n_z_0_7 { *:1 (RD_n_A_8_12 + n_z_0_7) = RD_n_B_13_17:1; }
 :b.pclwz n_z_0_7(n_A_8_12) is n_c21_23=0 & n_c20_20=1 & n_c13_19=0 & RD_n_A_8_12 & n_A_8_12 & n_z_0_7 { aeon_pclwz(RD_n_A_8_12, n_z_0_7:4); }
-:b.addi n_D_13_17,n_A_8_12,n_O_0_7 is n_c21_23=0 & n_c18_20=7 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 & n_O_0_7 { n_D_13_17 = RD_n_A_8_12 + n_O_0_7; }
+:b.addi n_D_13_17,n_A_8_12,n_O_0_7 is n_c21_23=0 & n_c18_20=7 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 & n_O_0_7 { local a:4 = RD_n_A_8_12; local b:4 = n_O_0_7; CY = carry(a, b); n_D_13_17 = a + b; }
 :b.div n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c0_2=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 s/ RD_n_B_3_7; }
 :b.divu n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c1_2=0 & n_c0_0=1 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 / RD_n_B_3_7; }
 :b.mulu n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 * RD_n_B_3_7; }
 :b.mul n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=0 & n_c0_1=3 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 * RD_n_B_3_7; }
-:b.add n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=1 & n_c0_1=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 + RD_n_B_3_7; }
-:b.sub n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=1 & n_c1_1=0 & n_c0_0=1 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 - RD_n_B_3_7; }
-:b.subb n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c1_2=3 & n_c0_0=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local c = zext(CY); n_D_13_17 = RD_n_A_8_12 - RD_n_B_3_7 - c; CY = RD_n_A_8_12 < RD_n_B_3_7; }
-:b.addc n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c0_2=7 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local c = zext(CY); n_D_13_17 = RD_n_A_8_12 + RD_n_B_3_7 + c; CY = carry(RD_n_A_8_12, RD_n_B_3_7); }
+:b.add n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=1 & n_c0_1=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local a:4 = RD_n_A_8_12; local b:4 = RD_n_B_3_7; CY = carry(a, b); n_D_13_17 = a + b; }
+:b.sub n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c2_2=1 & n_c1_1=0 & n_c0_0=1 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local a:4 = RD_n_A_8_12; local b:4 = RD_n_B_3_7; CY = a < b; n_D_13_17 = a - b; }
+:b.subb n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c1_2=3 & n_c0_0=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local a:4 = RD_n_A_8_12; local b:4 = RD_n_B_3_7; local c:4 = zext(CY); local t:4 = a - b; local b1:1 = a < b; n_D_13_17 = t - c; CY = b1 || (t < c); }
+:b.addc n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c18_21=0 & n_c0_2=7 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { local a:4 = RD_n_A_8_12; local b:4 = RD_n_B_3_7; local c:4 = zext(CY); local s:4 = a + b; local cy1:1 = carry(a, b); n_D_13_17 = s + c; CY = cy1 || carry(s, c); }
 :b.flb n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c19_21=0 & n_c18_18=1 & n_c0_2=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = aeon_flb(RD_n_A_8_12, RD_n_B_3_7); }
 :b.andn n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c19_21=0 & n_c18_18=1 & n_c1_2=0 & n_c0_0=1 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = RD_n_A_8_12 & ~RD_n_B_3_7; }
 :b.sub_s n_D_13_17,n_A_8_12,n_B_3_7 is n_c23_23=0 & n_c22_22=1 & n_c19_21=0 & n_c18_18=1 & n_c2_2=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & RD_n_B_3_7 & n_A_8_12 & n_B_3_7 & n_D_13_17 { n_D_13_17 = aeon_sub_s(RD_n_A_8_12, RD_n_B_3_7); }
@@ -489,11 +489,11 @@ IMM_g_CARET_3_14: val is g_CARET_3_14 [ val = ((g_CARET_3_14) * 4); ] { export *
 :b.extbs n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c2_4=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = sext(RD_n_A_8_12:1); }
 :b.exthz n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c3_4=0 & n_c2_2=1 & n_c0_1=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = zext(RD_n_A_8_12:2); }
 :b.exths n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c3_4=0 & n_c1_2=3 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = sext(RD_n_A_8_12:2); }
-:b.ff1 n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c3_3=1 & n_c0_2=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_find_first_one(RD_n_A_8_12); }
+:b.ff1 n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c3_3=1 & n_c0_2=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { local a:4 = RD_n_A_8_12; local low:4 = a & (-a); n_D_13_17 = 32 - lzcount(low); }
 :b.exp n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c6_7=0 & n_c4_5=0 & n_c3_3=1 & n_c2_2=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_exp(RD_n_A_8_12); }
 :b.exp16 n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c6_7=0 & n_c5_5=1 & n_c4_4=0 & n_c3_3=1 & n_c2_2=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_exp16(RD_n_A_8_12); }
-:b.fl1 n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c2_3=3 & n_c0_1=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_find_last_one(RD_n_A_8_12); }
-:b.clz n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c1_3=7 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_count_leading_zeros(RD_n_A_8_12); }
+:b.fl1 n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c2_3=3 & n_c0_1=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = 32 - lzcount(RD_n_A_8_12); }
+:b.clz n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=0 & n_c1_3=7 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = lzcount(RD_n_A_8_12); }
 :b.swab n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=1 & n_c0_3=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_swap_bytes(RD_n_A_8_12); }
 :b.bitrev n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=1 & n_c2_3=0 & n_c1_1=1 & n_c0_0=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_bit_reverse(RD_n_A_8_12); }
 :b.sgn n_D_13_17,n_A_8_12 is n_c23_23=0 & n_c22_22=1 & n_c21_21=0 & n_c18_20=7 & n_c5_7=0 & n_c4_4=1 & n_c3_3=0 & n_c2_2=1 & n_c0_1=0 & RD_n_A_8_12 & n_A_8_12 & n_D_13_17 { n_D_13_17 = aeon_sgn(RD_n_A_8_12); }
@@ -593,7 +593,7 @@ IMM_g_CARET_3_14: val is g_CARET_3_14 [ val = ((g_CARET_3_14) * 4); ] { export *
 :b.flush_invalidate_line g_EQ_6_15(g_A_16_20),g_d_4_5 is g_c28_31=15 & g_c27_27=0 & g_c26_26=1 & g_c21_25=0 & g_c3_3=1 & g_c1_2=0 & g_c0_0=1 & RD_g_A_16_20 & g_A_16_20 & g_EQ_6_15 & g_d_4_5 { aeon_flush_invalidate_line(RD_g_A_16_20, g_EQ_6_15:4, g_d_4_5:4); }
 :b.dma_op g_A_16_20,g_B_11_15 is g_c28_31=15 & g_c27_27=0 & g_c26_26=1 & g_c21_25=0 & g_c4_5=0 & g_c3_3=1 & g_c2_2=0 & g_c1_1=1 & g_c0_0=0 & RD_g_A_16_20 & RD_g_B_11_15 & g_A_16_20 & g_B_11_15 & g_EQ_6_10 { aeon_dma_op(RD_g_A_16_20, RD_g_B_11_15, g_EQ_6_10:4); }
 :b.sb g_Y_0_15(g_A_16_20),g_B_21_25 is g_c27_31=31 & g_c26_26=0 & RD_g_A_16_20 & RD_g_B_21_25 & g_A_16_20 & g_B_21_25 & g_Y_0_15 { *:1 (RD_g_A_16_20 + g_Y_0_15) = RD_g_B_21_25:1; }
-:b.addi g_D_21_25,g_A_16_20,g_Y_0_15 is g_c26_31=63 & RD_g_A_16_20 & g_A_16_20 & g_D_21_25 & g_Y_0_15 { g_D_21_25 = RD_g_A_16_20 + g_Y_0_15; }
+:b.addi g_D_21_25,g_A_16_20,g_Y_0_15 is g_c26_31=63 & RD_g_A_16_20 & g_A_16_20 & g_D_21_25 & g_Y_0_15 { local a:4 = RD_g_A_16_20; local b:4 = g_Y_0_15; CY = carry(a, b); g_D_21_25 = a + b; }
 :b.sfeqi g_A_21_25,g_Y_5_20 is g_c30_31=3 & g_c26_29=0 & g_c4_4=0 & g_c0_3=0 & RD_g_A_21_25 & g_A_21_25 & g_Y_5_20 { F = (RD_g_A_21_25 == g_Y_5_20); }
 :b.sfnei g_A_21_25,g_Y_5_20 is g_c30_31=3 & g_c26_29=0 & g_c4_4=0 & g_c3_3=0 & g_c2_2=1 & g_c0_1=0 & RD_g_A_21_25 & g_A_21_25 & g_Y_5_20 { F = (RD_g_A_21_25 != g_Y_5_20); }
 :b.sflesi g_A_21_25,g_Y_5_20 is g_c30_31=3 & g_c26_29=0 & g_c4_4=0 & g_c3_3=1 & g_c0_2=0 & RD_g_A_21_25 & g_A_21_25 & g_Y_5_20 { F = (RD_g_A_21_25 s<= g_Y_5_20); }
@@ -627,7 +627,7 @@ IMM_g_CARET_3_14: val is g_CARET_3_14 [ val = ((g_CARET_3_14) * 4); ] { export *
 :b.bne g_A_21_25,g_B_16_20,REL_g_SEM_3_15 is g_c30_31=3 & g_c29_29=0 & g_c28_28=1 & g_c27_27=0 & g_c26_26=1 & g_c1_2=3 & g_c0_0=0 & RD_g_A_21_25 & RD_g_B_16_20 & REL_g_SEM_3_15 & g_A_21_25 & g_B_16_20 { if (RD_g_A_21_25 != RD_g_B_16_20) goto REL_g_SEM_3_15; }
 :b.bnf REL_g_QUO_3_25 is g_c30_31=3 & g_c29_29=0 & g_c28_28=1 & g_c27_27=0 & g_c26_26=1 & g_c0_2=7 & REL_g_QUO_3_25 { if (!F) goto REL_g_QUO_3_25; }
 :b.xori g_D_21_25,g_A_16_20,g_Y_0_15 is g_c30_31=3 & g_c29_29=0 & g_c27_28=3 & g_c26_26=0 & RD_g_A_16_20 & g_A_16_20 & g_D_21_25 & g_Y_0_15 { g_D_21_25 = RD_g_A_16_20 ^ g_Y_0_15; }
-:bg.addic g_D_21_25,g_A_16_20,g_Y_0_15 is g_c30_31=3 & g_c29_29=0 & g_c26_28=7 & RD_g_A_16_20 & g_A_16_20 & g_D_21_25 & g_Y_0_15 { local c = zext(CY); g_D_21_25 = RD_g_A_16_20 + g_Y_0_15 + c; CY = carry(RD_g_A_16_20, g_Y_0_15:4); }
+:bg.addic g_D_21_25,g_A_16_20,g_Y_0_15 is g_c30_31=3 & g_c29_29=0 & g_c26_28=7 & RD_g_A_16_20 & g_A_16_20 & g_D_21_25 & g_Y_0_15 { local a:4 = RD_g_A_16_20; local b:4 = g_Y_0_15; local c:4 = zext(CY); local s:4 = a + b; local cy1:1 = carry(a, b); g_D_21_25 = s + c; CY = cy1 || carry(s, c); }
 :b.divl g_D_21_25,g_A_16_20,g_B_11_15,g_b_5_10 is g_c31_31=1 & g_c30_30=0 & g_c29_29=1 & g_c26_28=0 & g_c2_4=0 & g_c0_1=0 & RD_g_A_16_20 & RD_g_B_11_15 & g_A_16_20 & g_B_11_15 & g_D_21_25 & g_b_5_10 { g_D_21_25 = aeon_divl(RD_g_A_16_20, RD_g_B_11_15, g_b_5_10:4); }
 :b.divlr g_D_21_25,g_A_16_20,g_B_11_15,g_b_5_10 is g_c31_31=1 & g_c30_30=0 & g_c29_29=1 & g_c26_28=0 & g_c2_4=0 & g_c1_1=0 & g_c0_0=1 & RD_g_A_16_20 & RD_g_B_11_15 & g_A_16_20 & g_B_11_15 & g_D_21_25 & g_b_5_10 { g_D_21_25 = aeon_divlr(RD_g_A_16_20, RD_g_B_11_15, g_b_5_10:4); }
 :b.divlu g_D_21_25,g_A_16_20,g_B_11_15,g_b_5_10 is g_c31_31=1 & g_c30_30=0 & g_c29_29=1 & g_c26_28=0 & g_c2_4=0 & g_c1_1=1 & g_c0_0=0 & RD_g_A_16_20 & RD_g_B_11_15 & g_A_16_20 & g_B_11_15 & g_D_21_25 & g_b_5_10 { g_D_21_25 = aeon_divlu(RD_g_A_16_20, RD_g_B_11_15, g_b_5_10:4); }

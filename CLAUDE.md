@@ -111,10 +111,11 @@ Ghidra's own output, and scripted and committed so anyone can re-run it. That is
 processor module is accepted (`ghidra-plugin-aeon` diffs its SLEIGH spec against MStar's
 `aeon-elf-objdump`, the standard `dailydriver` set), and it is not reachable through the
 MCP tools even in principle: a processor whose module doesn't exist yet has no Ghidra
-disassembler to route through. The oracle is the comparison, never the finding on its own,
-and once the module exists and Ghidra disassembles the target, the ordinary rule applies
-again. A tool gap met while doing such a diff is a normal feature request to
-`ghidra-plugin-mcp`.
+disassembler to route through. The oracle is the comparison, never the finding on its own:
+its output is evidence about the disassembler, not about the firmware, so nothing derived
+from it alone goes into the RE notes. Once the module exists and Ghidra disassembles the
+target, the ordinary rule applies again. A tool gap met while doing such a diff is a normal
+feature request to `ghidra-plugin-mcp`.
 
 ## Verify against the decompiler, not the listing
 
@@ -217,10 +218,10 @@ So, in this order:
     `~/.config/ghidra`, which lives outside the flatpak.
   - `support/sleigh` **ignores `-Dapplication.settingsdir`** and writes its log under
     `~/.config/ghidra` anyway; `XDG_CONFIG_HOME=<dir> support/sleigh …` does pin it. So a
-    build that compiles specs pins it that way. (Measured by `ghidra-plugin-aeon` and
-    `ghidra-plugin-keil8051` on the 12.1.3 SDK, on Linux, where `XDG_CONFIG_HOME` is the
-    base-directory path Ghidra derives the user settings dir from: a fact about this Ghidra,
-    so re-check it on a version bump.)
+    build that compiles specs pins it that way. Linux-only — `XDG_CONFIG_HOME` is the
+    base-directory path Ghidra derives the user settings dir from — and measured on the
+    12.1.3 SDK (found by `ghidra-plugin-aeon`, confirmed by `ghidra-plugin-keil8051`), so
+    it is a fact about this Ghidra: re-check it on a version bump.
   - Extracts the freshly built zip into
     `new File(settingsDir, "ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}/Extensions")` inside the
     task's `doFirst`, **after** the task wipes `build/smoke`. Those two properties come from
@@ -277,9 +278,15 @@ ignored). `tools/verify_letters.py` checks the operand model against every calib
 ## Verifying a change
 
 ```bash
-./gradlew smokeTest                                  # committed 19-byte program, expects "AEON SMOKE OK"
+./gradlew verify                                     # smokeTest + emuTest
 ./gradlew acceptanceTest -PaeonFixture=fixtures/sboot.bin -PaeonListing=fixtures-out/sboot.asm
 ```
+
+`smokeTest` decodes a committed 19-byte program; `emuTest` replays 26 sequences through
+Ghidra's p-code emulator and compares the register file with MStar's `aeon-elf-sim`, which is
+the only way semantics get checked at all — objdump can only confirm decoding. Regenerate the
+expectations with `tools/gen_emu_cases.py` after changing what an instruction computes, and
+sanity-check a new case by breaking the semantics on purpose and watching it fail.
 
 `acceptanceTest` is the real check: a full linear sweep diffed against the vendor objdump,
 address by address, mnemonic and operands and length, failing on any unexplained difference.
@@ -296,8 +303,9 @@ that objdump cannot (it is how `r0` was confirmed hardwired): link with
 
 ## Scope and state
 
-Decoding is complete and verified: every instruction in all three fixtures, 612,782 of them,
-matches the vendor objdump. P-code is real for the integer core, branches, loads/stores,
+Decoding is complete and verified: every instruction in all four fixtures, 1.16 million of
+them, matches the vendor objdump, and the p-code for the integer core is checked against the
+vendor simulator. P-code is real for the integer core, branches, loads/stores,
 `movhi`, compares and the flag, stack ops and system instructions. MAC/DSP/SIMD/float, the
 cache ops and `entri`/`reti`/`creti` decode correctly but carry pseudo-op semantics, so the
 decompiler shows them as opaque calls. Give one real semantics when a target needs it.
