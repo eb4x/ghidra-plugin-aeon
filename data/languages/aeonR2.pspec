@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <processor_spec>
+  <properties>
+    <!-- Off by default. MStar firmware holds little-endian records of code
+         addresses that point just past call instructions. The stock table
+         finder turns those into references, and the non-returning-function
+         heuristic reads a reference after a call as evidence that the callee
+         never returns. On stream 0 it marked nine heavily-used helpers
+         non-returning (one with 683 callers), which cut off 270 functions and
+         put 1,228 "Subroutine does not return" warnings in the decompilation.
+         With it off: no non-returning functions, 3,151 functions, and jump-table
+         recovery the same as before. -->
+    <property key="Analyzers.Create Address Tables" value="false"/>
+  </properties>
   <programcounter register="pc"/>
   <!-- Instructions are 2, 3 or 4 bytes and may start at any address. -->
   <data_space space="ram"/>

@@ -593,7 +593,8 @@ class Gen:
         L.append('# Do not edit by hand: edit the generator and regenerate.')
         L.append('')
         for tok, size in (('i16', 16), ('i24', 24), ('i32', 32)):
-            L.append(f'define token {tok} ({size})')
+            # instructions are big-endian even when data is not (-EL -EBinst)
+            L.append(f'define token {tok} ({size}) endian=big')
             for fname, (lo, hi, signed) in self.fields[tok].items():
                 L.append(f'  {fname}=({lo},{hi})' + (' signed' if signed else ''))
             L.append(';')

@@ -6,6 +6,7 @@
  * functions whose output looks pathological, plus a sample decompilation.
  *
  * Usage: analyzeHeadless ... -postScript AeonDecompileCheck.java seed=<file> [show=<address>]
+ *        [functions=<file>]   also write every function entry point, one per line
  */
 //@category AEON
 
@@ -27,6 +28,7 @@ public class AeonDecompileCheck extends GhidraScript {
 	@Override
 	public void run() throws Exception {
 		String show = null;
+		String functionsOut = null;
 		for (String arg : getScriptArgs()) {
 			if (arg.startsWith("seed=")) {
 				seed(arg.substring(5));
@@ -34,8 +36,17 @@ public class AeonDecompileCheck extends GhidraScript {
 			else if (arg.startsWith("show=")) {
 				show = arg.substring(5);
 			}
+			else if (arg.startsWith("functions=")) {
+				functionsOut = arg.substring(10);
+			}
 		}
 		analyzeAll(currentProgram);
+		if (functionsOut != null) {
+			var lines = new ArrayList<String>();
+			currentProgram.getFunctionManager().getFunctions(true)
+					.forEach(f -> lines.add("0x" + f.getEntryPoint().toString(false)));
+			java.nio.file.Files.write(java.nio.file.Path.of(functionsOut), lines);
+		}
 
 		DecompInterface decomp = new DecompInterface();
 		decomp.openProgram(currentProgram);
@@ -105,7 +116,19 @@ public class AeonDecompileCheck extends GhidraScript {
 				}
 			}
 
+			// A wrongly non-returning callee truncates every caller after the call,
+			// so list which functions analysis marked that way.
+			List<String> noReturn = new ArrayList<>();
+			for (Function f : currentProgram.getFunctionManager().getFunctions(true)) {
+				if (f.hasNoReturn()) {
+					noReturn.add(f.getEntryPoint() + " (" +
+						f.getSymbol().getReferenceCount() + " refs)");
+				}
+			}
+
 			println("AEON DECOMPILE CHECK");
+			println("  non-returning functions: " + noReturn.size());
+			noReturn.stream().limit(15).forEach(x -> println("    no return: " + x));
 			println("  computed jumps:          " + computed);
 			println("  with a recovered table:  " + resolved + " (" + targets + " targets)");
 			println("  decompiled:     " + ok);

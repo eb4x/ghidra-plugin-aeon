@@ -7,7 +7,8 @@ bytes through Ghidra's p-code emulator and compares, so the semantics in the
 SLEIGH spec are checked against the hardware model rather than against my
 reading of it.
 
-Writes tests/emu_cases.json.
+Writes tests/emu_cases.json (an -EB build) and tests/emu_cases_le.json (an
+-EL -EBinst build: same instruction bytes, little-endian data).
 """
 import json
 import os
@@ -52,6 +53,12 @@ CASES = [
                                  'b.lbz r6,0x14(r1)\nb.lbs r7,0x14(r1)'),
     ('store then load half',     'b.movhi r1,0x10\nb.movi r5,-2\nb.sh 0x18(r1),r5\n'
                                  'b.lhz r6,0x18(r1)\nb.lhs r7,0x18(r1)'),
+    # a wider store read back narrower: the only cases that see the data byte order
+    ('word store, byte loads',   'b.movhi r1,0x10\nb.movhi r5,0x1122\nb.ori r5,r5,0x3344\n'
+                                 'b.sw 0x10(r1),r5\nb.lbz r6,0x10(r1)\nb.lbz r7,0x13(r1)\n'
+                                 'b.lhz r8,0x10(r1)'),
+    ('half store, byte load',    'b.movhi r1,0x10\nb.ori r5,r0,0xa1b2\nb.sh 0x18(r1),r5\n'
+                                 'b.lbz r6,0x18(r1)\nb.lbz r7,0x19(r1)'),
     ('push and pop move r1',     'b.movhi r1,0x10\nb.addi r5,r0,0x2a\nb.push r5\nb.pop r6'),
     ('conditional move, taken',  'b.movi r3,1\nb.movi r4,2\nb.sfeq r3,r3\nb.cmov r6,r3,r4'),
     # multi-word transfers: c selects 2/3/4/8 registers, offset scales by 4
@@ -95,16 +102,20 @@ def assemble(body):
 
 
 def main():
+    for endian, name in (('big', 'emu_cases.json'), ('little', 'emu_cases_le.json')):
+        generate(endian, os.path.join(HERE, 'tests', name))
+
+
+def generate(endian, path):
     out = []
     for name, body in CASES:
         code = assemble(body)
-        regs = probe(body)
+        regs = probe(body, endian=endian)
         expected = {k: regs[k] for k in WATCH if k in regs}
         out.append({'name': name, 'asm': body, 'bytes': code.hex(),
                     'expected': expected})
         print(f'{name:28s} {len(code):2d} bytes  ' +
               ' '.join(f'{k}={v:#x}' for k, v in expected.items() if v))
-    path = os.path.join(HERE, 'tests/emu_cases.json')
     json.dump(out, open(path, 'w'), indent=1)
     print(f'\nwrote {path}: {len(out)} cases')
 

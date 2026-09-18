@@ -1,14 +1,23 @@
 # ghidra-plugin-aeon — MStar AEON R2 processor module
 
 A Ghidra processor module (SLEIGH) for the MStar **AEON R2** (`aeonR2`) core, packaged as a
-standalone extension. The core is big-endian and OpenRISC-derived, with 32 general-purpose
-registers and instructions of 2, 3 or 4 bytes.
+standalone extension. The core is OpenRISC-derived, with 32 general-purpose registers and
+instructions of 2, 3 or 4 bytes, always big-endian. Data can be either byte order, so there
+are two languages:
+
+| language | data | use for |
+|---|---|---|
+| `AEON:LE:32:R2` | little-endian | MStar firmware (built `-EL`, which the vendor gcc turns into `-EL -EBinst`) |
+| `AEON:BE:32:R2` | big-endian | code built `-EB`, the toolchain's default |
+
+They decode identically. They differ in every load and store, and in the order of 64-bit
+register pairs.
 
 ## What the core looks like
 
 | Property | Value | How it was established |
 |---|---|---|
-| Endianness | big | vendor objdump, `-EB` |
+| Endianness | instructions big; data big (`-EB`) or little (`-EL -EBinst`) | vendor gcc spec, assembler, `aeon-elf-sim -EL`; MStar images store packed `u16` fields low byte first and hold little-endian code-address records |
 | Instruction length | top **three** bits of byte 0: `0xx`=3, `100`=2, `101`=4, `11x`=4 | vendor objdump; `101` is the 4-byte DSP/MAC/SIMD block |
 | Alignment | 1 (instructions start at any byte) | fixtures |
 | Delay slots | **none** | the vendor gcc driver rejects `-minsert-nop-before-branch` for `-march=aeonR2`, and aeonR2 output has no filled slots |
@@ -19,7 +28,7 @@ registers and instructions of 2, 3 or 4 bytes.
 | Stack pointer | `r1` | vendor gcc |
 | Link register | `r9` (`b.jal` writes it, `b.jr r9` returns) | vendor gcc, fixtures |
 | Arguments | `r3`..`r8`, then the stack at `0(r1)` | vendor gcc |
-| Return value | `r3` (64-bit in `r3:r4`, high word in `r3`) | vendor gcc |
+| Return value | `r3`; 64-bit in `r3`+`r4`, high word in `r3` under `-EB` but **low** word in `r3` under `-EL` (arguments likewise) | vendor gcc `-mbe`/`-mle` |
 | Callee-saved | `r10`..`r22` | vendor gcc (`r23`..`r31` are used freely by leaf functions) |
 | Address loads | `movhi rN,hi` then `addi/ori rN,rN,lo` (`addi` signed) | vendor gcc, fixtures |
 
@@ -92,14 +101,17 @@ Ghidra leaves them undefined.
 Decoding can be checked against objdump; semantics cannot. `tools/gen_emu_cases.py` runs short
 sequences in MStar's `aeon-elf-sim` and records the resulting register file;
 `ghidra_scripts/AeonEmuTest.java` replays the same bytes through Ghidra's p-code emulator and
-compares. `./gradlew emuTest` runs the 26 committed cases: carry and borrow chains, 64-bit
+compares. `./gradlew emuTest` runs the 35 committed cases: carry and borrow chains, 64-bit
 addition, the address-load pair, shifts, logic, extension, multiply and divide, compares and
-conditional moves, loads and stores of each width, and push/pop.
+conditional moves, loads and stores of each width, push/pop and the multi-word transfers.
+`emuTestLe` replays the same cases against the simulator run on an `-EL -EBinst` build, for
+the little-endian language. Two cases store a word and read back bytes, which gives
+different answers in the two byte orders, so each test catches the wrong endianness.
 
 This is what caught the carry semantics. `b.add` sets CY in hardware, so modelling carry as
 "only `addc` touches it" made every `addc` after an `add` read a stale flag — wrong in a way
 that corrupts decompiled 64-bit arithmetic silently rather than failing. Deliberately
-reverting that one line makes 4 of the 26 cases fail, so the test has teeth.
+reverting that one line makes 4 of the cases fail, so the test has teeth.
 
 Fixtures come from the `hp-z27k-g3` session and are not committed here, and neither are the
 entry-point lists derived from them: generate one with
@@ -154,7 +166,9 @@ one of these images:
 | 0x300000 – ~0x3c0000 | main firmware (stream 0); base 0x300000 confirmed |
 | 0x10xxxx – 0x16xxxx | the loadable modules, sharing one address space with the firmware, which calls into them (the HDCP module's 0x157000 sits here) |
 | 0x2d0000 | data/table region, 551 references, populated at runtime |
-| 0x1b06_0000 / 0x1b07_0000 | MMIO and buffers | The HDCP module recovers none of its 31 because its dispatch tables
+| 0x1b06_0000 / 0x1b07_0000 | MMIO and buffers |
+
+The HDCP module recovers none of its 31 because its dispatch tables
 live in RAM — the pattern is `b.bgtui` bound check, `b.slli` index, `movhi`+`addi` table base
 of 0xb000828, `b.lwz`, `b.jr` — and that RAM is not part of the module blob. Mapping the RAM
 region (or importing the module alongside the firmware that fills it) is what would recover
@@ -212,3 +226,39 @@ tail call. A function ending in a tail call is healthy too, and the census count
 In sBoot every function is accounted for: 96 return, 3 tail-call, and the remaining 3 are a
 boot hand-off trampoline (`b.jr r3`, where the caller loads the address of the next image) and
 two deliberate hang loops (`b.j` to themselves). No gaps in the spec.
+
+## Analysis the extension adds
+
+The same image that imported with 71 functions (stream 0, nothing seeded) now gets 3,437. Three
+pieces make the difference, and they apply to both languages:
+
+- **Function-start patterns** (`data/patterns/`). A non-leaf gcc function opens with
+  `b.addi r1,r1,-N` and then `b.sw N-4(r1),r9`, in every encoding width the assembler picks.
+  The stock Function Start Search finds those, and call following reaches the leaf functions
+  from there. Of the functions no `b.jal` in the image reaches, a sample of six were all real
+  starts, each directly after the previous function's `b.jr r9` or `b.j`. These are functions
+  reached through pointer tables.
+- **AEON Constant Reference Analyzer** (`src/main/java/aeon/AeonAddressAnalyzer.java`). This is
+  the stock constant propagation, plus a DATA reference on each `b.addi`/`b.ori` that
+  completes a `movhi` address. The stock analyzer already references a load or store through
+  such a base. What it misses is the address itself when the code passes it on, e.g. a struct
+  pointer or a string handed to a callee. On stream 0 that adds 6,560 references.
+- **"Create Address Tables" is off by default** (a pspec property). With little-endian data it
+  finds records of addresses that point just past call instructions. Ghidra's non-returning
+  function heuristic reads a reference after a call as evidence that the callee never
+  returns, so it marked nine busy helpers non-returning and cut off 270 functions.
+
+`./gradlew decompileCheck` lists non-returning functions, so a regression like that shows. Its
+`-PaeonDisable=<analyzer>,…` option switches analyzers off for an A/B comparison.
+
+## Known limit: data addresses that coincide with code
+
+In the MST9U main firmware, data addresses share their numbers with code, but not their bytes.
+`0x3241e9` is used as a printf format string, but code sits at that address. `0x3c027c` is a
+global next to a real function, and `0x3305da` is both a struct base and a function entry.
+Ghidra's decompiler treats any address inside a function body as read-only. So a load from
+such a global folds to the instruction bytes that happen to be there, and whole branches
+disappear: `FUN_0030e7f3` decompiles to `return 0`. The same thing happens in both languages.
+The fix is a language variant with a separate data space (`AEON:LE:32:R2-harvard`, reviewed
+with `dailydriver`, not built yet), in which loads and stores resolve somewhere other than
+instruction fetches.

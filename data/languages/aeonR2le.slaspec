@@ -1,0 +1,10 @@
+# MStar AEON "R2" (aeonR2), built -EL: little-endian data, big-endian
+# instructions (the vendor gcc passes -EBinst along with -EL). This is how
+# MStar scaler firmware is built: its packed u16 fields are stored low byte
+# first and its pointer tables are little-endian words.
+#
+# Everything else is identical to aeonR2.slaspec.
+
+define endian=little;
+
+@include "aeonR2_common.sinc"
