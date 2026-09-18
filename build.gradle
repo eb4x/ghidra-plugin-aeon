@@ -46,7 +46,15 @@ buildExtension.exclude 'gradle.properties'
 buildExtension.exclude 'vendor/**'
 buildExtension.exclude 'isa/**'
 buildExtension.exclude 'tools/**'
+// Fixtures are proprietary firmware belonging to another session, and the test
+// data and instructions are ours, not the user's. buildExtension packages the
+// whole project directory minus this list, so anything new at the root that is
+// not part of the language must be added here.
+buildExtension.exclude 'fixtures/**'
 buildExtension.exclude 'fixtures-out/**'
+buildExtension.exclude 'tests/**'
+buildExtension.exclude 'CLAUDE.md'
+buildExtension.exclude '*.rawlob'
 
 def extensionName = project.name
 
