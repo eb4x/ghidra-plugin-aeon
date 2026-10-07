@@ -264,7 +264,8 @@ ext.buildStamp = {
  *
  * Headless analyzes and runs scripts on the primary program of an import only (Ghidra
  * GP-2965); a loader that yields several programs needs one task per program, each loading
- * the one it checks.
+ * the one it checks. Ghidra refuses a project path with an element starting with '.', so a
+ * checkout under a dot-directory can't run headless tasks.
  */
 class GhidraHeadlessSpec {
 	final Task task
@@ -308,6 +309,17 @@ class GhidraHeadlessSpec {
 
 def smokeDir = layout.buildDirectory.dir('smoke').get().asFile
 def smokeSettingsDir = new File(smokeDir, 'settings')
+// Ghidra names its per-user directory "ghidra" inside the user's home and "<user>-ghidra"
+// anywhere else, e.g. a checkout under /tmp (ApplicationUtilities.getUserSpecificDirName).
+def smokeUserDirName = {
+	def home = new File(System.getProperty('user.home')).canonicalPath + '/'
+	if ((smokeSettingsDir.canonicalPath + '/').startsWith(home)) {
+		return 'ghidra'
+	}
+	def user = System.getProperty('user.name').replace(' ', '').replaceAll(/.*[\\\/]/, '')
+	return "${user}-ghidra"
+}.call()
+def smokeProfileDir = new File(smokeSettingsDir, "${smokeUserDirName}/${ghidraProfileName}")
 
 // Registered on the first ghidraHeadless call, so a plugin without headless runs has neither
 // the task nor build/smoke.
@@ -322,7 +334,7 @@ def registerHeadlessExtract = {
 			fileOps.fs.delete { delete smokeDir }
 			fileOps.fs.copy {
 				from fileOps.archives.zipTree(builtZip())
-				into new File(smokeSettingsDir, "ghidra/${ghidraProfileName}/Extensions")
+				into new File(smokeProfileDir, 'Extensions')
 			}
 		}
 	}
@@ -391,6 +403,12 @@ def runHeadless = { Task task, GhidraHeadlessSpec spec ->
 		}
 	}
 	def exit = process.waitFor()
+	// Ghidra writes its application.log into the profile it used; anywhere else means the
+	// extension extracted into smokeProfileDir was never loaded.
+	if (!new File(smokeProfileDir, 'application.log').isFile()) {
+		throw new GradleException("${task.name}: Ghidra did not use ${smokeProfileDir}, so " +
+			"${extensionName} was not loaded — see ${logFile}")
+	}
 	if (exit != 0 || failures || verdict == null) {
 		def why = exit != 0 ? "analyzeHeadless exited ${exit}"
 			: failures ? failures.join('\n')
