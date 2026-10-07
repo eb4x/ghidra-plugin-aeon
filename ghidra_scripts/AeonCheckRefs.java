@@ -89,6 +89,23 @@ public class AeonCheckRefs extends GhidraScript {
 		}
 		println("  in-memory data refs:   " + dataRefs);
 
+		// The movhi completers' references by target space and source: in the Harvard
+		// language every one of them should land in data, not in the code space.
+		var bySpace = new java.util.TreeMap<String, Integer>();
+		for (Instruction insn : currentProgram.getListing().getInstructions(true)) {
+			String m = insn.getMnemonicString();
+			if (!m.equals("b.addi") && !m.equals("b.ori")) {
+				continue;
+			}
+			for (Reference r : insn.getOperandReferences(0)) {
+				if (r.getReferenceType().isData()) {
+					bySpace.merge(r.getToAddress().getAddressSpace().getName() + " " +
+						r.getSource(), 1, Integer::sum);
+				}
+			}
+		}
+		bySpace.forEach((k, v) -> println("  completer refs to " + k + ": " + v));
+
 		for (String arg : getScriptArgs()) {
 			if (arg.startsWith("seed=")) {
 				continue;

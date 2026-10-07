@@ -63,7 +63,7 @@ operands.
 ```
 ./gradlew buildExtension     # compiles the .slaspec first; a spec error fails the build
 ./gradlew installExtension   # extract into GHIDRA_USER_EXTENSIONS_DIR
-./gradlew smokeTest          # decode tests/smoke.bin and compare with the vendor objdump
+./gradlew smokeTest          # decode src/test/smoke/smoke.bin and compare with the vendor objdump
 ```
 
 Every headless run goes through a Gradle task: each one wipes `build/smoke`, extracts the

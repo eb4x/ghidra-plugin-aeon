@@ -19,8 +19,8 @@
 //   GHIDRA_USER_EXTENSIONS_DIR  where installExtension extracts to (absolute path)
 // A one-off override is -PKEY=value: an exported variable loses to gradle.properties.
 
-import java.util.regex.Pattern
 import java.util.zip.ZipFile
+import javax.inject.Inject
 
 // ------------------------------------------------------------------------------- settings --
 
@@ -48,13 +48,25 @@ if (!buildExtensionScript.isFile()) {
 apply from: buildExtensionScript.canonicalPath
 ext.ghidraInstallDir = ghidraInstall.canonicalPath
 
+def extensionName = project.name
+def ghidraProfileName = "${DISTRO_PREFIX}_${RELEASE_NAME}"
+
 // Resolved only when install or uninstall runs: CI never sets it.
 def ghidraUserExtensionsDir = {
 	absoluteSetting('GHIDRA_USER_EXTENSIONS_DIR',
-		"/home/<user>/.var/app/org.eclipse.Java/config/ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}_location_dailydriver/Extensions")
+		"/home/<user>/.var/app/org.eclipse.Java/config/ghidra/${ghidraProfileName}_location_dailydriver/Extensions")
 }
 
-def builtZip = { tasks.named('buildExtension', Zip).get().archiveFile.get().asFile }
+def builtZipFile = tasks.named('buildExtension', Zip).flatMap { it.archiveFile }
+def builtZip = { builtZipFile.get().asFile }
+
+// File operations for task actions, which must not touch Task.project at execution time
+// (deprecated, an error from Gradle 10).
+interface GhidraPluginFileOps {
+	@Inject FileSystemOperations getFs()
+	@Inject ArchiveOperations getArchives()
+}
+def fileOps = objects.newInstance(GhidraPluginFileOps)
 
 // ------------------------------------------------------------------------- dependencies --
 
@@ -65,6 +77,12 @@ repositories {
 dependencies {
 	// Ghidra's AbstractGenericTest and ProgramBuilder are JUnit 4. Test-only, never in the zip.
 	testImplementation 'junit:junit:4.13.2'
+}
+
+tasks.named('test') {
+	// As in Ghidra's own test.gradle: the Gradle test worker installs a serial filter before
+	// Ghidra's application initialises, which then fails ("Cannot replace filter factory").
+	jvmArgs '-Djdk.serialFilterFactory=ghidra.framework.remote.GhidraSerialFilterFactory'
 }
 
 // ------------------------------------------------------------------------------ packaging --
@@ -106,7 +124,7 @@ ext.allowPackaged = { Object... patterns -> packaged.addAll(patterns) }
 // Deletes a zip that fails, so nothing downstream (install, headless runs, a copy from dist/)
 // ever sees it.
 def checkZip = { File zip ->
-	def top = project.name + '/'
+	def top = extensionName + '/'
 	def unexpected = []
 	new ZipFile(zip).withCloseable { zf ->
 		zf.entries().each { entry ->
@@ -151,12 +169,12 @@ tasks.register('installExtension') {
 	dependsOn 'buildExtension'
 	doLast {
 		def extensionsDir = ghidraUserExtensionsDir()
-		project.delete new File(extensionsDir, project.name)
-		project.copy {
-			from project.zipTree(builtZip())
+		fileOps.fs.delete { delete new File(extensionsDir, extensionName) }
+		fileOps.fs.copy {
+			from fileOps.archives.zipTree(builtZip())
 			into extensionsDir
 		}
-		logger.lifecycle("installed ${project.name} into ${extensionsDir}")
+		logger.lifecycle("installed ${extensionName} into ${extensionsDir}")
 	}
 }
 
@@ -164,7 +182,8 @@ tasks.register('uninstallExtension') {
 	group = 'Ghidra'
 	description = "Remove the extension from Ghidra's user Extensions folder"
 	doLast {
-		project.delete new File(ghidraUserExtensionsDir(), project.name)
+		def extensionsDir = ghidraUserExtensionsDir()
+		fileOps.fs.delete { delete new File(extensionsDir, extensionName) }
 	}
 }
 
@@ -180,7 +199,7 @@ tasks.register('verify') {
 // runtime. It makes every build's jar differ, which is why it is not on by default.
 ext.buildStamp = {
 	def stampDir = layout.buildDirectory.dir('generated/buildstamp')
-	def resource = "${project.name.toLowerCase(Locale.ROOT)}-build.properties"
+	def resource = "${extensionName.toLowerCase(Locale.ROOT)}-build.properties"
 	def generate = tasks.register('generateBuildStamp') {
 		description = "Write ${resource} with the version, git commit and build time"
 		outputs.dir(stampDir)
@@ -242,6 +261,10 @@ ext.buildStamp = {
  * build/smoke/<task>.log. Script lines are the ones headless prefixes "<Script>.java> "
  * (INFO for println, ERROR for printerr). analyzeHeadless exits 0 even when a script throws,
  * so the verdict comes from those lines; a non-zero exit fails too.
+ *
+ * Headless analyzes and runs scripts on the primary program of an import only (Ghidra
+ * GP-2965); a loader that yields several programs needs one task per program, each loading
+ * the one it checks.
  */
 class GhidraHeadlessSpec {
 	final Task task
@@ -296,13 +319,19 @@ def registerHeadlessExtract = {
 		dependsOn 'buildExtension'
 		outputs.upToDateWhen { false }
 		doLast {
-			project.delete smokeDir
-			project.copy {
-				from project.zipTree(builtZip())
-				into new File(smokeSettingsDir, "ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}/Extensions")
+			fileOps.fs.delete { delete smokeDir }
+			fileOps.fs.copy {
+				from fileOps.archives.zipTree(builtZip())
+				into new File(smokeSettingsDir, "ghidra/${ghidraProfileName}/Extensions")
 			}
 		}
 	}
+}
+
+def projectDirectory = layout.projectDirectory.asFile
+def resolveFile = { Object path ->
+	def file = path instanceof File ? path : new File(path.toString())
+	file.isAbsolute() ? file : new File(projectDirectory, file.path)
 }
 
 def scriptLine = ~/\S+\.(?:java|py)> (.*?)(?: \(\w+\))?\s*$/
@@ -311,7 +340,7 @@ def runHeadless = { Task task, GhidraHeadlessSpec spec ->
 	if (!spec.requiredLine) {
 		throw new GradleException("${task.name}: requiredLine is not set")
 	}
-	def importFile = spec.importFile == null ? null : project.file(spec.importFile)
+	def importFile = spec.importFile == null ? null : resolveFile(spec.importFile)
 	if (importFile != null && !importFile.isFile()) {
 		throw new GradleException("${task.name}: import file not found: ${importFile}" +
 			(spec.importSwitch ? " (set -P${spec.importSwitch}=<path>)" : ''))
@@ -328,7 +357,7 @@ def runHeadless = { Task task, GhidraHeadlessSpec spec ->
 	if (spec.noAnalysis) {
 		command << '-noanalysis'
 	}
-	command += ['-scriptPath', project.file(spec.scriptPath).path]
+	command += ['-scriptPath', resolveFile(spec.scriptPath).path]
 	spec.preScripts.each { command += ['-preScript'] + it }
 	if (spec.postScriptCall) {
 		command += ['-postScript'] + spec.postScriptCall
