@@ -62,6 +62,14 @@ tasks.named('test') {
 // model of the hardware. One of each per language.
 def smokeSample = file('src/test/smoke/smoke.bin')
 
+// Rebuilds smoke.bin and smoke.objdump from smoke.s. Local only: it needs the
+// vendor toolchain in vendor/, which CI does not have, so CI checks the committed
+// outputs instead.
+tasks.register('generateSmokeSample', Exec) {
+	description = 'Reassemble the smoke sample from src/test/smoke/smoke.s with the vendor toolchain'
+	commandLine 'python3', file('src/test/smoke/generate.py').absolutePath
+}
+
 [
 	['', 'AEON:BE:32:R2', 'the big-endian-data language', 'emu_cases.json'],
 	['Le', 'AEON:LE:32:R2', 'the little-endian-data language', 'emu_cases_le.json'],
@@ -69,12 +77,14 @@ def smokeSample = file('src/test/smoke/smoke.bin')
 	// match if stores and the loads that read them back agree on the space
 	['Harvard', 'AEON:LE:32:R2-harvard', 'the Harvard language', 'emu_cases_le.json'],
 ].each { variant, language, what, cases ->
+	// the script seeds the entry and runs analysis itself: a raw image has no entry point
 	ghidraHeadless("smokeTest${variant}") {
-		description = "Decode the committed sample with ${what} and compare with the vendor objdump"
+		description = "Decode, analyse and decompile the committed sample with ${what}"
 		importFile = smokeSample
 		processor = language
 		noAnalysis = true
-		postScript 'AeonSmoke.java'
+		args '-loader', 'BinaryLoader', '-loader-baseAddr', '0x200000'
+		postScript 'AeonSmoke.java', file('src/test/smoke/smoke.objdump').absolutePath
 		requiredLine = 'SMOKE OK'
 	}
 	ghidraHeadless("emuTest${variant}") {

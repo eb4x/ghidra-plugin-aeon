@@ -63,12 +63,24 @@ operands.
 ```
 ./gradlew buildExtension     # compiles the .slaspec first; a spec error fails the build
 ./gradlew installExtension   # extract into GHIDRA_USER_EXTENSIONS_DIR
-./gradlew smokeTest          # decode src/test/smoke/smoke.bin and compare with the vendor objdump
+./gradlew verify             # what CI runs: packaging check, JUnit, smoke and emu tests
 ```
 
-Every headless run goes through a Gradle task: each one wipes `build/smoke`, extracts the
-freshly built zip into the settings dir it pins, and takes its verdict from a fixed line in
-the script's output, since `analyzeHeadless` exits 0 even when a script throws.
+The shared part of the build is `gradle/ghidra-plugin-common.gradle`, byte-identical in every
+`ghidra-plugin-*` repo; `build.gradle` holds only what is AEON's own.
+
+- `test`: JUnit for the address analyzer (`src/test/java`), on programs built in all three
+  languages. A control runs the stock propagator on the same code, so the tests show what
+  AEON adds rather than what Ghidra already does.
+- `smokeTest`, `smokeTestLe`, `smokeTestHarvard`: the committed sample
+  (`src/test/smoke/smoke.s`, loaded at 0x200000) decoded against the vendor objdump's listing
+  of it, analysed, and decompiled, one run per language. `./gradlew generateSmokeSample`
+  reassembles it with the vendor toolchain (local only; CI checks the committed bytes).
+- `emuTest`, `emuTestLe`, `emuTestHarvard`: the p-code emulator against the vendor simulator.
+
+Every headless run goes through the common `ghidraHeadless` runner: it extracts the freshly
+built zip into the settings dir it pins, and takes its verdict from a fixed line in the
+script's output, since `analyzeHeadless` exits 0 even when a script throws.
 
 `gradle.properties` (gitignored) points at the shared read-only SDK and the user extensions
 directory. The sleigh step runs with `-l -c -n -u -t -f`, so pattern conflicts, colliding
