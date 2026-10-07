@@ -163,10 +163,21 @@ tasks.named('clean') {
 
 // ---------------------------------------------------------------------- install / verify --
 
+// Install and uninstall change what the shared Ghidra loads, so sessions' permission rules
+// ask before them; Gradle's task-name abbreviations (`./gradlew iE`) would slip past a rule
+// on the name, so these two run only when spelled in full.
+def requestedTasks = gradle.startParameter.taskNames
+def requireFullName = { String name ->
+	if (!requestedTasks.any { it == name || it.endsWith(":${name}") }) {
+		throw new GradleException("${name} must be requested by its full name, not abbreviated")
+	}
+}
+
 tasks.register('installExtension') {
 	group = 'Ghidra'
 	description = "Install the built extension into Ghidra's user Extensions folder"
 	dependsOn 'buildExtension'
+	doFirst { requireFullName('installExtension') }
 	doLast {
 		def extensionsDir = ghidraUserExtensionsDir()
 		fileOps.fs.delete { delete new File(extensionsDir, extensionName) }
@@ -181,6 +192,7 @@ tasks.register('installExtension') {
 tasks.register('uninstallExtension') {
 	group = 'Ghidra'
 	description = "Remove the extension from Ghidra's user Extensions folder"
+	doFirst { requireFullName('uninstallExtension') }
 	doLast {
 		def extensionsDir = ghidraUserExtensionsDir()
 		fileOps.fs.delete { delete new File(extensionsDir, extensionName) }
