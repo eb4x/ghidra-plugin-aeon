@@ -71,6 +71,6 @@ public class AeonDumpDisasm extends GhidraScript {
 				}
 			}
 		}
-		println("AeonDumpDisasm: wrote " + args[0]);
+		println("DUMP DONE: wrote " + args[0]);
 	}
 }

@@ -7,7 +7,7 @@ bytes through Ghidra's p-code emulator and compares, so the semantics in the
 SLEIGH spec are checked against the hardware model rather than against my
 reading of it.
 
-Writes tests/emu_cases.json (an -EB build) and tests/emu_cases_le.json (an
+Writes src/test/smoke/emu_cases.json (an -EB build) and src/test/smoke/emu_cases_le.json (an
 -EL -EBinst build: same instruction bytes, little-endian data).
 """
 import json
@@ -103,7 +103,7 @@ def assemble(body):
 
 def main():
     for endian, name in (('big', 'emu_cases.json'), ('little', 'emu_cases_le.json')):
-        generate(endian, os.path.join(HERE, 'tests', name))
+        generate(endian, os.path.join(HERE, 'src', 'test', 'smoke', name))
 
 
 def generate(endian, path):

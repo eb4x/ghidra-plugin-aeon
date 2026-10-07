@@ -123,7 +123,7 @@ public class AeonCensus extends GhidraScript {
 		List<Map.Entry<String, int[]>> rows = new ArrayList<>(counts.entrySet());
 		rows.sort((a, b) -> b.getValue()[0] - a.getValue()[0]);
 
-		println("AEON CENSUS");
+		println("CENSUS");
 		println("  functions:                  " + functions);
 		println("  instructions in functions:  " + reached);
 		println("  functions with a return:    " + endsWithReturn);
@@ -141,7 +141,7 @@ public class AeonCensus extends GhidraScript {
 			println(String.format("  %-24s %6d %6d%s", e.getKey(), c[0], c[2],
 				c[1] > 0 ? "   PSEUDO-OP" : ""));
 		}
-		println("AEON CENSUS DONE");
+		println("CENSUS DONE");
 	}
 
 	/** A jump out of the function to another function's entry point. */

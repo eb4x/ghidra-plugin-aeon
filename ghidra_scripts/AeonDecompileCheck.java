@@ -136,7 +136,7 @@ public class AeonDecompileCheck extends GhidraScript {
 				}
 			}
 
-			println("AEON DECOMPILE CHECK");
+			println("DECOMPILE CHECK");
 			println("  non-returning functions: " + noReturn.size());
 			noReturn.stream().limit(15).forEach(x -> println("    no return: " + x));
 			println("  computed jumps:          " + computed);
@@ -168,7 +168,7 @@ public class AeonDecompileCheck extends GhidraScript {
 					}
 				}
 			}
-			println("AEON DECOMPILE CHECK DONE");
+			println("DECOMPILE CHECK DONE");
 		}
 		finally {
 			decomp.dispose();

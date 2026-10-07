@@ -54,9 +54,9 @@ public class AeonSmoke extends GhidraScript {
 		}
 
 		if (failures > 0) {
-			printerr("AEON SMOKE FAILED: " + failures + " of " + EXPECTED.length);
+			printerr("SMOKE FAILED: " + failures + " of " + EXPECTED.length);
 			return;
 		}
-		println("AEON SMOKE OK: " + EXPECTED.length + " instructions match the vendor objdump");
+		println("SMOKE OK: " + EXPECTED.length + " instructions match the vendor objdump");
 	}
 }

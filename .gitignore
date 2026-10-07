@@ -1,31 +1,26 @@
+# --- common to every ghidra-plugin-* repo ---
 .gradle/
 build/
 dist/
 lib/
 bin/
-.settings/
+os/
 .classpath
 .project
-os/
-
-# vendor toolchain and ISA sources (large, redistributable separately)
-vendor/
-
-# generated disassembly listings used for the acceptance diff
-fixtures-out/
-
-# machine-specific build config (absolute GHIDRA_INSTALL_DIR / extensions dir)
-gradle.properties
-
-# local dev config: MCP endpoints on this host
+.settings/
+.claude/
 .mcp.json
-
+gradle.properties
+# --- this plugin ---
+# vendor toolchain and ISA sources (large, redistributable separately)
+/vendor/
+# proprietary firmware fixtures and the vendor objdump listings of them
+/fixtures/
+/fixtures-out/
 # compiled SLEIGH: a build product of data/languages/*.slaspec
 data/languages/*.sla
-fixtures/
+# firmware-derived entry-point lists (regenerate with tools/jal_targets.py)
+src/test/fixtures/hdcp_entries.txt
+src/test/fixtures/stream0_entries.txt
 __pycache__/
 *.pyc
-
-# firmware-derived entry-point lists (regenerate with tools/jal_targets.py)
-tests/hdcp_entries.txt
-tests/stream0_entries.txt

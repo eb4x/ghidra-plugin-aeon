@@ -1,0 +1,385 @@
+// ghidra-plugin-common.gradle — the build every ghidra-plugin-* repo shares.
+//
+// Byte-identical in every repo. Change it only by agreement of all the plugin sessions, then
+// compare `md5sum gradle/ghidra-plugin-common.gradle` across the repos.
+//
+// A plugin's build.gradle applies this file first, then adds only what is its own:
+//
+//   apply from: 'gradle/ghidra-plugin-common.gradle'
+//
+//   buildExtension.exclude 'fixtures/**'                  extra files kept out of the zip
+//   allowPackaged 'data/', 'data/languages/[^/]+\\.sla'   extra zip entries (regex, relative
+//                                                         to the extension's top directory)
+//   tasks.named('verify') { dependsOn 'smokeTest' }       extra checks CI runs
+//   buildStamp()                                          opt-in <name>-build.properties resource
+//   ghidraHeadless('smokeTest') { ... }                   a headless Ghidra run (see the end)
+//
+// Settings, from gradle.properties (gitignored), -PKEY=value, or the environment, in that order:
+//   GHIDRA_INSTALL_DIR          the shared SDK to build against (absolute path)
+//   GHIDRA_USER_EXTENSIONS_DIR  where installExtension extracts to (absolute path)
+// A one-off override is -PKEY=value: an exported variable loses to gradle.properties.
+
+import java.util.regex.Pattern
+import java.util.zip.ZipFile
+
+// ------------------------------------------------------------------------------- settings --
+
+def absoluteSetting = { String key, String example ->
+	def value = (findProperty(key) ?: System.getenv(key))?.toString()
+	if (!value) {
+		throw new GradleException("""${key} is not set. Set it in gradle.properties:
+    ${key}=${example}
+or pass -P${key}=<path>, or export ${key}=<path>.""")
+	}
+	if (!new File(value).isAbsolute()) {
+		throw new GradleException("${key} must be an absolute path without '~', got: ${value}")
+	}
+	return file(value)
+}
+
+def ghidraInstall = absoluteSetting('GHIDRA_INSTALL_DIR',
+	'/home/<user>/src/ghidra/sdk/ghidra_<ver>_DEV-<commit>')
+def buildExtensionScript = new File(ghidraInstall, 'support/buildExtension.gradle')
+if (!buildExtensionScript.isFile()) {
+	throw new GradleException("GHIDRA_INSTALL_DIR is not a Ghidra install " +
+		"(no support/buildExtension.gradle): ${ghidraInstall}")
+}
+// buildExtension.gradle derives the install from its own location, so this path is the one used.
+apply from: buildExtensionScript.canonicalPath
+ext.ghidraInstallDir = ghidraInstall.canonicalPath
+
+// Resolved only when install or uninstall runs: CI never sets it.
+def ghidraUserExtensionsDir = {
+	absoluteSetting('GHIDRA_USER_EXTENSIONS_DIR',
+		"/home/<user>/.var/app/org.eclipse.Java/config/ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}_location_dailydriver/Extensions")
+}
+
+def builtZip = { tasks.named('buildExtension', Zip).get().archiveFile.get().asFile }
+
+// ------------------------------------------------------------------------- dependencies --
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Ghidra's AbstractGenericTest and ProgramBuilder are JUnit 4. Test-only, never in the zip.
+	testImplementation 'junit:junit:4.13.2'
+}
+
+// ------------------------------------------------------------------------------ packaging --
+
+// buildExtension zips the whole project directory minus an exclude list. These are kept out
+// everywhere; a plugin adds its own with buildExtension.exclude after the apply.
+// agent
+buildExtension.exclude '.claude/**'
+buildExtension.exclude '.mcp.json'
+buildExtension.exclude 'CLAUDE.md'
+// IDE
+buildExtension.exclude '.classpath'
+buildExtension.exclude '.project'
+buildExtension.exclude '.settings/**'
+// build
+buildExtension.exclude 'gradle/**'
+buildExtension.exclude 'gradlew'
+buildExtension.exclude 'gradlew.bat'
+buildExtension.exclude 'gradle.properties'
+// repo
+buildExtension.exclude '.github/**'
+buildExtension.exclude '.gitignore'
+buildExtension.exclude 'docs/**'
+buildExtension.exclude 'ghidra_scripts/**'
+
+// The allowlist behind the exclude list: a zip entry outside it fails the build, so a
+// forgotten exclude cannot ship. Patterns are regexes over the entry name relative to the
+// extension's top directory; '' is that directory itself. Read when the check runs, so
+// allowPackaged calls after the apply count.
+def packaged = [
+	'',
+	'(extension\\.properties|Module\\.manifest|LICENSE|README\\.md|version\\.properties)',
+	'lib/',
+	'lib/[^/]+\\.jar',
+	'lib/[^/]+-src\\.zip',
+]
+ext.allowPackaged = { Object... patterns -> packaged.addAll(patterns) }
+
+// Deletes a zip that fails, so nothing downstream (install, headless runs, a copy from dist/)
+// ever sees it.
+def checkZip = { File zip ->
+	def top = project.name + '/'
+	def unexpected = []
+	new ZipFile(zip).withCloseable { zf ->
+		zf.entries().each { entry ->
+			def name = entry.name
+			def relative = name.startsWith(top) ? name.substring(top.length()) : null
+			if (relative == null || !packaged.any { relative ==~ it }) {
+				unexpected << name
+			}
+		}
+	}
+	if (unexpected) {
+		zip.delete()
+		throw new GradleException("${zip.name} contains files outside the packaging allowlist " +
+			"and was deleted:\n  " + unexpected.join('\n  ') +
+			"\nExclude them with buildExtension.exclude, or allowPackaged them if they ship.")
+	}
+}
+
+tasks.named('buildExtension') {
+	doLast { checkZip(archiveFile.get().asFile) }
+}
+
+tasks.register('checkPackaging') {
+	group = 'verification'
+	description = 'Fail if the built zip holds anything outside the packaging allowlist'
+	dependsOn 'buildExtension'
+	doLast {
+		checkZip(builtZip())
+		logger.lifecycle("checkPackaging: ${builtZip().name} holds only allowlisted entries")
+	}
+}
+
+tasks.named('clean') {
+	delete 'dist'
+}
+
+// ---------------------------------------------------------------------- install / verify --
+
+tasks.register('installExtension') {
+	group = 'Ghidra'
+	description = "Install the built extension into Ghidra's user Extensions folder"
+	dependsOn 'buildExtension'
+	doLast {
+		def extensionsDir = ghidraUserExtensionsDir()
+		project.delete new File(extensionsDir, project.name)
+		project.copy {
+			from project.zipTree(builtZip())
+			into extensionsDir
+		}
+		logger.lifecycle("installed ${project.name} into ${extensionsDir}")
+	}
+}
+
+tasks.register('uninstallExtension') {
+	group = 'Ghidra'
+	description = "Remove the extension from Ghidra's user Extensions folder"
+	doLast {
+		project.delete new File(ghidraUserExtensionsDir(), project.name)
+	}
+}
+
+tasks.register('verify') {
+	group = 'verification'
+	description = 'Everything CI runs: checkPackaging, test, and the checks this plugin adds'
+	dependsOn 'checkPackaging', 'test'
+}
+
+// ---------------------------------------------------------------------------- build stamp --
+
+// Opt-in: version, git commit (+dirty) and build time in a resource the plugin can report at
+// runtime. It makes every build's jar differ, which is why it is not on by default.
+ext.buildStamp = {
+	def stampDir = layout.buildDirectory.dir('generated/buildstamp')
+	def resource = "${project.name.toLowerCase(Locale.ROOT)}-build.properties"
+	def generate = tasks.register('generateBuildStamp') {
+		description = "Write ${resource} with the version, git commit and build time"
+		outputs.dir(stampDir)
+		// git state is not a tracked input; the file is tiny, so restamp on every build
+		outputs.upToDateWhen { false }
+		doLast {
+			def git = 'unknown'
+			try {
+				def hash = 'git rev-parse --short HEAD'.execute(null, projectDir).text.trim()
+				def dirty = 'git status --porcelain'.execute(null, projectDir).text.trim()
+				if (hash) {
+					git = hash + (dirty ? '+dirty' : '')
+				}
+			}
+			catch (IOException ignored) {
+				// no git on this machine
+			}
+			def versionProps = new Properties()
+			file('version.properties').withInputStream { versionProps.load(it) }
+			def dir = stampDir.get().asFile
+			dir.mkdirs()
+			new File(dir, resource).text =
+				"version=${versionProps.getProperty('version', '0.0.0')}\n" +
+				"git=${git}\n" +
+				"built=${new Date().format('yyyy-MM-dd HH:mm:ss z', TimeZone.getTimeZone('UTC'))}\n"
+		}
+	}
+	tasks.named('processResources') {
+		dependsOn generate
+		from stampDir
+	}
+}
+
+// ------------------------------------------------------------------------------- headless --
+
+/**
+ * One headless Ghidra run, configured in a ghidraHeadless('name') { ... } block:
+ *
+ *   importFile    file to -import (optional); missing at run time is a failure that names
+ *   importSwitch  the -P switch to set, if the plugin gives one
+ *   processor     -processor language ID (optional)
+ *   noAnalysis    true adds -noanalysis; full auto-analysis is the default
+ *   scriptPath    -scriptPath (default ghidra_scripts)
+ *   preScript 'X.java', args...    any number
+ *   postScript 'X.java', args...   at most one
+ *   args '-loader', 'BinaryLoader', ...   further raw analyzeHeadless arguments
+ *   requiredLine  required: the run passes only if a script line contains it
+ *   failPattern   any script line containing it fails the run (default "UNEXPECTED";
+ *                 case-sensitive; null turns it off, e.g. for reports that relay Ghidra text)
+ *   echo          true prints every script line, for report tasks
+ *
+ * description, group, dependsOn, doFirst, doLast, inputs, outputs and mustRunAfter go to the
+ * task; `task` is the task itself. A plugin builds its own inputs in doFirst.
+ *
+ * Every run is hermetic: the settings dir is pinned to build/smoke/settings, which holds a
+ * fresh extract of this build's zip and nothing else, and each run gets its own project under
+ * build/smoke/project/<task>, deleted afterwards. build/smoke is wiped once per build, before
+ * the first run, so one run can leave a file for another. Output streams to
+ * build/smoke/<task>.log. Script lines are the ones headless prefixes "<Script>.java> "
+ * (INFO for println, ERROR for printerr). analyzeHeadless exits 0 even when a script throws,
+ * so the verdict comes from those lines; a non-zero exit fails too.
+ */
+class GhidraHeadlessSpec {
+	final Task task
+	Object importFile
+	String importSwitch
+	String processor
+	boolean noAnalysis
+	Object scriptPath = 'ghidra_scripts'
+	final List<List<String>> preScripts = []
+	List<String> postScriptCall
+	final List<String> extraArgs = []
+	String requiredLine
+	String failPattern = 'UNEXPECTED'
+	boolean echo
+
+	GhidraHeadlessSpec(Task task) {
+		this.task = task
+	}
+
+	void preScript(String script, Object... args) {
+		preScripts << ([script] + args*.toString())
+	}
+
+	void postScript(String script, Object... args) {
+		postScriptCall = [script] + args*.toString()
+	}
+
+	void args(Object... args) {
+		extraArgs.addAll(args*.toString())
+	}
+
+	void setDescription(String description) { task.description = description }
+	void setGroup(String group) { task.group = group }
+	void dependsOn(Object... paths) { task.dependsOn(paths) }
+	void mustRunAfter(Object... paths) { task.mustRunAfter(paths) }
+	void doFirst(Closure action) { task.doFirst(action) }
+	void doLast(Closure action) { task.doLast(action) }
+	def getInputs() { task.inputs }
+	def getOutputs() { task.outputs }
+}
+
+def smokeDir = layout.buildDirectory.dir('smoke').get().asFile
+def smokeSettingsDir = new File(smokeDir, 'settings')
+
+// Registered on the first ghidraHeadless call, so a plugin without headless runs has neither
+// the task nor build/smoke.
+def registerHeadlessExtract = {
+	if (tasks.names.contains('headlessExtract')) {
+		return
+	}
+	tasks.register('headlessExtract') {
+		dependsOn 'buildExtension'
+		outputs.upToDateWhen { false }
+		doLast {
+			project.delete smokeDir
+			project.copy {
+				from project.zipTree(builtZip())
+				into new File(smokeSettingsDir, "ghidra/${DISTRO_PREFIX}_${RELEASE_NAME}/Extensions")
+			}
+		}
+	}
+}
+
+def scriptLine = ~/\S+\.(?:java|py)> (.*?)(?: \(\w+\))?\s*$/
+
+def runHeadless = { Task task, GhidraHeadlessSpec spec ->
+	if (!spec.requiredLine) {
+		throw new GradleException("${task.name}: requiredLine is not set")
+	}
+	def importFile = spec.importFile == null ? null : project.file(spec.importFile)
+	if (importFile != null && !importFile.isFile()) {
+		throw new GradleException("${task.name}: import file not found: ${importFile}" +
+			(spec.importSwitch ? " (set -P${spec.importSwitch}=<path>)" : ''))
+	}
+	def projectDir = new File(smokeDir, "project/${task.name}")
+	projectDir.mkdirs()
+	def command = ["${ghidraInstallDir}/support/analyzeHeadless", projectDir.path, task.name]
+	if (importFile != null) {
+		command += ['-import', importFile.path]
+	}
+	if (spec.processor) {
+		command += ['-processor', spec.processor]
+	}
+	if (spec.noAnalysis) {
+		command << '-noanalysis'
+	}
+	command += ['-scriptPath', project.file(spec.scriptPath).path]
+	spec.preScripts.each { command += ['-preScript'] + it }
+	if (spec.postScriptCall) {
+		command += ['-postScript'] + spec.postScriptCall
+	}
+	command += spec.extraArgs
+	command << '-deleteProject'
+
+	def builder = new ProcessBuilder(command*.toString()).redirectErrorStream(true)
+	builder.environment().put('GHIDRA_JAVA_OPTIONS', "-Dapplication.settingsdir=${smokeSettingsDir}".toString())
+	def logFile = new File(smokeDir, "${task.name}.log")
+	def verdict = null
+	def failures = []
+	def process = builder.start()
+	logFile.withWriter { log ->
+		process.inputStream.eachLine { line ->
+			log.println(line)
+			def match = line =~ scriptLine
+			if (!match.find()) {
+				return
+			}
+			def text = match.group(1)
+			if (spec.echo) {
+				task.logger.lifecycle(text)
+			}
+			if (verdict == null && text.contains(spec.requiredLine)) {
+				verdict = text
+			}
+			if (spec.failPattern && text.contains(spec.failPattern)) {
+				failures << text
+			}
+		}
+	}
+	def exit = process.waitFor()
+	if (exit != 0 || failures || verdict == null) {
+		def why = exit != 0 ? "analyzeHeadless exited ${exit}"
+			: failures ? failures.join('\n')
+			: "no script line contains \"${spec.requiredLine}\""
+		throw new GradleException("${task.name} failed — see ${logFile}\n${why}")
+	}
+	task.logger.lifecycle("${task.name}: ${verdict} — log: ${logFile}")
+}
+
+ext.ghidraHeadless = { String name, Closure configure ->
+	registerHeadlessExtract()
+	tasks.register(name) { task ->
+		task.group = 'verification'
+		task.dependsOn 'headlessExtract'
+		def spec = new GhidraHeadlessSpec(task)
+		task.doLast { runHeadless(task, spec) }
+		configure.delegate = spec
+		configure.resolveStrategy = Closure.DELEGATE_FIRST
+		configure()
+	}
+}

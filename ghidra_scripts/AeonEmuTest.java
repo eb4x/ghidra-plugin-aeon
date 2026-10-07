@@ -1,4 +1,4 @@
-/* Differential p-code test: replay the cases in tests/emu_cases.json through
+/* Differential p-code test: replay the cases in src/test/smoke/emu_cases.json through
  * Ghidra's emulator and compare the register file with the vendor simulator's.
  *
  * The expected values come from aeon-elf-sim (tools/gen_emu_cases.py), so this
@@ -6,7 +6,7 @@
  * than against anyone's reading of the ISA tables.
  *
  * Usage: analyzeHeadless ... -postScript AeonEmuTest.java <emu_cases.json>
- * Prints "AEON EMU OK: <n> cases" when every case matches; the Gradle task
+ * Prints "EMU OK: <n> cases" when every case matches; the Gradle task
  * fails unless that line appears.
  */
 //@category AEON
@@ -41,10 +41,10 @@ public class AeonEmuTest extends GhidraScript {
 			}
 		}
 		if (failures > 0) {
-			printerr("AEON EMU FAILED: " + failures + " of " + cases.size() + " cases");
+			printerr("EMU FAILED: " + failures + " of " + cases.size() + " cases");
 			return;
 		}
-		println("AEON EMU OK: " + cases.size() + " cases match the vendor simulator");
+		println("EMU OK: " + cases.size() + " cases match the vendor simulator");
 	}
 
 	private boolean runCase(Map<String, Object> c) throws Exception {

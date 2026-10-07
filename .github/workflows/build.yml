@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The Ghidra version this module is developed and tested against. The matrix
-  # also builds against the latest official release; only the pinned build is
+  # The Ghidra version the extension is developed and tested against. The matrix
+  # also builds against the latest official release; only this pinned build is
   # required for a release to go out.
   PINNED_GHIDRA: "12.1.3"
 
@@ -70,27 +70,24 @@ jobs:
           unzip -q ~/ghidra/ghidra.zip -d ~/ghidra
           rm ~/ghidra/ghidra.zip
 
-      # buildExtension depends on compileSleigh, so a spec error, a pattern
-      # conflict or a colliding operand fails here rather than at load time.
+      # buildExtension fails if the zip holds anything outside the packaging allowlist.
       - name: Build extension
         run: |
           export GHIDRA_INSTALL_DIR="$(echo "$HOME"/ghidra/ghidra_*)"
           ./gradlew buildExtension
 
-      # checkPackaging: nothing but the language in the zip.
-      # smokeTest:      decodes the committed test program, compared with the
-      #                 vendor objdump's output recorded in the script.
-      # emuTest:        replays committed sequences through Ghidra's p-code
-      #                 emulator and compares registers with the vendor
-      #                 simulator's recorded results.
-      # The acceptance diff is not here: it needs the vendor toolchain and
-      # proprietary firmware, neither of which is in this repo.
+      # verify: checkPackaging, the JUnit suite, and the headless checks on the
+      # committed samples (see `./gradlew help --task verify`).
       - name: Verify
         run: |
           sudo apt-get update -q
           sudo apt-get install -y -q xvfb
           export GHIDRA_INSTALL_DIR="$(echo "$HOME"/ghidra/ghidra_*)"
           xvfb-run -a ./gradlew verify
+
+      - name: Headless logs on failure
+        if: failure()
+        run: tail -n 200 build/smoke/*.log || true
 
       - uses: actions/upload-artifact@v4
         with:
